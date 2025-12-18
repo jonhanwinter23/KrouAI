@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Isn't Permanent - Khmer Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #f5f3ff; /* Light purple tint */
+        }
+        .kh-text-title {
+            font-family: 'Battambang', cursive;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #ede9fe; /* Violet-100 */
+            border-right: 4px solid #7c3aed; /* Violet-600 */
+            color: #5b21b6; /* Violet-900 */
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a78bfa;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c3aed;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white p-4 shadow-md flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold text-violet-800 kh-text-title">បុគ្គលិកលក្ខណៈមិនថេរទេ</h1>
+        <button id="menuBtn" class="text-gray-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-white shadow-xl transition duration-200 ease-in-out z-10 flex flex-col border-r border-violet-100">
+        <div class="p-6 border-b border-gray-100 hidden md:block bg-violet-50">
+            <h1 class="text-xl font-bold text-violet-800 kh-text-title leading-relaxed">បុគ្គលិកលក្ខណៈមិនមែនជា<br>អ្វីដែលមិនអាចកែប្រែបាន</h1>
+            <p class="text-xs text-violet-600 mt-2 font-medium uppercase tracking-wider">Personality Isn't Permanent</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4" id="lessonList">
+            <!-- Navigation Items will be injected here -->
+        </div>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between text-sm mb-1 text-violet-800 font-medium">
+                <span>វឌ្ឍនភាព (Progress)</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-violet-600 h-2.5 rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#fdfbff]" id="mainContent">
+        <div class="max-w-4xl mx-auto p-6 md:p-10 pb-24">
+            
+            <!-- Welcome Screen (Initial State) -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[60vh] text-center fade-in">
+                <div class="bg-white p-10 rounded-2xl shadow-xl max-w-2xl border-t-8 border-violet-500">
+                    <div class="text-7xl mb-6">🦋</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 kh-text-title">ឈប់ជឿថាអ្នក "កើតមកបែបហ្នឹង"</h2>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        អតីតកាលរបស់អ្នកមិនកំណត់អនាគតរបស់អ្នកទេ។<br>
+                        អ្នកគឺជាអ្នករចនា (Designer) នៃបុគ្គលិកលក្ខណៈរបស់ខ្លួនឯង។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1 text-lg flex items-center mx-auto">
+                        <span>ចាប់ផ្តើមផ្លាស់ប្តូរខ្លួនឯង</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content (Dynamic) -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-2 text-violet-600 mb-4 font-bold text-sm uppercase tracking-wide bg-violet-100 w-fit px-3 py-1 rounded-full">
+                    <span id="chapterNumber">Lesson 1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 kh-text-title leading-snug"></h2>
+                
+                <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-8 prose prose-lg max-w-none text-gray-700 leading-relaxed border border-gray-100" id="lessonBody">
+                    <!-- Lesson HTML Content -->
+                </div>
+
+                <!-- Interactive Scenario / Example Box -->
+                <div id="scenarioBox" class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg mb-8 hidden shadow-sm">
+                    <h3 class="text-lg font-bold text-indigo-800 mb-3 flex items-center kh-text-title">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        ឧទាហរណ៍ជាក់ស្តែង (Practical Step)
+                    </h3>
+                    <div id="scenarioContent" class="text-indigo-900"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200 mt-10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-purple-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center kh-text-title relative z-10">
+                        <span class="bg-violet-100 text-violet-800 text-sm font-bold mr-3 px-3 py-1 rounded-full">QUIZ</span>
+                        សាកល្បងចំណេះដឹងរបស់អ្នក
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-lg font-medium mb-4 text-gray-800"></p>
+                        <div id="quizOptions" class="space-y-3"></div>
+                        <div id="quizFeedback" class="mt-4 hidden p-4 rounded-lg text-sm md:text-base"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-12">
+                    <button id="prevBtn" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-600 hover:bg-white hover:shadow-md font-medium disabled:opacity-50 transition-all">
+                        ← មេរៀនមុន
+                    </button>
+                    <button id="nextBtn" class="px-8 py-3 rounded-xl bg-violet-600 text-white hover:bg-violet-700 font-bold shadow-lg hover:shadow-violet-200 flex items-center disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-0.5">
+                        មេរៀនបន្ទាប់ →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data Structure for Lessons (Personality Isn't Permanent)
+        const lessons = [
+            {
+                title: "1. ទេវកថានៃបុគ្គលិកលក្ខណៈ (The Myth of Personality)",
+                content: `
+                    <p class="mb-4 text-lg">តើអ្នកធ្លាប់ឮគេនិយាយថា៖ "ខ្ញុំកើតមកបែបហ្នឹង ខ្ញុំកែមិនបានទេ" ដែរឬទេ? ឬក៏អ្នកធ្លាប់ធ្វើតេស្តបុគ្គលិកលក្ខណៈ (ដូចជា MBTI, Enneagram, DISC) ហើយជឿថាវាជា <strong>ការពិត</strong> អំពីខ្លួនអ្នក?</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">ការពិតដ៏គួរឱ្យភ្ញាក់ផ្អើល</h4>
+                    <p class="mb-4">Benjamin Hardy បកស្រាយថា ជំនឿដែលថា "បុគ្គលិកលក្ខណៈគឺជា DNA" គឺជាការកុហកដ៏ធំបំផុតដែលឃាត់ឃាំងការរីកចម្រើនរបស់មនុស្ស។ បុគ្គលិកលក្ខណៈមិនមែនជារឿងថេរ (Permanent) ទេ វាគឺជាអ្វីដែលយើងអាច <strong>រចនា (Design)</strong> បាន។</p>
+                    
+                    <p class="mb-4">ការធ្វើតេស្តបុគ្គលិកលក្ខណៈ គ្រាន់តែជាការ "ថតរូប" (Snapshot) នៃអារម្មណ៍និងទម្លាប់របស់អ្នក <strong>នៅពេលបច្ចុប្បន្ន</strong> ប៉ុណ្ណោះ។ បើអ្នកយកលទ្ធផលតេស្តមកដាក់ជាស្លាក (Label) លើខ្លួនឯង ថា "ខ្ញុំជា Introvert" នោះអ្នកនឹងចាប់ផ្តើមបង្កើតអាកប្បកិរិយាឱ្យសមស្របតាមស្លាកនោះ ហើយបិទផ្លូវមិនឱ្យខ្លួនឯងក្លាយជាអ្នកដឹកនាំ ឬអ្នកក្លាហាន។</p>
+                    
+                    <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 my-6 shadow-sm">
+                        <p class="font-bold text-red-800 text-lg mb-2">គ្រោះថ្នាក់នៃការដាក់ស្លាក (The Danger of Labeling):</p>
+                        <p class="text-red-900 leading-relaxed">នៅពេលអ្នកនិយាយថា "ខ្ញុំជាមនុស្សបែបនេះ..." អ្នកកំពុងប្រាប់ខួរក្បាលឱ្យឈប់ព្យាយាម។ អ្នកកំពុងយកអតីតកាល មកធ្វើជាគុកឃុំឃាំងអនាគតរបស់អ្នក។ មនុស្សជោគជ័យមិនសួរថា "តើខ្ញុំជានរណា?" ទេ តែគេសួរថា "តើខ្ញុំចង់ក្លាយជានរណា?"</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> អ្នកត្រូវបានគេហៅឱ្យឡើងនិយាយជាសាធារណៈ។</p>
+                    <p class="text-red-600 mt-2 font-medium">❌ គំនិតចាស់ (Fixed Mindset): "ខ្ញុំមិនធ្វើទេ ព្រោះតេស្តប្រាប់ថាខ្ញុំជា Introvert។ ខ្ញុំមិនពូកែនិយាយទេ។"</p>
+                    <p class="text-green-600 mt-2 font-medium">✅ គំនិតថ្មី (Growth Mindset): "ខ្ញុំប្រហែលជាមិនសូវធ្លាប់និយាយពីមុនមក ប៉ុន្តែជំនាញនិយាយជាសាធារណៈគឺសំខាន់សម្រាប់គោលដៅរបស់ខ្ញុំ។ ខ្ញុំនឹងរៀនវា ទោះបីវាពិបាកនៅពេលដំបូងក៏ដោយ។"</p>
+                `,
+                quiz: {
+                    question: "តើ Benjamin Hardy យល់ឃើញយ៉ាងណាចំពោះតេស្តបុគ្គលិកលក្ខណៈ?",
+                    options: [
+                        "វាជាការពិតវិទ្យាសាស្ត្រដែលមិនអាចប្រកែកបាន",
+                        "វាគ្រាន់តែជាស្លាក (Label) បណ្តោះអាសន្ន ដែលអាចកម្រិតសក្តានុពលរបស់យើងបើធ្ងន់ធ្ងរពេក",
+                        "វាជួយយើងឱ្យស្គាល់អនាគត ១០០%",
+                        "វាមិនមានប្រយោជន៍អ្វីសោះ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ការជឿលើតេស្តទាំងនេះងងឹតងងុល ធ្វើឱ្យយើងគិតថាយើងកែប្រែខ្លួនឯងមិនបាន។ យើងគួរប្រើវាជាទិន្នន័យបច្ចុប្បន្ន មិនមែនជាការទស្សន៍ទាយអនាគតទេ។"
+                }
+            },
+            {
+                title: "2. របួសផ្លូវចិត្តជាអ្នកកំណត់អ្នក (Trauma Shapes You)",
+                content: `
+                    <p class="mb-4 text-lg">ហេតុអ្វីបានជាមនុស្សខ្លះចង់ផ្លាស់ប្តូរ ប៉ុន្តែនៅតែជាប់គាំងក្នុងបុគ្គលិកលក្ខណៈចាស់រាប់ឆ្នាំ? ចម្លើយគឺ៖ <strong>របួសផ្លូវចិត្តដែលមិនទាន់ដោះស្រាយ (Unresolved Trauma)</strong>។</p>
+                    
+                    <p class="mb-4">Trauma មិនចាំបាច់ទាល់តែជារឿងធំដុំដូចជាសង្គ្រាមទេ។ ការត្រូវគេបដិសេធ ការត្រូវគេមើលងាយ ឬការបរាជ័យកាលពីក្មេង ក៏ជា Trauma ដែរ។ នៅពេលរឿងទាំងនេះកើតឡើង ខួរក្បាលរបស់យើងបង្កើត <strong>"យន្តការការពារខ្លួន"</strong> ហើយយើងក៏ "កក" (Freeze) នៅក្នុងអាយុនោះ។</p>
+
+                    <ul class="list-none space-y-4 mb-6">
+                        <li class="flex items-start bg-white p-4 rounded shadow-sm">
+                            <span class="text-2xl mr-4">🛡️</span>
+                            <div>
+                                <strong>ឧទាហរណ៍ទី ១៖</strong> បើអ្នកធ្លាប់ត្រូវគេបដិសេធស្នេហា ហើយឈឺចាប់ខ្លាំង អ្នកអាចក្លាយជាមនុស្ស "ខ្លាចការប្តេជ្ញាចិត្ត" (Commitment Phobic)។ នេះមិនមែនជាបុគ្គលិកលក្ខណៈរបស់អ្នកទេ វាគឺជា <em>របួស</em> របស់អ្នក។
+                            </div>
+                        </li>
+                        <li class="flex items-start bg-white p-4 rounded shadow-sm">
+                            <span class="text-2xl mr-4">🛑</span>
+                            <div>
+                                <strong>ឧទាហរណ៍ទី ២៖</strong> បើអ្នកធ្លាប់បរាជ័យ ហើយត្រូវគេសើចចំអក អ្នកអាចក្លាយជាមនុស្ស "ខ្ជិល" ឬ "មិនហ៊ានប្រថុយ"។ ភាពខ្ជិលនោះគឺជាវិធីការពារខ្លួនកុំឱ្យឈឺចាប់ម្តងទៀត។
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mb-2">ដំណោះស្រាយ៖ Empathetic Witness</h4>
+                    <p>ដើម្បីរំដោះខ្លួនចេញ អ្នកត្រូវការនរណាម្នាក់ (ឬខ្លួនឯង) ដើម្បីស្តាប់ការឈឺចាប់នោះដោយការយល់ចិត្ត (Empathetic Witness) និងប្តូរអត្ថន័យនៃរឿងរ៉ាវនោះ។</p>
+                `,
+                scenario: `
+                    <p><strong>Reframing The Past (ការប្តូរអត្ថន័យ):</strong></p>
+                    <p>ជំនួសឱ្យការនិយាយថា "ព្រោះតែឪពុកខ្ញុំវាយខ្ញុំ ទើបខ្ញុំក្លាយជាមនុស្សបរាជ័យ និងមានកំហឹង។"</p>
+                    <p class="font-bold text-violet-700">ចូរនិយាយថា៖ "ព្រោះតែខ្ញុំឆ្លងកាត់ការលំបាកនោះ ទើបខ្ញុំមានចិត្តរឹងមាំ និងចេះយល់ចិត្តក្មេងៗដែលជួបទុក្ខលំបាក។ ខ្ញុំនឹងក្លាយជាឪពុកដ៏ល្អម្នាក់ ដែលមិនធ្វើឱ្យកូនឈឺចាប់ដូចខ្ញុំ។"</p>
+                `,
+                quiz: {
+                    question: "តើ Trauma ប៉ះពាល់ដល់បុគ្គលិកលក្ខណៈយ៉ាងដូចម្តេច?",
+                    options: [
+                        "វាមិនប៉ះពាល់អ្វីទេ",
+                        "វាធ្វើឱ្យយើងរឹងមាំដោយស្វ័យប្រវត្តិ",
+                        "វាធ្វើឱ្យយើងជាប់គាំងក្នុងយន្តការការពារខ្លួន និងប្រតិកម្មតាមបែបដដែលៗ",
+                        "វាធ្វើឱ្យយើងក្លាយជាមនុស្សពូកែភ្លេច"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! Trauma ធ្វើឱ្យយើងប្រតិកម្មតាមបែបដដែលៗដើម្បីការពារខ្លួន (Defensive Mechanism) ធ្វើឱ្យយើងមិនអាចបង្កើតអត្តចរិតថ្មីបាន ទាល់តែយើងព្យាបាលវាជាមុនសិន។"
+                }
+            },
+            {
+                title: "3. គោលការណ៍ Teleology (Future-Driven)",
+                content: `
+                    <p class="mb-4">អ្នកប្រាជ្ញចិត្តសាស្ត្របានបែងចែកការរស់នៅជាពីរប្រភេទធំៗ៖</p>
+                    <ol class="list-decimal ml-6 space-y-4 mb-6">
+                        <li class="pl-2">
+                            <strong>Causal Determinism (ដឹកមុខដោយអតីតកាល):</strong> ជឿថាអ្វីដែលអ្នកធ្វើថ្ងៃនេះ គឺជាលទ្ធផលនៃអ្វីដែលកើតឡើងពីមុន។ (អតីតកាល -> បច្ចុប្បន្ន)។ <br><em>"ខ្ញុំធ្វើបែបនេះ ព្រោះពីមុនខ្ញុំធ្លាប់..."</em>
+                        </li>
+                        <li class="pl-2">
+                            <strong>Teleology (ដឹកមុខដោយគោលដៅ):</strong> ជឿថាអ្វីដែលអ្នកធ្វើថ្ងៃនេះ គឺដើម្បីសម្រេចគោលដៅនៅអនាគត។ (អនាគត -> បច្ចុប្បន្ន)។ <br><em>"ខ្ញុំធ្វើបែបនេះ ដើម្បីឱ្យខ្ញុំក្លាយជា..."</em>
+                        </li>
+                    </ol>
+                    
+                    <p class="mb-4">Benjamin Hardy លើកទឹកចិត្តឱ្យយើងប្រើ <strong>Teleology</strong>។ បុគ្គលិកលក្ខណៈរបស់អ្នកមិនគួរត្រូវបានកំណត់ដោយអតីតកាលទេ ប៉ុន្តែគួរតែត្រូវបានកំណត់ដោយ <strong>គោលដៅ</strong> របស់អ្នក។</p>
+                    
+                    <blockquote class="border-l-4 border-violet-500 pl-4 italic bg-gray-50 p-6 my-6 rounded-r text-lg">
+                        "កុំសួរថា 'ហេតុអ្វីខ្ញុំមានអារម្មណ៍បែបនេះ?' (សួររកមូលហេតុក្នុងអតីតកាល)<br><br>
+                        ចូរសួរសំណួរថា 'តើអារម្មណ៍នេះ ឬសកម្មភាពនេះ បម្រើគោលបំណងអ្វីសម្រាប់អនាគត?'"
+                    </blockquote>
+                `,
+                scenario: `
+                    <p><strong>ការអនុវត្តក្នុងជីវិតប្រចាំថ្ងៃ៖</strong></p>
+                    <p>មុននឹងសម្រេចចិត្តញ៉ាំអាហារ ឬចាយលុយ កុំសួរថា "តើខ្ញុំ (បច្ចុប្បន្ន) ចង់បានអ្វី?"</p>
+                    <p class="font-bold text-violet-700">ចូរសួរថា "តើ Future Self (ខ្លួនខ្ញុំនៅអនាគត) ចង់ឱ្យខ្ញុំធ្វើអ្វី?"</p>
+                    <p>បើអ្នកចង់ក្លាយជាអ្នកកីឡា (គោលដៅអនាគត) នោះបុគ្គលិកលក្ខណៈបច្ចុប្បន្នរបស់អ្នកនឹងប្តូរទៅជាមនុស្សដែលក្រោកពីព្រឹក និងញ៉ាំអាហារសុខភាព ដោយស្វ័យប្រវត្តិ។</p>
+                `,
+                quiz: {
+                    question: "តើគោលការណ៍ Teleology មានន័យដូចម្តេច?",
+                    options: [
+                        "អាកប្បកិរិយារបស់យើងត្រូវបានកំណត់ដោយអតីតកាល",
+                        "យើងទាញថាមពលនិងមូលហេតុពី 'អនាគត' ដើម្បីកំណត់សកម្មភាពបច្ចុប្បន្ន",
+                        "យើងគួររស់នៅមួយថ្ងៃដឹងមួយថ្ងៃ",
+                        "យើងមិនអាចគ្រប់គ្រងជីវិតបានទេ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! Teleology មានន័យថាយើងត្រូវបាន 'ទាញ' (Pulled) ដោយចក្ខុវិស័យនៃអនាគត មិនមែនត្រូវបាន 'រុញ' (Pushed) ដោយអតីតកាលទេ។"
+                }
+            },
+            {
+                title: "4. ស្គាល់ខ្លួនឯងនៅអនាគត (Your Future Self)",
+                content: `
+                    <p class="mb-4">កំហុសដ៏ធំបំផុតដែលមនុស្សធ្វើគឺការគិតថា៖ <strong>"ខ្លួនខ្ញុំនៅអនាគត គឺគ្រាន់តែជាខ្លួនខ្ញុំនៅពេលនេះ ដែលមានអាយុច្រើនជាងមុន"</strong>។</p>
+                    <p class="mb-4">ការគិតបែបនេះខុសស្រឡះ! វិទ្យាសាស្ត្របង្ហាញថា អ្នកនៅរយៈពេល ១០ ឆ្នាំទៀត គឺជាមនុស្សផ្សេងម្នាក់ទៀតទាំងស្រុង (Strangers to ourselves)។ ចំណង់ចំណូលចិត្ត មិត្តភក្តិ គំនិត និងទម្លាប់របស់អ្នកនឹងផ្លាស់ប្តូរ។</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">បង្កើតទំនាក់ទំនងជាមួយ Future Self</h4>
+                    <p class="mb-4">អ្នកកាន់តែមើលឃើញ "ខ្លួនឯងនៅអនាគត" ច្បាស់ប៉ុណ្ណា អ្នកកាន់តែធ្វើការសម្រេចចិត្តបានល្អនៅថ្ងៃនេះប៉ុណ្ណោះ។</p>
+                    
+                    <div class="space-y-4 my-6">
+                        <div class="bg-violet-50 p-4 rounded border border-violet-200">
+                            <strong>១. ស្រមៃឱ្យច្បាស់ (Visualize):</strong> តើគាត់/នាង មានមុខមាត់បែបណា? ស្លៀកពាក់បែបណា? ធ្វើការងារអ្វី? មានប្រាក់ខែប៉ុន្មាន?
+                        </div>
+                        <div class="bg-violet-50 p-4 rounded border border-violet-200">
+                            <strong>២. ប្រាប់គេឯង (Tell People):</strong> កុំលាក់គោលដៅ។ ប្រាប់គេថា "ខ្ញុំកំពុងបោះជំហានដើម្បីក្លាយជា..."។ ការប្រាប់គេ ធ្វើឱ្យគោលដៅនោះក្លាយជាផ្នែកមួយនៃអត្តសញ្ញាណរបស់អ្នក។
+                        </div>
+                        <div class="bg-violet-50 p-4 rounded border border-violet-200">
+                            <strong>៣. វិនិយោគលើ Future Self:</strong> ចាយលុយថ្ងៃនេះ ដើម្បីមនុស្សម្នាក់នោះ។ ឧទាហរណ៍៖ ទិញសៀវភៅ ទិញវគ្គសិក្សា ឬជួលគ្រូបង្វឹក។
+                        </div>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>សរសេរសំបុត្រទៅអនាគត៖</strong></p>
+                    <p>សាកល្បងសរសេរសំបុត្រទៅកាន់ខ្លួនឯងក្នុងរយៈពេល ៥ ឆ្នាំខាងមុខ។ ប្រាប់គាត់ថាអ្នកកំពុងធ្វើអ្វីខ្លះនៅថ្ងៃនេះដើម្បីគាត់។</p>
+                    <p><em>"ជូនចំពោះខ្លួនខ្ញុំនៅឆ្នាំ ២០៣០, ថ្ងៃនេះខ្ញុំបានបដិសេធការដើរលេង ដើម្បីសន្សំលុយឱ្យអ្នកមានដើមទុនបើកអាជីវកម្ម។ សូមរីករាយជាមួយជោគជ័យរបស់អ្នកចុះ!"</em></p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីយើងគួរមើលឃើញ 'ខ្លួនឯងនៅអនាគត' ដូចជាមនុស្សផ្សេងម្នាក់ទៀត?",
+                    options: [
+                        "ដើម្បីកុំឱ្យយើងខ្វល់ពីគេ",
+                        "ដើម្បីឱ្យយើងដឹងថា ការសម្រេចចិត្តថ្ងៃនេះមានឥទ្ធិពលលើ 'មនុស្សម្នាក់នោះ' និងធ្វើឱ្យយើងហ៊ានលះបង់សេចក្តីសុខខ្លីៗ",
+                        "ដើម្បីឱ្យយើងមានអារម្មណ៍ឯកា",
+                        "ព្រោះយើងមានជំងឺផ្លូវចិត្ត"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ការស្រលាញ់ Future Self ធ្វើឱ្យយើងមិនហ៊ានធ្វើរឿងផ្តេសផ្តាសនៅថ្ងៃនេះ (ដូចជាជក់បារី ឬខ្ជះខ្ជាយលុយ) ព្រោះយើងអាណិតមនុស្សម្នាក់នោះ។"
+                }
+            },
+            {
+                title: "5. ការរចនាបរិស្ថាន (Environment Design)",
+                content: `
+                    <p class="mb-4">មនុស្សជាច្រើនបរាជ័យក្នុងការផ្លាស់ប្តូរខ្លួនឯង ព្រោះពួកគេពឹងផ្អែកតែលើ <strong>"ឆន្ទៈ" (Willpower)</strong>។</p>
+                    <p class="mb-4">Benjamin Hardy និយាយថា៖ <em>"Willpower is for losers."</em> (ឆន្ទៈគឺសម្រាប់តែអ្នកចាញ់ប៉ុណ្ណោះ)។ ឆន្ទៈគឺដូចជាថ្មពិល វាមានពេលអស់។ នៅពេលអ្នកហត់ ឬស្ត្រេស ឆន្ទៈនឹងចុះខ្សោយ ហើយអ្នកនឹងត្រឡប់ទៅរកទម្លាប់ចាស់។</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">កុំតស៊ូនឹងបរិស្ថាន ចូររចនាវា!</h4>
+                    <p class="mb-4">វិធីល្អបំផុតដើម្បីប្តូរបុគ្គលិកលក្ខណៈ គឺប្រើ <strong>Forcing Functions (មុខងារបង្ខំ)</strong>។ គឺការបង្កើតស្ថានការណ៍ដែល "បង្ខំ" ឱ្យអ្នកធ្វើរឿងត្រឹមត្រូវ ដោយមិនចាំបាច់ប្រឹង។</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <h5 class="font-bold text-blue-800 mb-2">ចង់ផ្តោតអារម្មណ៍ធ្វើការ?</h5>
+                            <p class="text-sm">កុំគ្រាន់តែ "តាំងចិត្ត" មិនលេងទូរស័ព្ទ។ <br>👉 <strong>ទុកទូរស័ព្ទនៅក្នុងឡាន ឬបន្ទប់ផ្សេង។</strong> (បរិស្ថានបង្ខំឱ្យអ្នកគ្មានជម្រើសក្រៅពីធ្វើការ)។</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <h5 class="font-bold text-green-800 mb-2">ចង់សន្សំលុយ?</h5>
+                            <p class="text-sm">កុំគ្រាន់តែ "ព្យាយាម" សន្សំ។ <br>👉 <strong>បង្កើតប្រព័ន្ធកាត់លុយស្វ័យប្រវត្តិ</strong> ទៅគណនីសន្សំរាល់ពេលបើកប្រាក់ខែ។</p>
+                        </div>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការផ្លាស់ប្តូរតួនាទី៖</strong></p>
+                    <p>អ្នកមិនចាំបាច់មានអារម្មណ៍ជាអ្នកដឹកនាំ ទើបធ្វើជាអ្នកដឹកនាំទេ។ បើអ្នកទទួលយកតួនាទីជា "ប្រធានក្រុម" បរិស្ថាននឹងបង្ខំឱ្យអ្នកអភិវឌ្ឍបុគ្គលិកលក្ខណៈជាអ្នកដឹកនាំដោយស្វ័យប្រវត្តិ។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វី Benjamin Hardy និយាយថា 'Willpower is for losers'?",
+                    options: [
+                        "ព្រោះយើងមិនគួរព្យាយាម",
+                        "ព្រោះឆន្ទៈមានកម្រិតកំណត់ ការរចនាបរិស្ថាន (Environment) មានប្រសិទ្ធភាពជាងនិងយូរអង្វែងជាង",
+                        "ព្រោះមនុស្សជោគជ័យមិនដែលប្រើឆន្ទៈទេ",
+                        "ព្រោះគាត់ចង់ឱ្យយើងខ្ជិល"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! បើអ្នកត្រូវប្រើឆន្ទៈដើម្បីប្រយុទ្ធនឹងបរិស្ថានរាល់ថ្ងៃ អ្នកនឹងចាញ់នៅទីបំផុត។ ផ្លាស់ប្តូរបរិស្ថាន នោះអាកប្បកិរិយានឹងផ្លាស់ប្តូរតាម។"
+                }
+            },
+            {
+                title: "6. ការសរសេរឡើងវិញនូវអតីតកាល (Rewrite Your Past)",
+                content: `
+                    <p class="mb-4">យើងតែងគិតថា "អតីតកាល" គឺជារឿងថេរ ដែលបានកើតឡើងហើយកែមិនបាន។ នេះជាការពិតចំពោះ <strong>ព្រឹត្តិការណ៍</strong> ប៉ុន្តែមិនមែនជាការពិតចំពោះ <strong>អត្ថន័យ</strong> ទេ។</p>
+                    <p class="mb-4">ការចងចាំ (Memory) មិនមែនជាការចាក់វីដេអូថយក្រោយទេ។ រាល់ពេលដែលអ្នកនឹកឃើញរឿងចាស់ អ្នកកំពុង <strong>សាងសង់វាឡើងវិញ (Reconstruct)</strong> នៅក្នុងខួរក្បាល។ អ្នកអាចជ្រើសរើសបកស្រាយវាថ្មី។</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">Narrative Identity (អត្តសញ្ញាណតាមរយៈការនិទានរឿង)</h4>
+                    <p>ជីវិតរបស់អ្នកគឺជាសាច់រឿង។ តើអ្នកជា "ជនរងគ្រោះ" (Victim) ឬជា "វីរបុរស" (Hero)?</p>
+                    
+                    <ul class="space-y-4 my-6">
+                        <li class="bg-white p-4 rounded border-l-4 border-gray-400 shadow-sm">
+                            <span class="block font-bold text-gray-600 mb-1">📖 រឿងចាស់ (The Gap):</span> 
+                            "ខ្ញុំលែងលះគ្នា ដូច្នេះខ្ញុំជាមនុស្សបរាជ័យរឿងស្នេហា។ ខ្ញុំមិនល្អគ្រប់គ្រាន់។" (នេះធ្វើឱ្យអ្នកបាក់ទឹកចិត្ត)
+                        </li>
+                        <li class="bg-white p-4 rounded border-l-4 border-green-500 shadow-sm">
+                            <span class="block font-bold text-green-700 mb-1">📖 រឿងថ្មី (The Gain):</span> 
+                            "ខ្ញុំលែងលះគ្នា ដើម្បីរៀនស្រលាញ់ខ្លួនឯង និងដឹងច្បាស់ពីអ្វីដែលខ្ញុំត្រូវការក្នុងទំនាក់ទំនងក្រោយ។ វាជាមេរៀនដ៏មានតម្លៃដែលធ្វើឱ្យខ្ញុំរឹងមាំ។" (នេះធ្វើឱ្យអ្នកមានសង្ឃឹម)
+                        </li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>លំហាត់សរសេរ៖</strong></p>
+                    <p>ជ្រើសរើសរឿងឈឺចាប់មួយក្នុងអតីតកាល។ សរសេរវាមកវិញ ប៉ុន្តែលើកនេះសរសេរក្នុងន័យថា <strong>"តើវាបានជួយឱ្យខ្ញុំរីកចម្រើនត្រង់ណាខ្លះ?"</strong></p>
+                    <p>ការធ្វើបែបនេះ គឺអ្នកកំពុងផ្លាស់ប្តូរអតីតកាលរបស់អ្នកពី "ឧបសគ្គ" ឱ្យទៅជា "ធនធាន"។</p>
+                `,
+                quiz: {
+                    question: "តើយើងអាច 'ផ្លាស់ប្តូរ' អតីតកាលបានដោយរបៀបណា?",
+                    options: [
+                        "ប្រើម៉ាស៊ីន Time Machine",
+                        "ផ្លាស់ប្តូរអត្ថន័យ ឬការបកស្រាយរបស់យើងចំពោះព្រឹត្តិការណ៍នោះ (Change the Meaning)",
+                        "កុហកខ្លួនឯងថាវាមិនដែលកើតឡើង",
+                        "មិនអាចទេ អតីតកាលគឺថេរ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ព្រឹត្តិការណ៍មិនប្តូរ តែសាច់រឿង (Narrative) អាចប្តូរ។ នៅពេលអ្នកប្តូរសាច់រឿង បុគ្គលិកលក្ខណៈបច្ចុប្បន្នរបស់អ្នកនឹងផ្លាស់ប្តូរ។"
+                }
+            },
+            {
+                title: "7. ទម្លាប់ពេលព្រឹក និងការកត់ត្រា (Journaling)",
+                content: `
+                    <p class="mb-4">ដើម្បីកុំឱ្យជាប់ក្នុងអន្ទាក់នៃ "ថ្ងៃម្សិលមិញ" អ្នកត្រូវដាស់តឿនខ្លួនឯងជារៀងរាល់ព្រឹកអំពី "អនាគត"។ បើអ្នកមិនធ្វើបែបនេះទេ អ្នកនឹងភ្ញាក់មកហើយរស់នៅតាមទម្លាប់ចាស់ (Autopilot)។</p>
+                    <p class="mb-4">Benjamin Hardy ណែនាំឱ្យមានទម្លាប់ពេលព្រឹក ដើម្បីកំណត់ <strong>Peak State</strong> (ស្ថានភាពស្មារតីខ្ពស់បំផុត)។</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">របៀប Journaling ដើម្បីបង្កើតអនាគត</h4>
+                    <p>ការសរសេរ Journal នេះមិនមែនសម្រាប់រៀបរាប់ថា "ថ្ងៃនេះខ្ញុំបានធ្វើអ្វី" ទេ។ វាគឺសម្រាប់ <strong>"ដំឡើងកម្មវិធី"</strong> ថ្មីឱ្យខួរក្បាល។</p>
+                    
+                    <ol class="list-decimal ml-6 mt-4 space-y-3">
+                        <li><strong>រំលឹកគោលដៅធំ៖</strong> សរសេរគោលដៅធំៗរបស់អ្នកឡើងវិញរាល់ថ្ងៃ។</li>
+                        <li><strong>អះអាងពីអត្តសញ្ញាណថ្មី៖</strong> សរសេរថា "ខ្ញុំជា..." (I am...) ក្នុងទម្រង់អនាគត។ <br><em>(ឧ. "ខ្ញុំជាអ្នកដឹកនាំដ៏ពូកែ" "ខ្ញុំជាអ្នកមានទ្រព្យស្តុកស្តម្ភ" ទោះបីឥឡូវមិនទាន់ក៏ដោយ)។</em></li>
+                        <li><strong>កំណត់សកម្មភាពអាទិភាព៖</strong> សរសេរពីសកម្មភាព ១-៣ យ៉ាងដែលត្រូវធ្វើថ្ងៃនេះ ដើម្បីរំកិលខ្លួនទៅរក Future Self។</li>
+                    </ol>
+                `,
+                scenario: `
+                    <p><strong>ច្បាប់ហាមឃាត់៖</strong></p>
+                    <p>ហាមដាច់ខាត <strong>ចូលមើល Social Media ឬ Email ពេលភ្ញាក់ពីគេងភ្លាម!</strong></p>
+                    <p>ពេលភ្ញាក់ពីគេង ខួរក្បាលអ្នកស្ថិតក្នុងរលក Theta (Suggestible)។ បើអ្នកមើល Facebook អ្នកកំពុងឱ្យពិភពលោកខាងក្រៅកំណត់អារម្មណ៍របស់អ្នក។ ចូរប្រើពេលនោះដើម្បីកំណត់ទិសដៅជីវិតខ្លួនឯងវិញ។</p>
+                `,
+                quiz: {
+                    question: "តើគោលបំណងសំខាន់នៃការ Journaling តាមវិធីសាស្ត្រ Benjamin Hardy គឺអ្វី?",
+                    options: [
+                        "ដើម្បីទុកជាអនុស្សាវរីយ៍",
+                        "ដើម្បីរំលឹកខ្លួនឯងពីគោលដៅអនាគត និងកំណត់អត្តសញ្ញាណថ្មីជារៀងរាល់ព្រឹក",
+                        "ដើម្បីហ្វឹកហាត់សរសេរអក្សរស្អាត",
+                        "ដើម្បីត្អូញត្អែរពីបញ្ហា"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! Journaling គឺជាឧបករណ៍យុទ្ធសាស្ត្រដើម្បីដំឡើង (Install) កម្មវិធីថ្មីឱ្យខួរក្បាល និងរៀបចំចិត្តមុននឹងចេញទៅប្រឈមនឹងពិភពលោក។"
+                }
+            },
+            {
+                title: "8. មេរៀនសង្ខេប៖ ក្លាយជាអ្នករចនាជីវិត",
+                content: `
+                    <p class="mb-4 text-xl font-bold text-center text-violet-800">"គោលដៅរបស់អ្នក គឺជាអ្វីដែលបង្កើតបុគ្គលិកលក្ខណៈរបស់អ្នក។"</p>
+                    
+                    <p class="mb-4">សៀវភៅ <em>Personality Isn't Permanent</em> ចង់ប្រាប់អ្នកថា អ្នកមិនចាំបាច់ "ស្វែងរកខ្លួនឯង" (Find yourself) ទេ ព្រោះខ្លួនឯងមិនមែនជារបស់ដែលបាត់ទេ។ អ្នកត្រូវ <strong>បង្កើតខ្លួនឯង (Create yourself)</strong>។</p>
+                    
+                    <h4 class="text-xl font-bold text-violet-700 mt-6 mb-3">បញ្ជីត្រួតពិនិត្យចុងក្រោយ (Checklist):</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 font-bold">✓</span>
+                            <span>ឈប់ដាក់ស្លាកខ្លួនឯង។ (Introvert/Extrovert គឺជារឿងបណ្តោះអាសន្ន)។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 font-bold">✓</span>
+                            <span>ព្យាបាលរបួសផ្លូវចិត្ត ដោយការប្តូរអត្ថន័យនៃអតីតកាល។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 font-bold">✓</span>
+                            <span>កំណត់រូបភាព "ខ្លួនឯងនៅអនាគត" (Future Self) ឱ្យច្បាស់ ហើយរាប់អានគាត់។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 font-bold">✓</span>
+                            <span>ផ្លាស់ប្តូរបរិស្ថាន ដើម្បីបង្ខំឱ្យមានការផ្លាស់ប្តូរ។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 font-bold">✓</span>
+                            <span>រស់នៅដោយមានគោលដៅ (Teleology) មិនមែនរស់នៅតាមទម្លាប់។</span>
+                        </li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>សំណួរចុងក្រោយ៖</strong></p>
+                    <p>តើមានរឿងមួយអ្វី ដែល Future Self របស់អ្នកចង់ឱ្យអ្នកធ្វើនៅថ្ងៃនេះ ប៉ុន្តែអ្នកចេះតែខ្លាច?</p>
+                    <p class="font-bold text-violet-700">ចូរធ្វើវាចុះ។ នោះហើយជាការបោះជំហានចេញពីបុគ្គលិកលក្ខណៈចាស់។</p>
+                `,
+                quiz: {
+                    question: "តើសារសំខាន់បំផុតនៃសៀវភៅនេះគឺអ្វី?",
+                    options: [
+                        "យើងត្រូវស្វែងរកថាពិតប្រាកដយើងជានរណា",
+                        "យើងត្រូវទទួលស្គាល់ថាអតីតកាលកំណត់វាសនាយើង",
+                        "យើងគឺជាអ្នកបង្កើតបុគ្គលិកលក្ខណៈខ្លួនឯង តាមរយៈគោលដៅដែលយើងជ្រើសរើស (Create Yourself)",
+                        "បុគ្គលិកលក្ខណៈគឺជារឿងថេរ តាំងពីកំណើត"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! អ្នកគឺជាអ្នកនិពន្ធ។ អនាគតស្ថិតនៅក្នុងដៃអ្នក។ សូមចាប់ផ្តើមរចនាវាចាប់ពីថ្ងៃនេះតទៅ!"
+                }
+            }
+        ];
+
+        // App State
+        let currentLessonIndex = 0;
+
+        // Elements
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        // Initialize Navigation
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-3 hover:bg-violet-50 transition flex items-center text-sm font-medium border-b border-gray-50 ${index === 0 ? 'text-gray-800' : 'text-gray-600'}`;
+                
+                // Extract simple title
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold">${index + 1}</span>
+                    <span class="truncate">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        // Toggle Sidebar Mobile
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        // Load Lesson
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            // Hide Welcome, Show Content
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); // Reset animation
+            void lessonContainer.offsetWidth; // Trigger reflow
+            lessonContainer.classList.add('fade-in');
+
+            // Update Sidebar Active State
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active');
+                b.querySelector('.lesson-indicator').classList.remove('bg-violet-600', 'text-white');
+                b.querySelector('.lesson-indicator').classList.add('bg-violet-100', 'text-violet-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-violet-100', 'text-violet-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-violet-600', 'text-white');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Close sidebar on mobile
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            // Populate Content
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Lesson ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            // Populate Scenario
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            // Setup Quiz
+            setupQuiz(lesson.quiz);
+
+            // Update Buttons
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = true; // Enabled only after quiz
+            nextBtn.innerHTML = index === lessons.length - 1 ? "បញ្ចប់វគ្គសិក្សា" : "មេរៀនបន្ទាប់ →";
+
+            // Update Progress
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-4 hidden p-4 rounded-lg";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition flex items-center shadow-sm";
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full border border-gray-300 mr-3 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 font-bold group-hover:border-gray-400">?</span> ${opt}`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            // Disable all buttons
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                btnElement.querySelector('span').innerText = "✓";
+                btnElement.querySelector('span').classList.add('bg-green-500', 'border-green-500', 'text-white');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-green-50 text-green-900 border border-green-200 fade-in";
+                quizFeedback.innerHTML = `<strong>ត្រឹមត្រូវ!</strong> ${explanation}`;
+                nextBtn.disabled = false; // Enable Next button
+                
+                // If last lesson, celebrate
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer');
+                btnElement.querySelector('span').innerText = "✕";
+                btnElement.querySelector('span').classList.add('bg-red-500', 'border-red-500', 'text-white');
+                
+                // Highlight correct one
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                correctBtn.querySelector('span').innerText = "✓";
+                correctBtn.querySelector('span').classList.add('bg-green-500', 'border-green-500', 'text-white');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-red-50 text-red-900 border border-red-200 fade-in";
+                quizFeedback.innerHTML = `<strong>មិនត្រឹមត្រូវទេ។</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+                nextBtn.disabled = false; // Let them proceed anyway
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        // Navigation Handlers
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("សូមអបអរសាទរ! អ្នកបានរៀនចប់វគ្គសិក្សានេះហើយ។ សូមចាប់ផ្តើមសាងអនាគតថ្មី!");
+            }
+        };
+
+        // Confetti effect
+        function launchConfetti() {
+            const colors = ['#8b5cf6', '#d946ef', '#06b6d4', '#f59e0b'];
+            for(let i=0; i<60; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy;
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/100);
+                    frame++;
+                    if(frame < 100) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Init
+        initNav();
+
+    </script>
+</body>
+</html>
