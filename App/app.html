@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crucial Conversations Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .kh-text-title {
+            font-family: 'Battambang', cursive;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #e0f2fe;
+            border-right: 4px solid #0ea5e9;
+            color: #0284c7;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white p-4 shadow-md flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold text-sky-700 kh-text-title">Crucial Conversations</h1>
+        <button id="menuBtn" class="text-gray-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-white shadow-xl transition duration-200 ease-in-out z-10 flex flex-col">
+        <div class="p-6 border-b border-gray-100 hidden md:block">
+            <h1 class="text-2xl font-bold text-sky-700 kh-text-title">សិល្បៈនៃការសន្ទនា</h1>
+            <p class="text-sm text-gray-500 mt-2">វគ្គសិក្សាសង្ខេបពីសៀវភៅ Crucial Conversations</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4" id="lessonList">
+            <!-- Navigation Items will be injected here -->
+        </div>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between text-sm mb-1">
+                <span>វឌ្ឍនភាព (Progress)</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-sky-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-gray-50" id="mainContent">
+        <div class="max-w-4xl mx-auto p-6 md:p-10 pb-24">
+            
+            <!-- Welcome Screen (Initial State) -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[60vh] text-center fade-in">
+                <div class="bg-white p-10 rounded-2xl shadow-lg max-w-2xl">
+                    <div class="text-6xl mb-6">💬</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 kh-text-title">សូមស្វាគមន៍មកកាន់វគ្គសិក្សា</h2>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        តើអ្នកធ្លាប់ជួបបញ្ហាក្នុងការនិយាយរឿងរសើប ឬរឿងសំខាន់ដែរឬទេ?<br>
+                        វគ្គសិក្សានេះនឹងបង្រៀនអ្នកពីគន្លឹះសំខាន់ៗដើម្បីគ្រប់គ្រងស្ថានការណ៍តានតឹង។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1 text-lg">
+                        ចាប់ផ្តើមរៀនឥឡូវនេះ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content (Dynamic) -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-2 text-sky-600 mb-4 font-semibold text-sm uppercase tracking-wide">
+                    <span id="chapterNumber">Chapter 1</span>
+                    <span>•</span>
+                    <span>Lesson</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 kh-text-title leading-snug"></h2>
+                
+                <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-8 prose prose-lg max-w-none text-gray-700 leading-relaxed" id="lessonBody">
+                    <!-- Lesson HTML Content -->
+                </div>
+
+                <!-- Interactive Scenario / Example Box -->
+                <div id="scenarioBox" class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg mb-8 hidden">
+                    <h3 class="text-lg font-bold text-indigo-800 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        ឧទាហរណ៍ជាក់ស្តែង (Scenario)
+                    </h3>
+                    <div id="scenarioContent" class="text-indigo-900"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200 mt-10">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center kh-text-title">
+                        <span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Quiz</span>
+                        សាកល្បងចំណេះដឹងរបស់អ្នក
+                    </h3>
+                    <div id="quizContainer">
+                        <p id="quizQuestion" class="text-lg font-medium mb-4"></p>
+                        <div id="quizOptions" class="space-y-3"></div>
+                        <div id="quizFeedback" class="mt-4 hidden p-4 rounded-lg"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-12">
+                    <button id="prevBtn" class="px-6 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium disabled:opacity-50">
+                        ← មេរៀនមុន
+                    </button>
+                    <button id="nextBtn" class="px-6 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 font-medium shadow-md flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                        មេរៀនបន្ទាប់ →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data Structure for Lessons
+        const lessons = [
+            {
+                title: "តើអ្វីជា Crucial Conversation?",
+                content: `
+                    <p class="mb-4">មិនមែនគ្រប់ការនិយាយគ្នាសុទ្ធតែសំខាន់ទេ។ ការសន្ទនាមួយក្លាយជា "Crucial" (សំខាន់បំផុត) នៅពេលមានធាតុផ្សំ ៣ យ៉ាង៖</p>
+                    <ul class="list-none space-y-4 mb-6">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-bold mr-3">1</span>
+                            <span><strong>ហានិភ័យខ្ពស់ (Stakes are high):</strong> លទ្ធផលប៉ះពាល់ខ្លាំងដល់ជីវិត ឬការងារ (ឧ. សុំដំឡើងប្រាក់ខែ, ការបែកបាក់ស្នេហា)។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-bold mr-3">2</span>
+                            <span><strong>គំនិតខុសគ្នា (Opinions vary):</strong> អ្នកនិងដៃគូសន្ទនាយល់ឃើញមិនដូចគ្នាទេ។</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-bold mr-3">3</span>
+                            <span><strong>អារម្មណ៍ពុះកញ្ជ្រោល (Emotions run strong):</strong> មានការខឹង ភ័យ ឬអន់ចិត្តខ្លាំង។</span>
+                        </li>
+                    </ul>
+                    <p><strong>គោលដៅសំខាន់៖</strong> បង្កើត "អាងនៃអត្ថន័យរួម" (Shared Pool of Meaning)។ គឺធ្វើយ៉ាងណាឱ្យភាគីទាំងសងខាងហ៊ាននិយាយការពិតរៀងខ្លួនដោយសុវត្ថិភាព។</p>
+                `,
+                scenario: `
+                    <p class="font-bold mb-2">ឧទាហរណ៍៖</p>
+                    <p>អ្នកចង់ប្រាប់មេថា គម្រោងថ្មីនេះនឹងបរាជ័យបើមិនកែសម្រួល។</p>
+                    <ul class="list-disc ml-5 mt-2">
+                        <li><strong>ធម្មតា៖</strong> ខ្លាចមេខឹង ក៏នៅស្ងៀម (Silence)។</li>
+                        <li><strong>Crucial Conversation៖</strong> ហ៊ានលើកឡើងពីបញ្ហាដោយការគោរព ដើម្បីជួយក្រុមហ៊ុន។</li>
+                    </ul>
+                `,
+                quiz: {
+                    question: "តើធាតុមួយណាដែល **មិនមែន** ជាលក្ខណៈនៃ Crucial Conversation?",
+                    options: [
+                        "លទ្ធផលមានហានិភ័យខ្ពស់",
+                        "គំនិតខុសគ្នា",
+                        "អារម្មណ៍ពុះកញ្ជ្រោល",
+                        "ការជជែកលេងសើចសប្បាយ"
+                    ],
+                    correct: 3,
+                    explanation: "ត្រឹមត្រូវ! ការជជែកលេងសើចសប្បាយ មិនមែនជា Crucial Conversation ទេ ព្រោះវាមិនមានហានិភ័យខ្ពស់ ឬអារម្មណ៍តានតឹង។"
+                }
+            },
+            {
+                title: "ចាប់ផ្តើមពីចិត្ត (Start with Heart)",
+                content: `
+                    <p class="mb-4">បញ្ហានៃការសន្ទនាភាគច្រើនមិនមែនមកពី "គេ" ទេ គឺមកពី "យើង"។ មុននឹងនិយាយ ត្រូវកែចិត្តខ្លួនឯងជាមុនសិន។</p>
+                    <h4 class="text-xl font-bold text-sky-700 mt-6 mb-2">ជៀសវាង "ជម្រើសល្ងង់ខ្លៅ" (The Sucker's Choice)</h4>
+                    <p>ជម្រើសល្ងង់ខ្លៅ គឺការគិតថាមានតែផ្លូវ ២ ទេ៖ "និយាយត្រង់ហើយគេខឹង" ឬ "ស្ងៀមដើម្បីឱ្យគេសប្បាយចិត្ត"។</p>
+                    <div class="bg-gray-100 p-4 rounded-lg mt-4 border-l-4 border-gray-500">
+                        <p class="font-bold">ដំណោះស្រាយ៖ ប្រើពាក្យ "និង" (AND)</p>
+                        <p>សួរខ្លួនឯងថា៖ "តើខ្ញុំអាចប្រាប់ការពិត [អ្វីដែលខ្ញុំចង់បាន] <strong>និង</strong> រក្សាទំនាក់ទំនងល្អ [អ្វីដែលខ្ញុំមិនចង់បាន] ដោយរបៀបណា?"</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> ប្តីរបស់អ្នកមកផ្ទះយឺតរាល់ថ្ងៃ។</p>
+                    <p class="text-red-600 mt-2">❌ ជម្រើសល្ងង់ខ្លៅ៖ "បើខ្ញុំនិយាយ គាត់នឹងខឹង។ បើខ្ញុំមិននិយាយ ខ្ញុំនឹងធុញថប់។"</p>
+                    <p class="text-green-600 mt-2">✅ ជម្រើសឆ្លាត៖ "ខ្ញុំចង់ប្រាប់គាត់ថាខ្ញុំបារម្ភ <strong>និង</strong> ធ្វើឱ្យគាត់យល់ថាខ្ញុំចង់ចំណាយពេលជាមួយគាត់ មិនមែនចង់រករឿងទេ។"</p>
+                `,
+                quiz: {
+                    question: "តើសំណួរមួយណាដែលជួយកែចិត្តយើងបានល្អបំផុត?",
+                    options: [
+                        "តើខ្ញុំធ្វើម៉េចឱ្យខ្ញុំឈ្នះ?",
+                        "តើអ្នកណាជាអ្នកខុស?",
+                        "តើខ្ញុំចង់បានអ្វីពិតប្រាកដសម្រាប់ខ្ញុំ សម្រាប់គាត់ និងសម្រាប់ទំនាក់ទំនងនេះ?",
+                        "តើខ្ញុំគួរប្រើពាក្យអ្វីដើម្បីជេរគាត់?"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ការសួររកគោលបំណងពិត (What do I really want?) ជួយឱ្យយើងមិនវង្វេងក្នុងអារម្មណ៍ខឹង។"
+                }
+            },
+            {
+                title: "រៀនសង្កេត (Learn to Look)",
+                content: `
+                    <p>កុំមើលតែខ្លឹមសារនៃពាក្យពេចន៍ ត្រូវមើល <strong>"បរិយាកាស"</strong>។ នៅពេលមនុស្សលែងមានអារម្មណ៍សុវត្ថិភាព គេនឹងបង្ហាញចេញ ២ បែប៖</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                            <h4 class="font-bold text-purple-700 mb-2">1. ភាពស្ងៀមស្ងាត់ (Silence)</h4>
+                            <ul class="list-disc ml-4 text-sm">
+                                <li>មិននិយាយស្តី</li>
+                                <li>និយាយបន្លប់ ឬនិយាយលេងសើច</li>
+                                <li>គេចវេះមិនចំសាច់រឿង</li>
+                                <li>យល់ព្រមទាំងមិនពេញចិត្ត</li>
+                            </ul>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                            <h4 class="font-bold text-red-700 mb-2">2. អំពើហិង្សា (Violence)</h4>
+                            <ul class="list-disc ml-4 text-sm">
+                                <li>និយាយកាត់ ឬនិយាយសង្កត់</li>
+                                <li>បង្ខំឱ្យគេយល់ស្រប</li>
+                                <li>ការដាក់ឈ្មោះ (Labeling) ឱ្យគេ</li>
+                                <li>ជេរប្រមាថ ឬគំរាម</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="mt-4"><strong>ចងចាំ៖</strong> ពេលឃើញសញ្ញាទាំងនេះ កុំតបត! ត្រូវដឹងថា "ដៃគូសន្ទនាកំពុងភ័យ"។ ឈប់និយាយរឿងនោះ ហើយងាកមកបង្កើតសុវត្ថិភាពវិញ។</p>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> អ្នកសួរមិត្តរួមការងារថា "ម៉េចមិនទាន់ផ្ញើ report?" ស្រាប់តែគាត់តបថា "ខ្ញុំមិនមែននៅទំនេរដូចឯងទេ!"</p>
+                    <p class="mt-2">នេះគឺជាសញ្ញា <strong>Violence</strong>។ គាត់កំពុងមានអារម្មណ៍មិនសុវត្ថិភាព (គិតថាអ្នកបន្ទោសគាត់)។ កុំតបតដោយកំហឹង ត្រូវធ្វើឱ្យគាត់ស្ងប់ចិត្តសិន។</p>
+                `,
+                quiz: {
+                    question: "តើមួយណាជាសញ្ញានៃ Silence?",
+                    options: [
+                        "ស្រែកដាក់យើង",
+                        "និយាយកាត់សម្តី",
+                        "ការនិយាយបន្លប់ ឬគេចវេះ",
+                        "ការចង្អុលមុខ"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! Silence មិនមែនមានន័យថាស្ងាត់មាត់ទេ តែរួមបញ្ចូលទាំងការនិយាយបន្លប់ ឬគេចវេះ ដើម្បីលាក់បាំងការពិត។"
+                }
+            },
+            {
+                title: "បង្កើតសុវត្ថិភាព (Make It Safe)",
+                content: `
+                    <p>មនុស្សមិនមែនខ្លាច "ការពិត" របស់អ្នកទេ គេខ្លាច "ចេតនា" របស់អ្នក។ បច្ចេកទេសសំខាន់បំផុតគឺ <strong>Contrast (The Don't/Do Statement)</strong>។</p>
+                    
+                    <h4 class="text-lg font-bold text-sky-700 mt-4">រូបមន្ត Contrast:</h4>
+                    <ol class="list-decimal ml-5 space-y-2 mt-2">
+                        <li><strong>The Don't:</strong> បដិសេធនូវអ្វីដែលគេកំពុងភ័យខ្លាច ឬយល់ច្រឡំ។</li>
+                        <li><strong>The Do:</strong> បញ្ជាក់ពីគោលបំណងល្អពិតប្រាកដរបស់អ្នក។</li>
+                    </ol>
+
+                    <h4 class="text-lg font-bold text-sky-700 mt-6">បច្ចេកទេស CRIB (ពេលគោលបំណងខុសគ្នា):</h4>
+                    <p>ប្រើនៅពេលអ្នកនិងគេចង់បានរឿង ២ ផ្សេងគ្នា។</p>
+                    <ul class="list-disc ml-5 mt-2">
+                        <li><strong>C</strong>ommit: ប្តេជ្ញារកដំណោះស្រាយឈ្នះទាំងអស់គ្នា។</li>
+                        <li><strong>R</strong>ecognize: រកហេតុផលពិតនៅពីក្រោយ។</li>
+                        <li><strong>I</strong>nvent: បង្កើតគោលបំណងរួមគ្នាថ្មី។</li>
+                        <li><strong>B</strong>rainstorm: រកវិធីសាស្រ្តថ្មី។</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ឧទាហរណ៍ Contrast៖</strong></p>
+                    <p>"ខ្ញុំ<strong>មិនមានបំណង</strong>ថានិយាយថាស្នាដៃអ្នកមិនល្អទេ (Don't)... <br>អ្វីដែលខ្ញុំ<strong>ចង់បាន</strong>គឺចង់ឱ្យយើងពិនិត្យមើលចំណុចនេះបន្តិច ដើម្បីឱ្យគម្រោងនេះកាន់តែល្អឥតខ្ចោះ (Do)។"</p>
+                `,
+                quiz: {
+                    question: "តើគោលបំណងនៃ 'Don't Statement' ក្នុង Contrast គឺដើម្បីអ្វី?",
+                    options: [
+                        "ដើម្បីស្តីបន្ទោសគេ",
+                        "ដើម្បីបដិសេធនូវការយល់ច្រឡំ ឬក្តីបារម្ភរបស់គេ",
+                        "ដើម្បីប្រាប់ពីអ្វីដែលយើងចង់បាន",
+                        "ដើម្បីបញ្ចប់ការសន្ទនា"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ផ្នែក 'Don't' ប្រើដើម្បីលុបបំបាត់ការយល់ច្រឡំភ្លាមៗ (ឧ. ខ្ញុំមិនមែនចង់ចាប់កំហុសទេ...)។"
+                }
+            },
+            {
+                title: "គ្រប់គ្រងរឿងរ៉ាវក្នុងចិត្ត (Master My Stories)",
+                content: `
+                    <p>អារម្មណ៍របស់អ្នកមិនកើតឡើងដោយសារ "ទង្វើរបស់គេ" ទេ តែវាបង្កឡើងដោយ "រឿងដែលអ្នកប្រាប់ខ្លួនឯង"។</p>
+                    <div class="flex items-center justify-center my-6 space-x-2 md:space-x-4 text-sm md:text-base">
+                        <div class="bg-gray-200 p-2 rounded">See/Hear</div>
+                        <span>→</span>
+                        <div class="bg-yellow-200 p-2 rounded border border-yellow-400 font-bold">Tell a Story</div>
+                        <span>→</span>
+                        <div class="bg-red-200 p-2 rounded">Feel</div>
+                        <span>→</span>
+                        <div class="bg-blue-200 p-2 rounded">Act</div>
+                    </div>
+                    <p>យើងត្រូវប្រយ័ត្នរឿង ៣ ប្រភេទដែលយើងច្រើនតែបង្កើតដាក់ខ្លួនឯង៖</p>
+                    <ul class="space-y-2 mt-4">
+                        <li>🦸‍♂️ <strong>រឿងកម្សត់ (Victim):</strong> "ខ្ញុំមិនខុសទេ គេទេដែលធ្វើបាបខ្ញុំ"។ -> <i>សួរខ្លួនឯង៖ តើខ្ញុំមានចំណែកខុសដែរទេ?</i></li>
+                        <li>🦹‍♂️ <strong>រឿងតួអាក្រក់ (Villain):</strong> "គេហ្នឹងចរិតអាក្រក់ណាស់"។ -> <i>សួរខ្លួនឯង៖ ហេតុអ្វីមនុស្សល្អម្នាក់ធ្វើបែបនេះ?</i></li>
+                        <li>🤷‍♂️ <strong>រឿងអស់ផ្លូវ (Helpless):</strong> "ខ្ញុំគ្មានជម្រើសទេ"។ -> <i>សួរខ្លួនឯង៖ តើខ្ញុំអាចធ្វើអ្វីបានខ្លះពេលនេះ?</i></li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> មិត្តរួមការងារភ្លេចប្រាប់ព័ត៌មានសំខាន់។</p>
+                    <p>❌ <strong>Villain Story:</strong> "គាត់មានបំណងចង់ឱ្យខ្ញុំខូចឈ្មោះហើយ!"</p>
+                    <p>✅ <strong>Master Story:</strong> "ប្រហែលជាគាត់រវល់ខ្លាំងពេក។ ខ្ញុំគួរតែទៅសួរគាត់ផ្ទាល់។"</p>
+                `,
+                quiz: {
+                    question: "នៅពេលយើងគិតថា 'ខ្ញុំគ្មានជម្រើសទេ ក្រៅពីនៅស្ងៀម' តើនេះជារឿងប្រភេទណា?",
+                    options: [
+                        "រឿងកម្សត់ (Victim Story)",
+                        "រឿងតួអាក្រក់ (Villain Story)",
+                        "រឿងអស់ផ្លូវ (Helpless Story)",
+                        "រឿងពិត (True Story)"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! Helpless Story គឺនៅពេលយើងជឿថាយើងមិនអាចធ្វើអ្វីបានដើម្បីកែប្រែស្ថានការណ៍។"
+                }
+            },
+            {
+                title: "របៀបនិយាយ (STATE My Path)",
+                content: `
+                    <p>នៅពេលដល់វេនអ្នកត្រូវនិយាយរឿងពិបាក ឬរឿងរសើប សូមប្រើរូបមន្ត <strong>STATE</strong>៖</p>
+                    <ul class="list-none space-y-4 mt-6">
+                        <li class="p-3 bg-white border border-gray-200 rounded shadow-sm">
+                            <strong class="text-sky-600 text-lg">S</strong> - <strong>Share your facts:</strong> ចាប់ផ្តើមពីការពិតដែលឃើញនឹងភ្នែក (កុំដាក់អារម្មណ៍)។ <br><i>"បងមកយឺត ២០នាទី..."</i>
+                        </li>
+                        <li class="p-3 bg-white border border-gray-200 rounded shadow-sm">
+                            <strong class="text-sky-600 text-lg">T</strong> - <strong>Tell your story:</strong> ប្រាប់ពីអ្វីដែលអ្នកគិត។ <br><i>"ធ្វើឱ្យខ្ញុំមានអារម្មណ៍ថា បងមិនឱ្យតម្លៃការប្រជុំនេះ..."</i>
+                        </li>
+                        <li class="p-3 bg-white border border-gray-200 rounded shadow-sm">
+                            <strong class="text-sky-600 text-lg">A</strong> - <strong>Ask for others' paths:</strong> សួរទៅគេវិញ។ <br><i>"តើបងយល់ឃើញខុសពីនេះទេ?"</i>
+                        </li>
+                        <li class="p-3 bg-white border border-gray-200 rounded shadow-sm">
+                            <strong class="text-sky-600 text-lg">T</strong> - <strong>Talk tentatively:</strong> និយាយដោយមិនដាច់ណាត់។ <br><i>"ខ្ញុំអាចនឹងយល់ច្រឡំ តែ..."</i>
+                        </li>
+                        <li class="p-3 bg-white border border-gray-200 rounded shadow-sm">
+                            <strong class="text-sky-600 text-lg">E</strong> - <strong>Encourage testing:</strong> លើកទឹកចិត្តឱ្យគេជំទាស់។ <br><i>"សូមប្រាប់ខ្ញុំមក បើខ្ញុំនិយាយខុស។"</i>
+                        </li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ការអនុវត្ត៖</strong> អ្នកចង់ប្រាប់កូនចៅថាការងារមិនល្អ។</p>
+                    <p>"ខ្ញុំបានពិនិត្យឯកសារនេះ ឃើញថាមានកំហុស ៣ កន្លែង (Facts)។ ខ្ញុំបារម្ភថាវានឹងធ្វើឱ្យអតិថិជនមិនទុកចិត្តយើង (Story)។ តើអ្នកយល់យ៉ាងណាដែរ? (Ask)"</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីយើងត្រូវចាប់ផ្តើមដោយ 'Share Facts' ជាមុន?",
+                    options: [
+                        "ព្រោះវាធ្វើឱ្យយើងមើលទៅឆ្លាត",
+                        "ព្រោះការពិត គឺជាចំណុចដែលមិនបង្កឱ្យមានជម្លោះ និងប្រកែកមិនបាន",
+                        "ព្រោះយើងចង់ឱ្យគេខ្មាសគេ",
+                        "ព្រោះវាជាច្បាប់ក្រុមហ៊ុន"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! Facts (ការពិត) គឺជាមូលដ្ឋានគ្រឹះដែលមានសុវត្ថិភាពបំផុត។ វាមិនមែនជាការចោទប្រកាន់ទេ។"
+                }
+            },
+            {
+                title: "របៀបស្តាប់ (Explore Others' Paths)",
+                content: `
+                    <p>នៅពេលគេខឹង ឬមិនព្រមនិយាយ សូមប្រើរូបមន្ត <strong>AMPP</strong> ដើម្បីឱ្យគេនិយាយ៖</p>
+                    <div class="space-y-4 mt-4">
+                        <div>
+                            <span class="font-bold text-sky-700">A - Ask (សួរ):</span> "មានរឿងអ្វីកើតឡើងមែនទេ? ខ្ញុំចង់ស្តាប់យោបល់អ្នក។"
+                        </div>
+                        <div>
+                            <span class="font-bold text-sky-700">M - Mirror (ឆ្លុះបញ្ចាំង):</span> និយាយពីកាយវិការដែលឃើញ។ "ខ្ញុំឃើញអ្នកនិយាយថាវាមិនអីទេ ប៉ុន្តែសំឡេងអ្នកដូចជាកំពុងខឹង។"
+                        </div>
+                        <div>
+                            <span class="font-bold text-sky-700">P - Paraphrase (សរុបសេចក្តី):</span> និយាយឡើងវិញនូវអ្វីដែលគេនិយាយ ដើម្បីបញ្ជាក់ថាអ្នកយល់ត្រូវ។
+                        </div>
+                        <div>
+                            <span class="font-bold text-sky-700">P - Prime (ស្ទូច):</span> (ប្រើពេលគេនៅស្ងៀមឈឹង) ទាយពីអារម្មណ៍គេ។ "តើអ្នកគិតថាគម្រោងនេះនឹងបរាជ័យមែនទេ?"
+                        </div>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> កូនរបស់អ្នកនៅស្ងៀមមិនស្តី។</p>
+                    <p><strong>Prime:</strong> "កូនប្រហែលជាអន់ចិត្តដែលម៉ាក់មិនបានទៅមើលកូនប្រលងមែនទេ?" (ការទាយបែបនេះ ជួយបើកផ្លូវឱ្យកូននិយាយថា "បាទ/ចាស" ឬកែតម្រូវ)</p>
+                `,
+                quiz: {
+                    question: "តើបច្ចេកទេស 'Mirror' ប្រើនៅពេលណា?",
+                    options: [
+                        "ពេលយើងចង់តែងខ្លួន",
+                        "ពេលសម្តីរបស់គេ និងកាយវិការរបស់គេ មិនស៊ីគ្នា (ឧ. មាត់ថាអត់អី តែមុខក្រហម)",
+                        "ពេលយើងចង់និយាយតាមគេ",
+                        "ពេលយើងអស់ពាក្យនិយាយ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! Mirror គឺដូចជាកញ្ចក់ឆ្លុះបញ្ចាំងឱ្យគេឃើញថា កាយវិការគេកំពុងបង្ហាញអារម្មណ៍អ្វី។"
+                }
+            },
+            {
+                title: "ឈានទៅរកសកម្មភាព (Move to Action)",
+                content: `
+                    <p>ការសន្ទនាល្អ តែគ្មានលទ្ធផល គឺគ្មានន័យទេ។ បញ្ចប់ការសន្ទនាដោយកំណត់ <strong>WWWF</strong>៖</p>
+                    <ul class="list-disc ml-6 mt-4 mb-6">
+                        <li><strong>W</strong>ho: នរណាជាអ្នកធ្វើ?</li>
+                        <li><strong>W</strong>hat: ត្រូវធ្វើអ្វីខ្លះ?</li>
+                        <li><strong>W</strong>hen: នៅពេលណា?</li>
+                        <li><strong>F</strong>ollow up: តាមដានដោយរបៀបណា?</li>
+                    </ul>
+                    <p><strong>របៀបសម្រេចចិត្ត ៤ បែប៖</strong></p>
+                    <ol class="list-decimal ml-6 mt-2 text-sm">
+                        <li>Command: មេសម្រេចតែឯង (រឿងបន្ទាន់)។</li>
+                        <li>Consult: សួរយោបល់សិន តែមេសម្រេចចុងក្រោយ។</li>
+                        <li>Vote: បោះឆ្នោត (រឿងដែលមានប្រយោជន៍ប្រហាក់ប្រហែលគ្នា)។</li>
+                        <li>Consensus: ឯកភាពគ្នាទាំងអស់គ្នា (រឿងធំ)។</li>
+                    </ol>
+                `,
+                scenario: `
+                    <p><strong>ឧទាហរណ៍ WWWF៖</strong></p>
+                    <p>"អញ្ចឹងសរុបមក... <strong>ដារ៉ា (Who)</strong> នឹងទាក់ទងទៅអតិថិជនដើម្បីសុំទោស <strong>(What)</strong> នៅត្រឹមម៉ោង ៥ ល្ងាចនេះ <strong>(When)</strong> ហើយផ្ញើអ៊ីមែលប្រាប់ខ្ញុំពេលធ្វើរួច <strong>(Follow-up)</strong>។"</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីយើងមិនគួរដាក់ថា 'ពួកយើងនឹងធ្វើរឿងនេះ' (We will do this)?",
+                    options: [
+                        "ព្រោះវាស្តាប់ទៅមិនពិរោះ",
+                        "ព្រោះពាក្យថា 'ពួកយើង' ធ្វើឱ្យបាត់ម្ចាស់ការទទួលខុសត្រូវ (Who) ច្បាស់លាស់",
+                        "ព្រោះវាជាពាក្យឈ្លើយ",
+                        "ព្រោះវាមិនសំខាន់"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! 'Everybody's business is nobody's business.' ត្រូវដាក់ឈ្មោះមនុស្សជាក់លាក់ជានិច្ច។"
+                }
+            }
+        ];
+
+        // App State
+        let currentLessonIndex = 0;
+        let progress = 0;
+
+        // Elements
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        // Initialize Navigation
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-3 hover:bg-sky-50 transition flex items-center text-sm font-medium ${index === 0 ? 'text-gray-800' : 'text-gray-600'}`;
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs mr-3 lesson-indicator">${index + 1}</span>
+                    <span class="truncate">${lesson.title}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        // Toggle Sidebar Mobile
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        // Load Lesson
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            // Hide Welcome, Show Content
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); // Reset animation
+            void lessonContainer.offsetWidth; // Trigger reflow
+            lessonContainer.classList.add('fade-in');
+
+            // Update Sidebar Active State
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active');
+                b.querySelector('.lesson-indicator').classList.remove('bg-sky-600', 'text-white');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            activeBtn.classList.add('sidebar-active');
+            activeBtn.querySelector('.lesson-indicator').classList.add('bg-sky-600', 'text-white');
+
+            // Close sidebar on mobile
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            // Populate Content
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            // Populate Scenario
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            // Setup Quiz
+            setupQuiz(lesson.quiz);
+
+            // Update Buttons
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = true; // Enabled only after quiz
+            nextBtn.innerHTML = index === lessons.length - 1 ? "បញ្ចប់វគ្គសិក្សា" : "មេរៀនបន្ទាប់ →";
+
+            // Update Progress
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-4 hidden p-4 rounded-lg";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded border border-gray-200 hover:bg-gray-50 transition flex items-center";
+                btn.innerHTML = `<span class="w-5 h-5 rounded-full border border-gray-300 mr-3 flex-shrink-0"></span> ${opt}`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            // Disable all buttons
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                btnElement.querySelector('span').classList.add('bg-green-500', 'border-green-500');
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-green-50 text-green-800 border border-green-200";
+                quizFeedback.innerHTML = `<strong>ត្រឹមត្រូវ!</strong> ${explanation}`;
+                nextBtn.disabled = false; // Enable Next button
+                
+                // If last lesson, celebrate
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer');
+                btnElement.querySelector('span').classList.add('bg-red-500', 'border-red-500');
+                // Highlight correct one
+                buttons[correct].classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-red-50 text-red-800 border border-red-200";
+                quizFeedback.innerHTML = `<strong>មិនត្រឹមត្រូវទេ។</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+                nextBtn.disabled = false; // Let them proceed anyway after trying
+            }
+        }
+
+        function updateProgress() {
+            // Simple logic: viewed lessons / total
+            // Ideally, track completed quizzes
+            const percentage = Math.round(((currentLessonIndex) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        // Navigation Handlers
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("សូមអបអរសាទរ! អ្នកបានបញ្ចប់វគ្គសិក្សានេះហើយ។");
+            }
+        };
+
+        // Simple Confetti effect for completion
+        function launchConfetti() {
+            const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+            for(let i=0; i<50; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 2 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy;
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    frame++;
+                    if(frame < 100) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Init
+        initNav();
+
+    </script>
+</body>
+</html>

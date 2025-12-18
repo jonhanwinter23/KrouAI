@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Psychology of Money - Full 17 Chapters</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #f0fdf4; /* Light green tint */
+        }
+        .kh-text-title {
+            font-family: 'Battambang', cursive;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #dcfce7;
+            border-right: 4px solid #15803d;
+            color: #14532d;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #86efac;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4ade80;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white p-4 shadow-md flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold text-green-800 kh-text-title">ចិត្តសាស្ត្រនៃលុយ (១៧ មេរៀន)</h1>
+        <button id="menuBtn" class="text-gray-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-white shadow-xl transition duration-200 ease-in-out z-10 flex flex-col border-r border-green-100">
+        <div class="p-6 border-b border-gray-100 hidden md:block bg-green-50">
+            <h1 class="text-2xl font-bold text-green-800 kh-text-title">ចិត្តសាស្ត្រនៃលុយ</h1>
+            <p class="text-xs text-green-600 mt-2 font-medium uppercase tracking-wider">The Psychology of Money</p>
+            <p class="text-xs text-gray-500 mt-1">Full 17 Chapters Course</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4" id="lessonList">
+            <!-- Navigation Items will be injected here -->
+        </div>
+
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between text-sm mb-1 text-green-800 font-medium">
+                <span>វឌ្ឍនភាព (Progress)</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-green-600 h-2.5 rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#f8fafc]" id="mainContent">
+        <div class="max-w-4xl mx-auto p-6 md:p-10 pb-24">
+            
+            <!-- Welcome Screen (Initial State) -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[60vh] text-center fade-in">
+                <div class="bg-white p-10 rounded-2xl shadow-xl max-w-2xl border-t-8 border-green-500">
+                    <div class="text-7xl mb-6">🧠💰</div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 kh-text-title">វគ្គសិក្សាពេញលេញ ១៧ ជំពូក</h2>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        នេះគឺជាការសង្ខេបសៀវភៅ "The Psychology of Money" ទាំង ១៧ ជំពូក។<br>
+                        រៀនពីរបៀបដែលគំនិតរបស់យើងកំណត់ចំនួនលុយក្នុងហោប៉ៅ។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1 text-lg flex items-center mx-auto">
+                        <span>ចាប់ផ្តើមរៀនពីជំពូកទី ១</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content (Dynamic) -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-2 text-green-600 mb-4 font-bold text-sm uppercase tracking-wide bg-green-100 w-fit px-3 py-1 rounded-full">
+                    <span id="chapterNumber">Lesson 1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 kh-text-title leading-snug"></h2>
+                
+                <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-8 prose prose-lg max-w-none text-gray-700 leading-relaxed border border-gray-100" id="lessonBody">
+                    <!-- Lesson HTML Content -->
+                </div>
+
+                <!-- Interactive Scenario / Example Box -->
+                <div id="scenarioBox" class="bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-r-lg mb-8 hidden shadow-sm">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-3 flex items-center kh-text-title">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        ឧទាហរណ៍ជាក់ស្តែង (Scenario)
+                    </h3>
+                    <div id="scenarioContent" class="text-emerald-900"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200 mt-10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center kh-text-title relative z-10">
+                        <span class="bg-green-100 text-green-800 text-sm font-bold mr-3 px-3 py-1 rounded-full">QUIZ</span>
+                        សាកល្បងចំណេះដឹងរបស់អ្នក
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-lg font-medium mb-4 text-gray-800"></p>
+                        <div id="quizOptions" class="space-y-3"></div>
+                        <div id="quizFeedback" class="mt-4 hidden p-4 rounded-lg text-sm md:text-base"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-12">
+                    <button id="prevBtn" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-600 hover:bg-white hover:shadow-md font-medium disabled:opacity-50 transition-all">
+                        ← មេរៀនមុន
+                    </button>
+                    <button id="nextBtn" class="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 font-bold shadow-lg hover:shadow-green-200 flex items-center disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-0.5">
+                        មេរៀនបន្ទាប់ →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data Structure for Lessons (17 Chapters of The Psychology of Money)
+        const lessons = [
+            {
+                title: "1. គ្មាននរណាម្នាក់ឆ្កួតទេ (No One's Crazy)",
+                content: `
+                    <p class="mb-4 text-lg">មនុស្សគ្រប់រូបធ្វើការសម្រេចចិត្តរឿងលុយ ដោយផ្អែកលើ <strong>បទពិសោធន៍ផ្ទាល់ខ្លួន</strong> មិនមែនផ្អែកលើតារាង Excel ទេ។</p>
+                    <p class="mb-4">អ្នកដែលធំដឹងក្តីក្នុងសម័យសង្គ្រាម ឬសម័យក្រីក្រ នឹងមានទស្សនៈចំពោះ "ហានិភ័យ" ខុសគ្នាដាច់ស្រឡះពីអ្នកដែលកើតក្នុងសម័យសេដ្ឋកិច្ចរីកចម្រើន។</p>
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 my-6">
+                        <p class="font-bold text-blue-800">ចំណុចសំខាន់៖</p>
+                        <p class="text-blue-900">នៅពេលអ្នកឃើញនរណាម្នាក់ចាយលុយរបៀប "ចំលែក" កុំប្រញាប់វិនិច្ឆ័យថាគេឆ្កួត។ ពួកគេគ្រាន់តែឆ្លងកាត់ជីវិតខុសពីអ្នកប៉ុណ្ណោះ។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> ជីតារបស់អ្នកចូលចិត្តទុកលុយសុទ្ធក្រោមខ្នើយ មិនព្រមដាក់ធនាគារ។</p>
+                    <p class="mt-2">គាត់មិនមែន "ល្ងង់" ទេ ប៉ុន្តែគាត់អាចធ្លាប់ឆ្លងកាត់សម័យដែលធនាគារដួលរលំ។ សម្រាប់គាត់ "សុវត្ថិភាពផ្លូវចិត្ត" មានតម្លៃជាង "ការប្រាក់"។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីបានជាមនុស្សឆ្លាត ជួនកាលធ្វើរឿងដែលមើលទៅដូចជា 'ល្ងង់' ជាមួយលុយ?",
+                    options: [
+                        "ព្រោះពួកគេមិនចេះគណិតវិទ្យា",
+                        "ព្រោះឥរិយាបថហិរញ្ញវត្ថុត្រូវបានដឹកមុខដោយបទពិសោធន៍ផ្ទាល់ខ្លួន មិនមែនតក្កវិទ្យាសុទ្ធទេ",
+                        "ព្រោះពួកគេចង់អួតអ្នកដទៃ",
+                        "ព្រោះពួកគេខ្ជិល"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! បទពិសោធន៍ផ្ទាល់ខ្លួន (Personal Experience) មានឥទ្ធិពលខ្លាំងជាងចំណេះដឹងក្នុងសៀវភៅ។"
+                }
+            },
+            {
+                title: "2. សំណាង និង ហានិភ័យ (Luck & Risk)",
+                content: `
+                    <p class="mb-4">សំណាង និងហានិភ័យ គឺជាបងប្អូនភ្លោះ។ លទ្ធផលនៃជីវិតអ្នក មិនមែនកើតចេញពីការខិតខំ ១០០% ទេ វាមានចំណែកនៃសំណាងផងដែរ។</p>
+                    <ul class="list-none space-y-3 mb-6">
+                        <li class="flex items-center bg-white p-3 rounded shadow-sm border border-gray-100">
+                            <span class="text-2xl mr-3">🍀</span>
+                            <span><strong>សំណាង៖</strong> Bill Gates ជោគជ័យ ព្រោះគាត់រៀននៅសាលាមួយក្នុងចំណោមសាលាតិចតួចបំផុតដែលមានកុំព្យូទ័រនៅសម័យនោះ។</span>
+                        </li>
+                        <li class="flex items-center bg-white p-3 rounded shadow-sm border border-gray-100">
+                            <span class="text-2xl mr-3">⚠️</span>
+                            <span><strong>ហានិភ័យ៖</strong> Kent Evans (មិត្តរបស់ Bill Gates) ក៏ឆ្លាតដូចគ្នា តែគាត់ស្លាប់ដោយគ្រោះថ្នាក់ឡើងភ្នំមុនពេលជោគជ័យ។</span>
+                        </li>
+                    </ul>
+                    <p><strong>មេរៀន៖</strong> កុំវាយតម្លៃនរណាម្នាក់ (ឬខ្លួនឯង) តែលើលទ្ធផល។</p>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> អ្នកវិនិយោគលើភាគហ៊ុនមួយ ហើយចំណេញ ២០០%។</p>
+                    <p class="text-green-600 mt-2">✅ គំនិតត្រូវ៖ "ខ្ញុំអាចនឹងមានសំណាងខ្លះដែរ។ ខ្ញុំគួរតែដកដើមខ្លះរក្សាទុក ជាជាងភ្នាល់ទាំងអស់ម្តងទៀត។"</p>
+                `,
+                quiz: {
+                    question: "តើយើងគួរមានអាកប្បកិរិយាបែបណាចំពោះភាពជោគជ័យ?",
+                    options: [
+                        "ជឿថាវាជាស្នាដៃរបស់យើង ១០០%",
+                        "បន្ទាបខ្លួន និងទទួលស្គាល់ថា សំណាងក៏មានចំណែកដែរ",
+                        "ឈប់ព្យាយាម ព្រោះវាអាស្រ័យលើសំណាងទាំងអស់",
+                        "អួតប្រាប់គេឱ្យបានច្រើន"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ការទទួលស្គាល់សំណាង ជួយឱ្យយើងមិនមានអំនួតហួសហេតុ និងចេះប្រយ័ត្នប្រយែង។"
+                }
+            },
+            {
+                title: "3. មិនចេះឆ្អែត (Never Enough)",
+                content: `
+                    <p class="mb-4">ជំនាញហិរញ្ញវត្ថុដែលពិបាកបំផុតគឺ៖ <strong>ការធ្វើឱ្យ Goalpost (បង្គោលទី) ឈប់ដើរ។</strong></p>
+                    <p>យើងត្រូវរៀនស្គាល់ពាក្យថា <strong>"គ្រប់គ្រាន់" (Enough)</strong>។ គ្រប់គ្រាន់មិនមែនមានន័យថាខ្វះខាតទេ តែមានន័យថាអ្នកដឹងថាត្រឹមណាដែលអ្នកសប្បាយចិត្ត ដោយមិនចាំបាច់ប្រៀបធៀបនឹងអ្នកដទៃ។</p>
+                    <blockquote class="border-l-4 border-green-500 pl-4 italic bg-gray-50 p-4 my-4 rounded-r">
+                        "គ្មានហេតុផលអ្វី ដែលត្រូវយកអ្វីដែលអ្នកមាននិងត្រូវការ ទៅប្រថុយដើម្បីអ្វីដែលអ្នកមិនមាននិងមិនត្រូវការនោះទេ។"
+                        <br><span class="text-sm font-bold not-italic text-gray-500">- Warren Buffett</span>
+                    </blockquote>
+                `,
+                scenario: `
+                    <p><strong>ករណី Rajat Gupta៖</strong> គាត់មាន ១០០ លានដុល្លាររួចហើយ តែគាត់ចង់បាន ១ ពាន់លាន។ គាត់ប្រព្រឹត្តបទល្មើស Insider Trading រហូតជាប់គុក។</p>
+                    <p class="text-red-600 font-bold">គាត់យក "សេរីភាព" ដែលគាត់ត្រូវការ ទៅប្រថុយដើម្បី "លុយបន្ថែម" ដែលគាត់មិនត្រូវការ។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីជាគ្រោះថ្នាក់នៃការមិនស្គាល់ពាក្យថា 'គ្រប់គ្រាន់'?",
+                    options: [
+                        "ធ្វើឱ្យយើងខ្ជិល",
+                        "ធ្វើឱ្យយើងគ្មានមហិច្ឆតា",
+                        "ធ្វើឱ្យយើងហ៊ានយកអ្វីដែលសំខាន់ ទៅប្រថុយដើម្បីអ្វីដែលមិនសំខាន់",
+                        "ធ្វើឱ្យយើងសន្សំលុយបានច្រើនពេក"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ការមិនចេះឆ្អែត ជំរុញឱ្យមនុស្សប្រថុយប្រថានហួសហេតុរហូតដល់វិនាស។"
+                }
+            },
+            {
+                title: "4. អនុភាពនៃការប្រាក់ត្រួតគ្នា (Confounding Compounding)",
+                content: `
+                    <p class="mb-4">Warren Buffett មានទ្រព្យសម្បត្តិមហាសាល មិនមែនព្រោះគាត់ជាអ្នកវិនិយោគពូកែបំផុតនោះទេ តែព្រោះគាត់ជា <strong>អ្នកវិនិយោគយូរបំផុត</strong> (តាំងពីអាយុ ១០ឆ្នាំ)។</p>
+                    <h4 class="text-xl font-bold text-green-700 mt-4 mb-2">អាថ៌កំបាំងគឺ "ពេលវេលា"</h4>
+                    <p>Compounding (ការប្រាក់ត្រួតគ្នា) ប្រៀបដូចជាការដាំដើមឈើ។ ឆ្នាំដំបូងៗ អ្នកមិនឃើញផលទេ តែយូរៗទៅវានឹងរីកធំឡើងដោយខ្លួនឯង។</p>
+                `,
+                scenario: `
+                    <p><strong>Ice Age (យុគសម័យទឹកកក)៖</strong> វាមិនមែនកើតឡើងដោយសាររដូវរងាត្រជាក់ខ្លាំងទេ តែដោយសាររដូវក្តៅ "មិនក្តៅល្មម" ដើម្បីរលាយទឹកកកអស់។ ទឹកកកសល់បន្តិចបន្តួចរាល់ឆ្នាំ រាប់ម៉ឺនឆ្នាំ ក៏ក្លាយជាផ្ទាំងទឹកកកយក្ស។ នេះហើយជា Compounding។</p>
+                `,
+                quiz: {
+                    question: "តើកត្តាអ្វីដែលសំខាន់បំផុតសម្រាប់ Compounding?",
+                    options: [
+                        "ចំនួនលុយដើម",
+                        "ពេលវេលា (រយៈពេលដែលអ្នកទុកលុយឱ្យកើន)",
+                        "ភាពឆ្លាតវៃ",
+                        "ការតាមដានទីផ្សាររាល់ថ្ងៃ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ពេលវេលាគឺជាកត្តាគុណ (Exponent)។ ពេលវេលាកាន់តែយូរ លទ្ធផលកាន់តែមហាសាល។"
+                }
+            },
+            {
+                title: "5. ការរកទ្រព្យ vs ការរក្សាទ្រព្យ (Getting vs Staying Wealthy)",
+                content: `
+                    <p class="mb-4">ការរកលុយត្រូវការ៖ ភាពក្លាហាន និងសុទិដ្ឋិនិយម។<br>
+                    ប៉ុន្តែការ <strong>រក្សាលុយ</strong> ត្រូវការ៖ ភាពភ័យខ្លាច (Paranoia) និងការបន្ទាបខ្លួន។</p>
+                    <p>គន្លឹះគឺ <strong>Survival Mindset</strong> (គំនិតនៃការរស់រាន)។ អ្នកមិនចាំបាច់ត្រូវការប្រាក់ចំណេញខ្ពស់បំផុតទេ ប៉ុន្តែអ្នកត្រូវការហិរញ្ញវត្ថុរឹងមាំ ដើម្បីកុំឱ្យអ្នក "ដាច់យ៉ៃ" នៅពេលមានវិបត្តិ។</p>
+                `,
+                scenario: `
+                    <p><strong>Warren Buffett vs Rick Guerin:</strong> ពួកគេវិនិយោគជាមួយគ្នាតាំងពីដើម។ Rick Guerin ឆ្លាតដូច Buffett ដែរ ប៉ុន្តែគាត់ប្រញាប់មានពេក គាត់ខ្ចីលុយគេ (Leverage) មកលេងភាគហ៊ុន។ ពេលទីផ្សារធ្លាក់ចុះ គាត់ត្រូវបង្ខំចិត្តលក់ហ៊ុនទាំងអស់។ Buffett នៅរស់ព្រោះគាត់មិនប្រថុយហួសហេតុ។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីសំខាន់ជាងការរកប្រាក់ចំណេញខ្ពស់?",
+                    options: [
+                        "ការមិនក្ស័យធន (Survival)",
+                        "ការចាយវាយ",
+                        "ការអួត",
+                        "ការមានទំនាក់ទំនងល្អ"
+                    ],
+                    correct: 0,
+                    explanation: "ត្រឹមត្រូវ! បើអ្នកអាចនៅរស់ (Survive) បានយូរ លុយរបស់អ្នកនឹងមានឱកាស Compounding។"
+                }
+            },
+            {
+                title: "6. កន្ទុយនៃការចែកចាយ (Tails, You Win)",
+                content: `
+                    <p class="mb-4">អ្នកអាចធ្វើខុស ៥០% នៃពេលវេលា ប៉ុន្តែនៅតែមានទ្រព្យសម្បត្តិស្តុកស្តម្ភ។</p>
+                    <p>នៅក្នុងជំនួញ និងការវិនិយោគ លទ្ធផលភាគច្រើនកើតចេញពី "ព្រឹត្តិការណ៍កន្ទុយ" (Tail Events) មួយចំនួនតូចប៉ុណ្ណោះ។</p>
+                    <ul class="list-disc ml-6 mt-2">
+                        <li>Disney បង្ផលិតរឿងតុក្កតារាប់រយរឿងដែលខាត ប៉ុន្តែរឿង "Snow White" មួយ បានស្រោចស្រង់ក្រុមហ៊ុនទាំងមូល។</li>
+                        <li>Warren Buffett កាន់កាប់ហ៊ុន ៥០០ ក្រុមហ៊ុន តែទ្រព្យសម្បត្តិភាគច្រើនបានមកពីក្រុមហ៊ុន ១០ ប៉ុណ្ណោះ។</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> អ្នកវិនិយោគលើ ១០ ក្រុមហ៊ុន។ ៥ ខាត, ៣ ស្មើដើម, ២ ចំណេញមហាសាល។</p>
+                    <p>លទ្ធផលសរុបគឺអ្នកនៅតែចំណេញ។ កុំបាក់ទឹកចិត្តពេលឃើញការខាតបង់ខ្លះៗ ព្រោះវាជារឿងធម្មតា។</p>
+                `,
+                quiz: {
+                    question: "តើពាក្យថា 'Tails You Win' មានន័យដូចម្តេច?",
+                    options: [
+                        "ត្រូវតែឈ្នះគ្រប់ពេល",
+                        "ភាពជោគជ័យដ៏ធំ កើតចេញពីព្រឹត្តិការណ៍តូចមួយចំនួនតូច (Outliers) ទោះបីយើងបរាជ័យច្រើនដងក៏ដោយ",
+                        "ការលេងកន្ទុយលេខ",
+                        "ការបោះកាក់"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ជ័យជម្នះពីរបីដង អាចទូទាត់ការបរាជ័យរាប់សិបដងបាន។"
+                }
+            },
+            {
+                title: "7. សេរីភាព (Freedom)",
+                content: `
+                    <p class="mb-4 text-xl font-serif italic text-gray-500 text-center">"ភាគលាភ (Dividend) ខ្ពស់បំផុតដែលលុយអាចទិញបាន គឺការគ្រប់គ្រងពេលវេលា។"</p>
+                    <p>ការមានលុយសន្សំ ផ្តល់ឱ្យអ្នកនូវសមត្ថភាពក្នុងការនិយាយថា៖ "ខ្ញុំនឹងធ្វើការងារនេះ នៅពេលដែលខ្ញុំចង់ ជាមួយអ្នកណាដែលខ្ញុំចង់។"</p>
+                    <p>សុភមង្គលមិនមែនមកពីរបស់របរទេ តែមកពីអារម្មណ៍ថា <strong>"ខ្ញុំជាម្ចាស់នៃជីវិតខ្លួនឯង"</strong>។</p>
+                `,
+                scenario: `
+                    <p><strong>ការប្រៀបធៀប៖</strong> អ្នកមានប្រាក់ខែ $5,000 តែគ្មានពេលសម្រាក សប្បាយចិត្តតិចជាង អ្នកមានប្រាក់ខែ $2,000 តែមានសេរីភាពពេញលេញ។</p>
+                `,
+                quiz: {
+                    question: "តើលុយផ្តល់អ្វីដែលសំខាន់បំផុតដល់យើង?",
+                    options: [
+                        "សម្ភារៈនិយម",
+                        "សេរីភាពក្នុងការគ្រប់គ្រងពេលវេលា",
+                        "មុខមាត់",
+                        "អំណាចបញ្ជាគេ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ការគ្រប់គ្រងពេលវេលាខ្លួនឯង ជាកត្តាកំណត់សុភមង្គលដ៏ធំបំផុត។"
+                }
+            },
+            {
+                title: "8. មនុស្សក្នុងឡាន (Man in the Car Paradox)",
+                content: `
+                    <p class="mb-4">នៅពេលអ្នកឃើញនរណាម្នាក់បើកឡាន Ferrari អ្នកមិនដែលគិតថា "អ្នកបើកឡានហ្នឹងឡូយណាស់" ទេ។ អ្នកគិតថា "បើ **ខ្ញុំ** បានជិះឡានហ្នឹង ម៉្លេះសម **ខ្ញុំ** ឡូយណាស់។"</p>
+                    <p><strong>Paradox (ភាពផ្ទុយគ្នា)៖</strong> អ្នកទិញរបស់ថ្លៃៗដើម្បីឱ្យគេចាប់អារម្មណ៍អ្នក... ប៉ុន្តែគេមិនចាប់អារម្មណ៍អ្នកទេ គេចាប់អារម្មណ៍តែរបស់ដែលអ្នកប្រើ ដើម្បីស្រមៃសម្រាប់ខ្លួនគេប៉ុណ្ណោះ។</p>
+                `,
+                scenario: `
+                    <p><strong>មេរៀន៖</strong> បើអ្នកចង់បានការគោរព (Respect) កុំទិញរបស់ថ្លៃៗ។ ចូរប្រើចិត្តល្អ (Kindness) និងភាពសុភាពរាបសារ (Humility) វិញ។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីការទិញរបស់ថ្លៃៗដើម្បីអួត មិនសូវមានប្រសិទ្ធភាព?",
+                    options: [
+                        "ព្រោះរបស់នោះអាចនឹងក្លែងក្លាយ",
+                        "ព្រោះមនុស្សមើលឃើញតែរបស់ មិនមែនមើលឃើញម្ចាស់ឡើយ",
+                        "ព្រោះវាថោកពេក",
+                        "ព្រោះគ្មាននរណាមើលឃើញ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! គេប្រើរបស់របស់អ្នក ជាកញ្ចក់ដើម្បីឆ្លុះបញ្ចាំងពីក្តីស្រមៃរបស់គេ។"
+                }
+            },
+            {
+                title: "9. ទ្រព្យសម្បត្តិគឺជាអ្វីដែលមើលមិនឃើញ (Wealth is What You Don't See)",
+                content: `
+                    <p class="mb-4">មានភាពខុសគ្នារវាង <strong>Rich</strong> និង <strong>Wealthy</strong>។</p>
+                    <ul class="list-disc ml-6 space-y-2">
+                        <li><strong>Rich (អ្នកមានលុយចាយ):</strong> គឺចំណូលបច្ចុប្បន្ន។ គេមើលឃើញតាមរយៈឡានទំនើប ផ្ទះធំ។</li>
+                        <li><strong>Wealthy (អ្នកមានទ្រព្យ):</strong> គឺជាលុយដែល **មិនបានចាយ**។ វាជាលុយក្នុងធនាគារ ភាគហ៊ុន ឬដីធ្លី។ វាជាជម្រើសដែលអ្នកមិនទាន់ប្រើ។</li>
+                    </ul>
+                    <p>ពិភពលោកពោរពេញដោយមនុស្សដែលមើលទៅ Rich (ចាយវាយហ៊ឺហា) តែតាមពិតកំពុងជំពាក់បំណុលវ័ណ្ឌក។</p>
+                `,
+                scenario: `
+                    <p><strong>Rihanna:</strong> ធ្លាប់ជិតក្ស័យធនព្រោះចាយលុយច្រើនពេក ទោះបីរកចំណូលបានច្រើនក៏ដោយ។ នាង Rich តែពេលនោះនាងមិនទាន់ Wealthy ទេ។</p>
+                `,
+                quiz: {
+                    question: "តើ Wealth គឺជាអ្វី?",
+                    options: [
+                        "ឡានទំនើប",
+                        "ការដើរលេងក្រៅប្រទេស",
+                        "ទ្រព្យសម្បត្តិដែលយើងមិនទាន់បានចាយ (Unspent assets)",
+                        "ប្រាក់ខែខ្ពស់"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! Wealth គឺជាអ្វីដែលលាក់កំបាំង។ វាផ្តល់ឱ្យអ្នកនូវសេរីភាព។"
+                }
+            },
+            {
+                title: "10. សន្សំលុយ (Save Money)",
+                content: `
+                    <p class="mb-4">មានមនុស្ស ៣ ប្រភេទ៖ អ្នកសន្សំ, អ្នកគិតថាខ្លួនសន្សំមិនបាន, និងអ្នកគិតថាខ្លួនមិនចាំបាច់សន្សំ។</p>
+                    <p>Morgan Housel ណែនាំថា៖ <strong>"សន្សំ ដើម្បីតែការសន្សំ" (Save just for saving's sake).</strong></p>
+                    <p>កុំចាំទាល់តែមានគោលដៅ (ដូចជាទិញផ្ទះ) ទើបសន្សំ។ ពិភពលោកពោរពេញដោយរឿង "ភ្ញាក់ផ្អើល"។ ការសន្សំគឺជាការទិញធានារ៉ាប់រងការពារអនាគតដែលយើងមើលមិនឃើញ។</p>
+                `,
+                scenario: `
+                    <p><strong>សមីការ៖</strong> Wealth = Income - Ego (ទ្រព្យ = ចំណូល - ការចង់អួត)។</p>
+                    <p>បើអ្នកបន្ថយ Ego អ្នកនឹងសន្សំបានច្រើន ដោយមិនចាំបាច់រកចំណូលច្រើនជាងមុន។</p>
+                `,
+                quiz: {
+                    question: "តើយើងគួរចាប់ផ្តើមសន្សំលុយនៅពេលណា?",
+                    options: [
+                        "នៅពេលយើងចង់ទិញឡាន",
+                        "នៅពេលយើងចាស់",
+                        "ឥឡូវនេះ! សន្សំដោយមិនចាំបាច់មានហេតុផលជាក់លាក់",
+                        "នៅពេលយើងមានលុយវាល់លាន"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ការសន្សំគឺជាការត្រៀមខ្លួនសម្រាប់ឱកាសនិងបញ្ហាដែលយើងមើលមិនឃើញ។"
+                }
+            },
+            {
+                title: "11. សមហេតុផល > ត្រឹមត្រូវតាមក្បួន (Reasonable > Rational)",
+                content: `
+                    <p class="mb-4">នៅក្នុងហិរញ្ញវត្ថុ ការធ្វើជាមនុស្ស <strong>"សមហេតុផល" (Reasonable)</strong> គឺប្រសើរជាងការធ្វើជាមនុស្ស <strong>"ត្រឹមត្រូវតាមក្បួន" (Rational)</strong>។</p>
+                    <p>ផែនការដែលល្អបំផុត មិនមែនជាផែនការដែលចំណេញលុយច្រើនបំផុតក្នុងក្រដាសទេ តែជាផែនការដែល <strong>អ្នកអាចអនុវត្តវាបានយូរអង្វែង</strong> ដោយមិនបោះបង់កណ្តាលផ្លូវ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការសងបំណុលផ្ទះ៖</strong> តាមក្បួនគណិតវិទ្យា អ្នកមិនគួរសងផ្តាច់ទេ ព្រោះការប្រាក់ទាប។ ប៉ុន្តែបើការសងផ្តាច់ធ្វើឱ្យអ្នក "ដេកលក់ស្រួល" (Peace of Mind) នោះវាជារឿងសមហេតុផលដែលត្រូវធ្វើ។</p>
+                `,
+                quiz: {
+                    question: "តើផែនការហិរញ្ញវត្ថុបែបណាដែលល្អបំផុត?",
+                    options: [
+                        "ផែនការដែលស្មុគស្មាញបំផុត",
+                        "ផែនការដែលផ្តល់ផលចំណេញខ្ពស់បំផុតតាមក្បួន",
+                        "ផែនការដែលអ្នកអាចអនុវត្តបានជាប់លាប់ និងធ្វើឱ្យអ្នកស្ងប់ចិត្ត",
+                        "ផែនការដែលអ្នកដទៃធ្វើតាម"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ភាពជាប់លាប់ (Consistency) សំខាន់ជាងភាពល្អឥតខ្ចោះ (Perfection)។"
+                }
+            },
+            {
+                title: "12. ភាពភ្ញាក់ផ្អើល (Surprise!)",
+                content: `
+                    <p class="mb-4">ប្រវត្តិសាស្ត្រគឺជាការសិក្សាពី "ការផ្លាស់ប្តូរ"។ វាមិនមែនជាផែនទីសម្រាប់មើលអនាគតទេ។</p>
+                    <p>កំហុសដ៏ធំបំផុតរបស់អ្នកវិនិយោគគឺការប្រើពាក្យថា៖ <strong>"រឿងនេះមិនដែលកើតឡើងពីមុនមកទេ ដូច្នេះវានឹងមិនកើតឡើងឡើយ។"</strong></p>
+                    <p>រឿងដែលសំខាន់បំផុតនៅក្នុងសេដ្ឋកិច្ច (ដូចជា Great Depression, វិបត្តិ 2008, COVID-19) សុទ្ធតែជារឿងដែល "មិនធ្លាប់កើតឡើងពីមុនមក"។</p>
+                `,
+                scenario: `
+                    <p><strong>COVID-19៖</strong> គ្មានទិន្នន័យប្រវត្តិសាស្ត្រណាអាចទាយទុកថា ពិភពលោកនឹងបិទទ្វារក្នុងឆ្នាំ 2020 ទេ។ យើងត្រូវត្រៀមខ្លួនសម្រាប់អ្វីដែល "មិនធ្លាប់មាន"។</p>
+                `,
+                quiz: {
+                    question: "តើយើងគួរពឹងផ្អែកលើប្រវត្តិសាស្ត្រ ១០០% ដើម្បីទាយអនាគតទេ?",
+                    options: [
+                        "បាទ ព្រោះប្រវត្តិសាស្ត្រតែងតែកើតឡើងដដែលៗ",
+                        "ទេ ព្រោះពិភពលោកផ្លាស់ប្តូរ ហើយរឿងដែលមិនធ្លាប់កើតឡើង នឹងកើតឡើង",
+                        "បាទ បើកុំព្យូទ័រគណនា",
+                        "ទេ ព្រោះអនាគតមិនសំខាន់"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! យើងត្រូវរំពឹងថា 'រឿងដែលមិនធ្លាប់កើតឡើង' នឹងកើតឡើង (Expect the unexpected)។"
+                }
+            },
+            {
+                title: "13. ទុកចន្លោះសម្រាប់កំហុស (Room for Error)",
+                content: `
+                    <p class="mb-4">ផែនការដែលល្អបំផុត គឺផែនការដែលត្រៀមសម្រាប់ <strong>ការខុសផែនការ</strong>។</p>
+                    <p>នេះហៅថា <strong>Margin of Safety</strong>។ បើអ្នករំពឹងថាបានផលចំណេញ ៨% អ្នកគួរសន្មតថាបានត្រឹម ៤% វិញ ដើម្បីកុំឱ្យអ្នកដួលរលំ បើលទ្ធផលមិនដូចការរំពឹងទុក។</p>
+                `,
+                scenario: `
+                    <p><strong>Bill Gates៖</strong> នៅពេលបង្កើត Microsoft ដំបូង គាត់សន្សំលុយឱ្យបានគ្រប់គ្រាន់ដើម្បីបើកប្រាក់ខែបុគ្គលិកបាន <strong>១ ឆ្នាំពេញ</strong> ទោះបីក្រុមហ៊ុនរកចំណូលមិនបានសោះក៏ដោយ។ នេះគឺជា Room for Error។</p>
+                `,
+                quiz: {
+                    question: "តើ Margin of Safety មានប្រយោជន៍អ្វី?",
+                    options: [
+                        "ធ្វើឱ្យយើងចំណេញច្រើន",
+                        "ការពារយើងមិនឱ្យក្ស័យធន នៅពេលផែនការមិនដើរតាមការគិត",
+                        "ធ្វើឱ្យយើងមើលទៅកំសាក",
+                        "គ្មានប្រយោជន៍អ្វីទេ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! វាជួយឱ្យយើងនៅរស់រានមានជីវិត ទោះបីមានរឿងអាក្រក់កើតឡើងក៏ដោយ។"
+                }
+            },
+            {
+                title: "14. អ្នកនឹងផ្លាស់ប្តូរ (You'll Change)",
+                content: `
+                    <p class="mb-4">ការរៀបចំផែនការរយៈពេលវែងគឺពិបាក ព្រោះ <strong>"មនុស្សយើងផ្លាស់ប្តូរ"</strong>។</p>
+                    <p>អ្វីដែលអ្នកចង់បាននៅអាយុ ២០ (ឡានស្អាត, ដើរលេង) អាចមិនមែនជាអ្វីដែលអ្នកចង់បាននៅអាយុ ៤០ (គ្រួសារកក់ក្តៅ, សុខភាព)។</p>
+                    <p>ប្រយ័ត្ននឹង <strong>Sunk Cost Fallacy</strong>៖ កុំបន្តធ្វើអ្វីមួយ គ្រាន់តែព្រោះអ្នកបានចំណាយពេលជាមួយវាយូរហើយ។ បើគោលដៅអ្នកប្តូរ អ្នកគួរតែហ៊ានប្តូរផ្លូវដើរ។</p>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> អ្នករៀនពេទ្យអស់ ៥ ឆ្នាំ តែអ្នកស្អប់អាជីពនេះ។</p>
+                    <p>កុំបង្ខំខ្លួនឯងធ្វើពេទ្យមួយជីវិតគ្រាន់តែស្តាយពេល ៥ ឆ្នាំ។ ហ៊ានផ្លាស់ប្តូរ ដើម្បីសេចក្តីសុខ ៥០ ឆ្នាំទៅមុខទៀត។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីការធ្វើផែនការរយៈពេលវែងពិបាក?",
+                    options: [
+                        "ព្រោះយើងមិនចេះគិត",
+                        "ព្រោះចំណង់ចំណូលចិត្តនិងគោលដៅរបស់យើង ផ្លាស់ប្តូរទៅតាមវ័យ",
+                        "ព្រោះគ្មានក្រដាសកត់",
+                        "ព្រោះវាខុសច្បាប់"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! យើងមិនមែនជាមនុស្សដដែលទេក្នុងរយៈពេល ១០ ឆ្នាំទៀត។"
+                }
+            },
+            {
+                title: "15. គ្មានអ្វីដែលឥតគិតថ្លៃទេ (Nothing's Free)",
+                content: `
+                    <p class="mb-4">អ្វីៗសុទ្ធតែមានតម្លៃរបស់វា។ ប៉ុន្តែនៅក្នុងហិរញ្ញវត្ថុ តម្លៃមិនមែនសរសេរលើស្លាក (Price Tag) ទេ។</p>
+                    <p>តម្លៃនៃភាពជោគជ័យក្នុងការវិនិយោគគឺ៖ <strong>ភាពភ័យខ្លាច, ការសង្ស័យ, ភាពមិនច្បាស់លាស់, និងការស្តាយក្រោយ។</strong></p>
+                    <p>បើអ្នកចង់បានផលចំណេញខ្ពស់ អ្នកត្រូវតែហ៊ានបង់ "តម្លៃ" ទាំងនេះ (គឺត្រូវហ៊ានទទួលយកការប្រែប្រួលទីផ្សារ)។ កុំចង់បានរង្វាន់ ដោយមិនចង់បង់ថ្លៃ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការវិនិយោគ៖</strong> ហ៊ុន Netflix ធ្លាប់កើនឡើង ៣៥,០០០%។ ប៉ុន្តែដើម្បីបានផលនេះ អ្នកត្រូវទ្រាំកាន់វាឆ្លងកាត់ពេលដែលវាធ្លាក់ចុះ ៨០% ចំនួន ៣ ដង។ ការឈឺចាប់ពេលឃើញហ៊ុនធ្លាក់ គឺជា "តម្លៃ" ដែលត្រូវបង់។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីជា 'តម្លៃ' ដែលយើងត្រូវបង់ដើម្បីជោគជ័យក្នុងការវិនិយោគ?",
+                    options: [
+                        "លុយថ្លៃសេវា",
+                        "ភាពអត់ធ្មត់នឹងការប្រែប្រួល (Volatility) និងភាពភ័យខ្លាច",
+                        "ការស៊ីសំណូក",
+                        "ការបោកប្រាស់"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! គ្មានផលចំណេញណាដែលបានមកស្រួលៗដោយមិនមានការឈឺចាប់ផ្លូវចិត្តខ្លះនោះទេ។"
+                }
+            },
+            {
+                title: "16. អ្នក និង ខ្ញុំ (You & Me)",
+                content: `
+                    <p class="mb-4">កំហុសហិរញ្ញវត្ថុជាច្រើនកើតឡើងព្រោះយើង <strong>លួចមើលកិច្ចការផ្ទះរបស់អ្នកដទៃ</strong>។</p>
+                    <p>កុំយកដំបូន្មានហិរញ្ញវត្ថុពីមនុស្សដែលកំពុងលេង <strong>"ហ្គេម"</strong> ខុសពីអ្នក។</p>
+                    <ul class="list-disc ml-6 mt-2">
+                        <li>បើអ្នកជាអ្នកវិនិយោគរយៈពេលវែង (៣០ ឆ្នាំ) កុំភ័យស្លន់ស្លោតាម Day Trader (អ្នកលេងហ៊ុនប្រចាំថ្ងៃ)។</li>
+                        <li>តម្លៃហ៊ុនដែលសមរម្យសម្រាប់ Day Trader អាចជាតម្លៃដែលថ្លៃហួសហេតុសម្រាប់អ្នក។</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> មិត្តភក្តិប្រាប់ថា "លក់ហ៊ុននេះចោលទៅ វាចុះហើយ!"</p>
+                    <p>សួរខ្លួនឯង៖ តើគាត់លេងហ្គេមដូចខ្ញុំទេ? បើគាត់ត្រូវការលុយថ្ងៃស្អែក គាត់ត្រូវតែលក់។ តែបើខ្ញុំត្រូវការលុយ ១០ ឆ្នាំទៀត ខ្ញុំមិនចាំបាច់ខ្វល់ទេ។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីយើងមិនគួរធ្វើតាមដំបូន្មានអ្នកដទៃទាំងងងឹតងងុល?",
+                    options: [
+                        "ព្រោះគេល្ងង់",
+                        "ព្រោះគោលដៅនិងរយៈពេលវិនិយោគ (Game) របស់គេ អាចខុសពីយើង",
+                        "ព្រោះគេចង់ឱ្យយើងខាត",
+                        "ព្រោះយើងពូកែជាងគេ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ស្គាល់ហ្គេមដែលខ្លួនឯងកំពុងលេង ហើយកុំរវល់នឹងហ្គេមអ្នកដទៃ។"
+                }
+            },
+            {
+                title: "17. ការល្បួងនៃទុទិដ្ឋិនិយម (The Seduction of Pessimism)",
+                content: `
+                    <p class="mb-4">ទុទិដ្ឋិនិយម (Pessimism) ស្តាប់ទៅ <strong>ឆ្លាត</strong>។ សុទិដ្ឋិនិយម (Optimism) ស្តាប់ទៅដូចជាការលក់ផលិតផល។</p>
+                    <p>បើមានគេប្រាប់ថា "សេដ្ឋកិច្ចនឹងដួលរលំ!" អ្នកនឹងស្តាប់គេដោយយកចិត្តទុកដាក់។ បើគេប្រាប់ថា "អ្វីៗនឹងល្អប្រសើរ!" អ្នកនឹងគិតថាគេមើលងាយស្ថានការណ៍។</p>
+                    <p>ប៉ុន្តែប្រវត្តិសាស្ត្របង្ហាញថា៖ <strong>សុទិដ្ឋិនិយមតែងតែឈ្នះក្នុងរយៈពេលវែង។</strong> បញ្ហាគឺកើតឡើងលឿន (ដូចជាភ្លើងឆេះ) តែភាពរីកចម្រើនកើតឡើងយឺតៗ (ដូចជាដើមឈើលូតលាស់) ធ្វើឱ្យយើងមិនសូវចាប់អារម្មណ៍។</p>
+                `,
+                scenario: `
+                    <p><strong>មេរៀន៖</strong> ទុកចិត្តលើសមត្ថភាពដោះស្រាយបញ្ហារបស់មនុស្សជាតិ។ មិនមែនថាគ្មានបញ្ហាទេ តែយើងតែងតែរកផ្លូវចេញឃើញជានិច្ច។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីយើងច្រើនតែជឿលើព័ត៌មានអាក្រក់ជាងព័ត៌មានល្អ?",
+                    options: [
+                        "ព្រោះព័ត៌មានអាក្រក់ស្តាប់ទៅដូចជាការដាស់តឿនដ៏ឆ្លាតវៃ (Sound smarter)",
+                        "ព្រោះព័ត៌មានល្អគឺជាការកុហក",
+                        "ព្រោះពិភពលោកកាន់តែអាក្រក់ទៅៗ",
+                        "ព្រោះយើងចូលចិត្តរឿងកម្សត់"
+                    ],
+                    correct: 0,
+                    explanation: "ត្រឹមត្រូវ! យើងត្រូវបានវិវត្តមកដើម្បីប្រយ័ត្ននឹងគ្រោះថ្នាក់ ដូច្នេះយើងចាប់អារម្មណ៍នឹងរឿងអាក្រក់។ តែត្រូវចាំថា ពិភពលោកកំពុងរីកចម្រើន។"
+                }
+            }
+        ];
+
+        // App State
+        let currentLessonIndex = 0;
+
+        // Elements
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        // Initialize Navigation
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-3 hover:bg-green-50 transition flex items-center text-sm font-medium border-b border-gray-50 ${index === 0 ? 'text-gray-800' : 'text-gray-600'}`;
+                // Extract just the chapter title for the sidebar to keep it clean
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold">${index + 1}</span>
+                    <span class="truncate">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        // Toggle Sidebar Mobile
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        // Load Lesson
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            // Hide Welcome, Show Content
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); // Reset animation
+            void lessonContainer.offsetWidth; // Trigger reflow
+            lessonContainer.classList.add('fade-in');
+
+            // Update Sidebar Active State
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active');
+                b.querySelector('.lesson-indicator').classList.remove('bg-green-600', 'text-white');
+                b.querySelector('.lesson-indicator').classList.add('bg-green-100', 'text-green-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-green-100', 'text-green-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-green-600', 'text-white');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Close sidebar on mobile
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            // Populate Content
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            // Populate Scenario
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            // Setup Quiz
+            setupQuiz(lesson.quiz);
+
+            // Update Buttons
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = true; // Enabled only after quiz
+            nextBtn.innerHTML = index === lessons.length - 1 ? "បញ្ចប់វគ្គសិក្សា" : "មេរៀនបន្ទាប់ →";
+
+            // Update Progress
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-4 hidden p-4 rounded-lg";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition flex items-center shadow-sm";
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full border border-gray-300 mr-3 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 font-bold group-hover:border-gray-400">?</span> ${opt}`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            // Disable all buttons
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                btnElement.querySelector('span').innerText = "✓";
+                btnElement.querySelector('span').classList.add('bg-green-500', 'border-green-500', 'text-white');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-green-50 text-green-900 border border-green-200 fade-in";
+                quizFeedback.innerHTML = `<strong>ត្រឹមត្រូវ!</strong> ${explanation}`;
+                nextBtn.disabled = false; // Enable Next button
+                
+                // If last lesson, celebrate
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer');
+                btnElement.querySelector('span').innerText = "✕";
+                btnElement.querySelector('span').classList.add('bg-red-500', 'border-red-500', 'text-white');
+                
+                // Highlight correct one
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                correctBtn.querySelector('span').innerText = "✓";
+                correctBtn.querySelector('span').classList.add('bg-green-500', 'border-green-500', 'text-white');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-red-50 text-red-900 border border-red-200 fade-in";
+                quizFeedback.innerHTML = `<strong>មិនត្រឹមត្រូវទេ។</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+                nextBtn.disabled = false; // Let them proceed anyway
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        // Navigation Handlers
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("សូមអបអរសាទរ! អ្នកបានបញ្ចប់វគ្គសិក្សាចិត្តសាស្ត្រនៃលុយពេញលេញហើយ!");
+            }
+        };
+
+        // Confetti effect
+        function launchConfetti() {
+            const colors = ['#16a34a', '#ca8a04', '#2563eb', '#dc2626'];
+            for(let i=0; i<60; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy;
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/100);
+                    frame++;
+                    if(frame < 100) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Init
+        initNav();
+
+    </script>
+</body>
+</html>
