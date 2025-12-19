@@ -1,43 +1,21 @@
 # Virtual environment
 venv/
-.venv/
-env/
-.env
 
-# Python
+# Python cache
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+*.pyc
+
+# Private files - DO NOT UPLOAD
+codes_master_list.json
+codes_master_list.csv
+codes.json
+
+# Local server (not needed for GitHub Pages)
+server.py
 
 # IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
 
-# OS
+# OS files
 .DS_Store
-Thumbs.db
-
-# Environment variables
-.env
-.env.local
-

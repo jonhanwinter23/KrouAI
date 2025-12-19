@@ -51,9 +51,98 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        
+        /* Lock Styles */
+        .lesson-locked {
+            opacity: 0.6;
+            position: relative;
+        }
+        .lesson-locked::after {
+            content: '🔒';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .lock-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .lock-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .unlock-modal {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .lock-overlay.active .unlock-modal {
+            transform: scale(1);
+        }
+        .premium-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        .unlocked-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <!-- Unlock Code Modal -->
+    <div id="lockOverlay" class="lock-overlay">
+        <div class="unlock-modal">
+            <div class="text-6xl mb-4">🔐</div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2 kh-text-title">មេរៀន Premium</h3>
+            <p class="text-gray-600 mb-6">បញ្ចូលលេខកូដដើម្បីបើកមេរៀនទាំងអស់</p>
+            
+            <input type="text" id="unlockCodeInput" 
+                placeholder="បញ្ចូលកូដរបស់អ្នក..."
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-center text-lg font-mono uppercase tracking-widest focus:border-sky-500 focus:outline-none mb-3">
+            
+            <div id="codeError" class="text-red-500 text-sm mb-4 hidden">កូដមិនត្រឹមត្រូវ សូមព្យាយាមម្តងទៀត</div>
+            
+            <button id="unlockBtn" onclick="tryUnlock()" class="w-full bg-gradient-to-r from-sky-600 to-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:from-sky-700 hover:to-blue-700 transition mb-3 disabled:opacity-50">
+                បើកសោ 🔓
+            </button>
+            
+            <button onclick="closeLockOverlay()" class="text-gray-500 hover:text-gray-700 text-sm">
+                ត្រលប់មកមេរៀនឥតគិតថ្លៃ
+            </button>
+            
+            <div class="mt-6 pt-4 border-t border-gray-100">
+                <p class="text-xs text-gray-400">មិនទាន់មានកូដ? ទាក់ទងយើងតាម Telegram</p>
+                <a href="#" class="text-sky-600 text-sm font-medium hover:underline">@KrouAI</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Mobile Header -->
     <div class="md:hidden bg-white p-4 shadow-md flex justify-between items-center z-20">
@@ -75,6 +164,11 @@
         </div>
 
         <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <!-- Premium Status -->
+            <div id="premiumStatus" class="mb-3 p-2 rounded-lg text-center text-xs font-medium">
+                <!-- Will be filled by JS -->
+            </div>
+            
             <div class="flex justify-between text-sm mb-1">
                 <span>វឌ្ឍនភាព (Progress)</span>
                 <span id="progressText">0%</span>
@@ -155,6 +249,118 @@
     </div>
 
     <script>
+        // ========== STATIC CODE VALIDATION (GitHub Pages Compatible) ==========
+        // Codes are loaded from valid_codes.json (pre-generated)
+        let VALID_CODES = [];
+        
+        // Load codes on startup
+        async function loadValidCodes() {
+            try {
+                const response = await fetch('valid_codes.json');
+                VALID_CODES = await response.json();
+                console.log(`✅ Loaded ${VALID_CODES.length} valid codes`);
+            } catch (err) {
+                console.warn('Could not load codes file, using empty list');
+                VALID_CODES = [];
+            }
+        }
+        
+        // ========== UNLOCK CODE SYSTEM ==========
+        // How many lessons are free (first N lessons)
+        const FREE_LESSONS_COUNT = 2;
+        
+        // Check if user has unlocked premium
+        function isUnlocked() {
+            return localStorage.getItem('krouai_unlocked') === 'true';
+        }
+        
+        // Save unlock status
+        function saveUnlockStatus(code) {
+            localStorage.setItem('krouai_unlocked', 'true');
+            localStorage.setItem('krouai_unlock_code', code);
+            localStorage.setItem('krouai_unlock_date', new Date().toISOString());
+        }
+        
+        // Show lock overlay
+        function showLockOverlay() {
+            document.getElementById('lockOverlay').classList.add('active');
+            document.getElementById('unlockCodeInput').focus();
+            document.getElementById('codeError').classList.add('hidden');
+            document.getElementById('unlockBtn').disabled = false;
+            document.getElementById('unlockBtn').textContent = 'បើកសោ 🔓';
+        }
+        
+        // Close lock overlay
+        function closeLockOverlay() {
+            document.getElementById('lockOverlay').classList.remove('active');
+            document.getElementById('unlockCodeInput').value = '';
+        }
+        
+        // Try to unlock with code - validates against static JSON
+        function tryUnlock() {
+            const input = document.getElementById('unlockCodeInput');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const code = input.value.trim().toUpperCase();
+            
+            if (!code) {
+                document.getElementById('codeError').textContent = 'សូមបញ្ចូលកូដ';
+                document.getElementById('codeError').classList.remove('hidden');
+                return;
+            }
+            
+            // Check if code is valid
+            if (!VALID_CODES.includes(code)) {
+                document.getElementById('codeError').textContent = 'កូដមិនត្រឹមត្រូវ';
+                document.getElementById('codeError').classList.remove('hidden');
+                input.classList.add('border-red-500');
+                setTimeout(() => input.classList.remove('border-red-500'), 2000);
+                return;
+            }
+            
+            // Check if already used (in this browser)
+            const usedCodes = JSON.parse(localStorage.getItem('krouai_used_codes') || '[]');
+            if (usedCodes.includes(code)) {
+                document.getElementById('codeError').textContent = 'កូដនេះបានប្រើប្រាស់រួចហើយ';
+                document.getElementById('codeError').classList.remove('hidden');
+                return;
+            }
+            
+            // Mark as used locally
+            usedCodes.push(code);
+            localStorage.setItem('krouai_used_codes', JSON.stringify(usedCodes));
+            
+            // Success!
+            saveUnlockStatus(code);
+            closeLockOverlay();
+            updateNavWithLockStatus();
+            
+            // Load the lesson they were trying to access
+            if (pendingLessonIndex !== null) {
+                loadLesson(pendingLessonIndex);
+                pendingLessonIndex = null;
+            }
+            
+            // Show success message
+            alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោមេរៀន Premium ទាំងអស់!');
+        }
+        
+        // Handle Enter key in code input
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('unlockCodeInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') tryUnlock();
+            });
+        });
+        
+        // Track which lesson user was trying to access
+        let pendingLessonIndex = null;
+        
+        // Check if a lesson is locked
+        function isLessonLocked(index) {
+            if (isUnlocked()) return false;
+            return index >= FREE_LESSONS_COUNT;
+        }
+        
+        // ========== LESSON DATA ==========
         // Data Structure for Lessons
         const lessons = [
             {
@@ -479,15 +685,31 @@
             lessonList.innerHTML = '';
             lessons.forEach((lesson, index) => {
                 const btn = document.createElement('button');
-                btn.className = `w-full text-left px-6 py-3 hover:bg-sky-50 transition flex items-center text-sm font-medium ${index === 0 ? 'text-gray-800' : 'text-gray-600'}`;
+                const locked = isLessonLocked(index);
+                btn.className = `w-full text-left px-6 py-3 hover:bg-sky-50 transition flex items-center text-sm font-medium ${index === 0 ? 'text-gray-800' : 'text-gray-600'} ${locked ? 'lesson-locked' : ''}`;
+                
+                let badge = '';
+                if (index >= FREE_LESSONS_COUNT) {
+                    badge = isUnlocked() 
+                        ? '<span class="unlocked-badge">✓ UNLOCKED</span>' 
+                        : '<span class="premium-badge">PREMIUM</span>';
+                }
+                
                 btn.innerHTML = `
                     <span class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs mr-3 lesson-indicator">${index + 1}</span>
-                    <span class="truncate">${lesson.title}</span>
+                    <span class="truncate flex-1">${lesson.title}</span>
+                    ${badge}
                 `;
                 btn.onclick = () => loadLesson(index);
                 btn.id = `nav-item-${index}`;
                 lessonList.appendChild(btn);
             });
+        }
+        
+        // Update nav to reflect unlock status
+        function updateNavWithLockStatus() {
+            initNav();
+            updatePremiumStatus();
         }
 
         // Toggle Sidebar Mobile
@@ -497,6 +719,13 @@
 
         // Load Lesson
         function loadLesson(index) {
+            // Check if lesson is locked
+            if (isLessonLocked(index)) {
+                pendingLessonIndex = index;
+                showLockOverlay();
+                return;
+            }
+            
             currentLessonIndex = index;
             
             // Hide Welcome, Show Content
@@ -648,8 +877,28 @@
             }
         }
 
+        // Update premium status display
+        function updatePremiumStatus() {
+            const statusEl = document.getElementById('premiumStatus');
+            if (isUnlocked()) {
+                statusEl.innerHTML = `
+                    <div class="bg-green-100 text-green-800 p-2 rounded-lg">
+                        ✅ Premium Unlocked
+                    </div>
+                `;
+            } else {
+                statusEl.innerHTML = `
+                    <div class="bg-amber-100 text-amber-800 p-2 rounded-lg cursor-pointer hover:bg-amber-200 transition" onclick="showLockOverlay()">
+                        🔒 មេរៀន ${FREE_LESSONS_COUNT} ដំបូងឥតគិតថ្លៃ | <span class="underline">បើកសោ Premium</span>
+                    </div>
+                `;
+            }
+        }
+
         // Init
+        loadValidCodes();  // Load codes from JSON file
         initNav();
+        updatePremiumStatus();
 
     </script>
 </body>
