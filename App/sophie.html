@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophie's World - Philosophy Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #0f172a; /* Slate-900 (Deep Night) */
+            color: #e2e8f0; /* Slate-200 */
+            line-height: 1.9;
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #1e293b; /* Slate-800 */
+            border-right: 4px solid #f59e0b; /* Amber-500 */
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #064e3b !important; /* Emerald-900 */
+            border-color: #10b981 !important; /* Emerald-500 */
+            color: #d1fae5 !important;
+        }
+        .wrong-answer {
+            background-color: #450a0a !important; /* Red-950 */
+            border-color: #ef4444 !important; /* Red-500 */
+            color: #fecaca !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .letter-box {
+            background-color: #fffbeb; /* Paper color */
+            color: #451a03; /* Brown ink */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            position: relative;
+            margin: 2rem 0;
+            font-family: 'Battambang', serif;
+            border: 1px solid #d6d3d1;
+        }
+        .letter-box::before {
+            content: "📩 សំបុត្រពីគ្រូទស្សនវិជ្ជា";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #f59e0b;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .philosopher-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f59e0b;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-900 p-4 shadow-md flex justify-between items-center z-20 border-b border-slate-800">
+        <h1 class="text-xl font-bold text-amber-500 en-title">Sophie's World</h1>
+        <button id="menuBtn" class="text-slate-300 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-slate-950 shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-slate-800">
+        <div class="p-8 border-b border-slate-800 hidden md:block">
+            <h1 class="text-2xl font-bold text-amber-500 en-title tracking-wider">Sophie's World</h1>
+            <p class="text-sm text-slate-400 mt-2 font-light">ប្រវត្តិសាស្រ្តទស្សនវិជ្ជា</p>
+            <p class="text-xs text-slate-600 mt-1">Jostein Gaarder</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-6 space-y-1" id="lessonList">
+            <!-- Navigation Items will be injected here -->
+        </div>
+
+        <div class="p-6 border-t border-slate-800 bg-slate-900">
+            <div class="flex justify-between text-sm mb-2 text-amber-500 font-bold">
+                <span>ចំណេះដឹង (Wisdom)</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-amber-600 to-yellow-400 h-2 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(245,158,11,0.5)]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-slate-900 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" id="mainContent">
+        <div class="max-w-5xl mx-auto p-6 md:p-12 pb-32">
+            
+            <!-- Welcome Screen (Initial State) -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[70vh] text-center fade-in">
+                <div class="bg-slate-800/80 backdrop-blur-md p-12 rounded-3xl shadow-2xl max-w-3xl border border-slate-700 relative overflow-hidden group hover:border-amber-500/30 transition-all duration-500">
+                    <div class="absolute -top-20 -right-20 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
+                    <div class="text-7xl mb-8 animate-pulse">🐇🎩</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">តើអ្នកជានរណា?<br>តើពិភពលោកកើតមកពីណា?</h2>
+                    <p class="text-lg text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
+                        សូមស្វាគមន៍មកកាន់ "ពិភពរបស់សូហ្វី"។<br>
+                        នេះមិនមែនជាវគ្គសិក្សាធម្មតាទេ តែជាការធ្វើដំណើរឆ្លងកាត់ពេលវេលា ៣០០០ ឆ្នាំ ដើម្បីស្វែងរកចម្លើយនៃជីវិត តាមរយៈសំបុត្រអាថ៌កំបាំង។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition transform hover:-translate-y-1 text-xl flex items-center mx-auto ring-4 ring-slate-900 hover:ring-amber-500/50">
+                        <span>បើកប្រអប់សំបុត្រ</span>
+                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content (Dynamic) -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-amber-500 mb-8 font-bold text-sm uppercase tracking-widest border border-amber-900/50 bg-amber-950/20 w-fit px-4 py-2 rounded-full">
+                    <span id="chapterNumber">Chapter 1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-10 leading-snug border-b border-slate-700 pb-6"></h2>
+                
+                <div class="prose prose-lg md:prose-xl max-w-none text-slate-300 leading-loose font-light" id="lessonBody">
+                    <!-- Lesson HTML Content -->
+                </div>
+
+                <!-- Interactive Scenario / Thought Experiment -->
+                <div id="scenarioBox" class="bg-slate-800 border-l-4 border-amber-500 p-8 rounded-r-xl mb-10 hidden shadow-xl mt-12 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 text-9xl text-amber-500/5 select-none font-serif">?</div>
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        ពិសោធន៍នៃការគិត (Thought Experiment)
+                    </h3>
+                    <div id="scenarioContent" class="text-slate-200 text-lg relative z-10"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-slate-800/50 backdrop-blur rounded-3xl shadow-xl p-8 md:p-12 border border-slate-700 mt-16 relative overflow-hidden">
+                    
+                    <h3 class="text-2xl font-bold text-white mb-8 flex items-center relative z-10">
+                        <span class="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-bold mr-4 px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">Quiz</span>
+                        តើអ្នកបានយល់អ្វីខ្លះ?
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-6 text-slate-200 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-6 hidden p-6 rounded-xl text-lg border border-transparent shadow-lg bg-opacity-95"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-16 pt-8 border-t border-slate-800">
+                    <button id="prevBtn" class="px-8 py-4 rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center font-bold">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        មេរៀនមុន
+                    </button>
+                    <button id="nextBtn" class="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-600 text-white hover:from-amber-500 hover:to-yellow-500 font-bold shadow-lg hover:shadow-amber-500/20 flex items-center transition-all transform hover:-translate-y-1">
+                        បន្តដំណើរ
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Full Content for Sophie's World
+        const lessons = [
+            {
+                title: "1. សួនអេដែន និង មួកធំ (The Garden of Eden & The Top Hat)",
+                content: `
+                    <div class="letter-box">
+                        <p><strong>Sophie ជាទីរាប់អាន,</strong></p>
+                        <p>តើអ្នកជានរណា? (Who are you?)</p>
+                        <p>តើពិភពលោកកើតមកពីណា? (Where does the world come from?)</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-amber-400 mt-8 mb-4">ការភ្ញាក់ដឹងខ្លួនពីទម្លាប់</h3>
+                    <p class="mb-4">Sophie Amundsen គឺជាក្មេងស្រីអាយុ ១៤ ឆ្នាំម្នាក់ដែលរស់នៅក្នុងប្រទេសន័រវេស។ ថ្ងៃមួយ នាងទទួលបានសំបុត្រអនាមិកដែលមានសំណួរខ្លីៗខាងលើ។ សំណួរទាំងនេះបានធ្វើឱ្យនាងភ្ញាក់ផ្អើល។ នាងឆ្លុះកញ្ចក់ហើយសួរខ្លួនឯងថា "ខ្ញុំជានរណា?"។ នាងរកចម្លើយមិនឃើញ។</p>
+                    
+                    <p class="mb-4">គ្រូទស្សនវិជ្ជាដ៏អាថ៌កំបាំង (Alberto Knox) ប្រៀបធៀបអ្នកទស្សនវិទូទៅនឹង <strong>ក្មេងតូចៗ</strong>។</p>
+                    <p class="mb-4">មនុស្សភាគច្រើនពេលធំឡើង ពួកគេស៊ាំនឹងពិភពលោក រហូតដល់លែងមានអារម្មណ៍ភ្ញាក់ផ្អើល។ ពួកគេដូចជាទន្សាយដែលត្រូវគេទាញចេញពី "មួកធំ" (The Top Hat) របស់វេទមន្តករ។ ពួកគេកប់ខ្លួនឯងនៅក្នុងរោមទន្សាយ (រឿងរ៉ាវប្រចាំថ្ងៃ អាហារ លុយកាក់) ហើយភ្លេចមើលទៅក្រៅដើម្បីសួរថា "តើនរណាជាអ្នកទាញទន្សាយនេះចេញមក?"</p>
+                    
+                    <p class="mb-4 text-amber-200 border-l-4 border-amber-500 pl-4"><strong>ទស្សនវិទូ</strong> គឺជាមនុស្សដែលព្យាយាមតោងរោមទន្សាយឡើងទៅលើ ដើម្បីមើលមុខវេទមន្តករ។ ពួកគេមិនដែលបាត់បង់ "ការងឿងឆ្ងល់" ទេ។</p>
+                `,
+                scenario: `
+                    <p><strong>ពិសោធន៍៖</strong> ស្រមៃថាថ្ងៃនេះអ្នកទើបតែកើតមកភ្លាមៗក្នុងរាងកាយមនុស្សធំ។ អ្នកដើរចេញទៅក្រៅឃើញដើមឈើ ឃើញផ្ទះ ឃើញមនុស្ស។ តើអ្នកនឹងមានអារម្មណ៍យ៉ាងណា? (នេះគឺជាអារម្មណ៍របស់អ្នកទស្សនវិទូ៖ ឃើញអ្វីៗសុទ្ធតែចម្លែក និងអស្ចារ្យ)។</p>
+                `,
+                quiz: {
+                    question: "នៅក្នុងសៀវភៅនេះ តើអ្នកទស្សនវិទូត្រូវបានប្រៀបធៀបទៅនឹងអ្វី?",
+                    options: [
+                        "មនុស្សដែលចេះគ្រប់រឿង",
+                        "មនុស្សដែលរស់នៅជ្រៅក្នុងរោមទន្សាយ ហើយដេកលក់ស្រួល",
+                        "មនុស្សដែលព្យាយាមតោងរោមទន្សាយឡើងទៅលើ ដើម្បីមើលថានរណាជាម្ចាស់មួក",
+                        "វេទមន្តករ"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ទស្សនវិទូគឺជាមនុស្សដែលមិនព្រមទទួលយកពិភពលោកថាជារឿងធម្មតា។ ពួកគេនៅតែរក្សាការងឿងឆ្ងល់ (Curiosity) ដូចកូនក្មេង។"
+                }
+            },
+            {
+                title: "2. ទេវកថា និង ទស្សនវិទូធម្មជាតិ (Myths & Natural Philosophers)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">ពីជំនឿ មកជាហេតុផល</h3>
+                    <p class="mb-4">មុនពេលមានទស្សនវិជ្ជា មនុស្សពន្យល់បាតុភូតធម្មជាតិតាមរយៈ <strong>"ទេវកថា" (Myths)</strong>។</p>
+                    <ul class="list-disc ml-6 mb-4 text-slate-300">
+                        <li>ហេតុអ្វីមានភ្លៀង? ព្រោះព្រះ Thor គ្រវីញញួរ។</li>
+                        <li>ហេតុអ្វីមានរដូវរងា? ព្រោះព្រះនាង Persephone ត្រូវគេចាប់ទៅឋាននរក។</li>
+                    </ul>
+                    <p class="mb-4">ប្រហែលឆ្នាំ ៦០០ មុនគ.ស នៅក្រិក មានក្រុមមនុស្សមួយក្រុមចាប់ផ្តើមបដិសេធការពន្យល់បែបទេវកថា។ ពួកគេចង់យល់ពីធម្មជាតិតាមរយៈ <strong>ហេតុផល (Reason)</strong>។ ពួកគេត្រូវបានហៅថា <strong>"ទស្សនវិទូធម្មជាតិ" (Natural Philosophers)</strong>។</p>
+
+                    <div class="bg-slate-800 p-6 rounded-lg mb-6 border border-slate-700">
+                        <h4 class="text-xl font-bold text-amber-500 mb-3">អ្នកល្បីៗទាំង ៣ រូប៖</h4>
+                        <ul class="space-y-3">
+                            <li>💧 <strong>Thales:</strong> ជឿថាអ្វីៗទាំងអស់កើតចេញពី <strong>"ទឹក"</strong>។ (គាត់សង្កេតឃើញថា ជីវិតត្រូវការទឹក ហើយទឹកអាចប្តូរជាទឹកកក និងចំហាយ)។</li>
+                            <li>♾️ <strong>Anaximander:</strong> ជឿថាពិភពលោកកើតចេញពី "The Boundless" (អ្វីមួយដែលគ្មានរូបរាង និងគ្មានទីបញ្ចប់)។</li>
+                            <li>🌬️ <strong>Anaximenes:</strong> ជឿថាអ្វីៗកើតចេញពី <strong>"ខ្យល់"</strong> (Air/Vapor)។ ខ្យល់កម្រក្លាយជាភ្លើង ខ្យល់ខាប់ក្លាយជាទឹកនិងដី។</li>
+                        </ul>
+                    </div>
+                    <p class="mb-4">ទោះបីជាចម្លើយរបស់ពួកគេខុស (យើងដឹងថាពិភពលោកមិនមែនកើតពីទឹកសុទ្ធទេ) ប៉ុន្តែ <strong>សំណួរ</strong> របស់ពួកគេគឺសំខាន់ណាស់៖ "តើអ្វីជាធាតុដើមនៃធម្មជាតិ?" ពួកគេគឺជាអ្នកវិទ្យាសាស្ត្រដំបូងគេ។</p>
+                `,
+                scenario: `
+                    <p><strong>Democritus & LEGO:</strong> សូហ្វីទទួលបានប្រអប់ LEGO មួយ។ គ្រូសួរថា "ហេតុអ្វី LEGO គឺជាប្រដាប់លេងដែលឆ្លាតបំផុតក្នុងលោក?"</p>
+                    <p>ចម្លើយ៖ ព្រោះ LEGO អាចរុះរើ និងផ្គុំជាអ្វីផ្សេងបានរាប់លានដង ដោយមិនខូច។ Democritus (៤៦០ មុនគ.ស) បានរកឃើញទ្រឹស្តី <strong>"អាតូម" (Atom)</strong> ដោយមិនប្រើមីក្រូទស្សន៍។ គាត់ថាធម្មជាតិកើតឡើងពីភាគល្អិតតូចៗដែលមិនអាចបំផ្លាញបាន ដូចជា LEGO ដែរ។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីជាការផ្លាស់ប្តូរដ៏សំខាន់ពីសម័យទេវកថា មកសម័យទស្សនវិទូធម្មជាតិ?",
+                    options: [
+                        "មនុស្សឈប់ជឿលើព្រះទាំងស្រុង",
+                        "មនុស្សចាប់ផ្តើមពន្យល់បាតុភូតធម្មជាតិដោយប្រើហេតុផល និងការសង្កេត ជំនួសឱ្យរឿងនិទានព្រះ",
+                        "មនុស្សចាប់ផ្តើមបង្កើតបច្ចេកវិទ្យាទំនើប",
+                        "មនុស្សឈប់ធ្វើស្រែចំការ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! នេះគឺជាកំណើតនៃវិទ្យាសាស្ត្រ។ ការព្យាយាមយល់ពីច្បាប់ធម្មជាតិ ដោយមិនពឹងផ្អែកលើអបិយជំនឿ។"
+                }
+            },
+            {
+                title: "3. សូក្រាត៖ មនុស្សដែលឆ្លាតបំផុត (Socrates)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">សិល្បៈនៃការសន្ទនា</h3>
+                    <p class="mb-4">សូក្រាត (470-399 មុនគ.ស) គឺជាតួអង្គដ៏អាថ៌កំបាំងនៅអាថែន។ គាត់មិនដែលសរសេរសៀវភៅទេ។ យើងស្គាល់គាត់តាមរយៈសិស្សរបស់គាត់គឺ <strong>Plato</strong>។</p>
+                    <p class="mb-4">សូក្រាតមិនដែលបង្រៀនគេទេ។ ផ្ទុយទៅវិញ គាត់ដើរតាមផ្សារហើយ <strong>សួរសំណួរ</strong>។ គាត់ធ្វើដូចជាខ្លួនគាត់មិនចេះអ្វីសោះ ដើម្បីឱ្យគូសន្ទនាប្រើគំនិតខ្លួនឯង។ វិធីសាស្ត្រនេះហៅថា <strong>"Socratic Irony"</strong>។</p>
+                    
+                    <div class="letter-box">
+                        <p class="italic text-center text-lg">"រឿងមួយដែលខ្ញុំដឹងច្បាស់ គឺខ្ញុំមិនដឹងអ្វីសោះ។"<br>(One thing I know is that I know nothing.)</p>
+                    </div>
+
+                    <p class="mb-4">គាត់ប្រៀបធៀបខ្លួនឯងទៅនឹង <strong>"ឆ្មប" (Midwife)</strong>។ ឆ្មបមិនបង្កើតកូនទេ តែជួយស្ត្រីឱ្យសម្រាលកូន។ សូក្រាតជួយមនុស្សឱ្យ "សម្រាល" នូវប្រាជ្ញាដែលនៅក្នុងខ្លួនពួកគេស្រាប់។</p>
+                    <p class="mb-4">ចុងបញ្ចប់ គាត់ត្រូវបានកាត់ទោសប្រហារជីវិតដោយការផឹកថ្នាំពុល Hemlock ព្រោះគាត់ហ៊ានសួរដេញដោលអ្នកមានអំណាច និង "បំពុល" គំនិតយុវជនឱ្យចេះគិត។ គាត់សុខចិត្តស្លាប់ ជាជាងឈប់ស្វែងរកការពិត។</p>
+                `,
+                scenario: `
+                    <p><strong>សំឡេងទេវៈ (Divine Voice):</strong> សូក្រាតនិយាយថា គាត់មានសំឡេងមួយក្នុងចិត្តដែលតែងតែឃាត់គាត់មិនឱ្យធ្វើរឿងខុស។ គាត់ជឿថា "អ្នកដែលដឹងថាអ្វីល្អ នឹងធ្វើល្អ" (He who knows what is right will do right)។ សម្រាប់គាត់ ចំណេះដឹងនិងគុណធម៌គឺជារឿងតែមួយ។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីបានជាសូក្រាតត្រូវបានគេចាត់ទុកថាជាមនុស្សឆ្លាតបំផុតនៅអាថែន?",
+                    options: [
+                        "ព្រោះគាត់អានសៀវភៅច្រើនជាងគេ",
+                        "ព្រោះគាត់ជាអ្នកមាន",
+                        "ព្រោះគាត់ទទួលស្គាល់ថាគាត់មិនដឹងអ្វីសោះ (Intellectual Humility) ខណៈអ្នកផ្សេងធ្វើចេះ",
+                        "ព្រោះគាត់ចេះទាយអនាគត"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ការដឹងថាខ្លួនមិនដឹង គឺជាជំហានដំបូងនៃប្រាជ្ញា។ វាបើកចំហចិត្តឱ្យរៀនសូត្រ។"
+                }
+            },
+            {
+                title: "4. ប្លាតូ៖ ពិភពនៃគំនិត (Plato & The World of Ideas)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">អ្វីដែលស្ថិតស្ថេរជារៀងរហូត</h3>
+                    <p class="mb-4">ប្លាតូ (សិស្សរបស់សូក្រាត) ឆ្ងល់ថា៖ ហេតុអ្វីបានជាអ្វីៗក្នុងលោកតែងតែផ្លាស់ប្តូរ (ដើមឈើងាប់, មនុស្សចាស់, ផ្ទះបាក់បែក) ប៉ុន្តែ "ទម្រង់" របស់វានៅដដែល? សេះអាចស្លាប់ ប៉ុន្តែ "គំនិតអំពីសេះ" មិនស្លាប់ទេ។</p>
+                    <p class="mb-4">គាត់បង្កើតទ្រឹស្តីថា ពិភពលោកចែកជា ២៖</p>
+                    <ol class="list-decimal ml-6 mb-4 space-y-2 text-slate-300">
+                        <li><strong>ពិភពនៃវិញ្ញាណ (World of Senses):</strong> អ្វីដែលយើងឃើញនឹងភ្នែក (តុ, កៅអី, ដើមឈើ)។ វាមិនល្អឥតខ្ចោះ និងប្រែប្រួល។</li>
+                        <li><strong>ពិភពនៃគំនិត (World of Ideas):</strong> ជាពុម្ពគំរូដើម (Moulds) ដែលល្អឥតខ្ចោះ និងអមតៈ។ ព្រលឹងរបស់យើងធ្លាប់នៅទីនេះមុនពេលកើត។</li>
+                    </ol>
+
+                    <div class="bg-slate-800 p-6 rounded-lg border border-amber-500/30 my-6">
+                        <h4 class="text-xl font-bold text-amber-500 mb-3">គុហានៃប្លាតូ (Allegory of the Cave)</h4>
+                        <p class="mb-3">ស្រមៃថាមានមនុស្សមួយក្រុមជាប់ក្នុងរូងភ្នំតាំងពីកើត។ ពួកគេត្រូវបានចងមុខឱ្យមើលទៅជញ្ជាំង។ នៅពីក្រោយពួកគេមានភ្លើង។ គេឃើញតែ "ស្រមោល" នៃវត្ថុដែលឆ្លងកាត់ភ្លើងនោះនៅលើជញ្ជាំង។ ពួកគេគិតថាស្រមោលនោះជាការពិត។</p>
+                        <p class="mb-3">ថ្ងៃមួយ មានម្នាក់រត់រួច ហើយចេញទៅក្រៅរូងភ្នំ។ គាត់ឃើញពន្លឺព្រះអាទិត្យ និងពិភពលោកពិត (World of Ideas)។ គាត់ត្រឡប់មកប្រាប់មិត្តភក្តិវិញថា "អ្វីដែលឯងឃើញគ្រាន់តែជាស្រមោលទេ!" តែពួកគេសើចចំអកឱ្យគាត់ ហើយចង់សម្លាប់គាត់។</p>
+                        <p class="text-sm italic text-slate-400">នេះជារឿងរ៉ាវរបស់ទស្សនវិទូ (ដូចជាសូក្រាត) ដែលព្យាយាមបង្ហាញការពិតដល់មនុស្សល្ងង់ខ្លៅ។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>នំឃុកឃី៖</strong> ស្រមៃថាអ្នកធ្វើនំឃុកឃីរូបសត្វ ៥០។ នំខ្លះបាក់ដៃ នំខ្លះខ្លោច។ មិនមាននំំណាល្អឥតខ្ចោះទេ ប៉ុន្តែអ្នកដឹងថាវាជារូបសត្វអ្វី ព្រោះអ្នកបានឃើញ "ពុម្ព" (Mould) របស់វា។ ពុម្ពនោះគឺជា World of Ideas។</p>
+                `,
+                quiz: {
+                    question: "នៅក្នុងរឿងប្រៀបធៀបអំពីគុហា (The Cave), តើ 'ស្រមោល' តំណាងឱ្យអ្វី?",
+                    options: [
+                        "ភាពងងឹត",
+                        "ពិភពលោកដែលយើងឃើញតាមរយៈវិញ្ញាណ (មិនមែនជាការពិតទាំងស្រុង)",
+                        "ខ្មោច",
+                        "ពិភពនៃគំនិត"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ប្លាតូជឿថាអ្វីដែលយើងឃើញរាល់ថ្ងៃគ្រាន់តែជាស្រមោលមិនច្បាស់លាស់នៃ 'ទម្រង់' (Forms) ដ៏ល្អឥតខ្ចោះដែលយើងអាចដឹងបានតាមរយៈការគិត (Reason) ប៉ុណ្ណោះ។"
+                }
+            },
+            {
+                title: "5. អារីស្តូត៖ អ្នករៀបចំសណ្តាប់ធ្នាប់ (Aristotle)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">ចុះមកដីវិញ</h3>
+                    <p class="mb-4">អារីស្តូត (សិស្សរបស់ប្លាតូ) មិនយល់ស្របនឹងគ្រូទេ។ គាត់ថា <strong>គ្មានពិភពនៃគំនិត (World of Ideas) ដាច់ដោយឡែកទេ</strong>។</p>
+                    <p class="mb-4">គាត់ចង្អុលចុះមកដី។ គាត់ថា "ទម្រង់" របស់សេះ គឺស្ថិតនៅក្នុងសេះផ្ទាល់។ យើងមិនកើតមកមានគំនិតស្រាប់ទេ (No innate ideas)។ ខួរក្បាលរបស់យើងគឺទទេស្អាត ហើយយើងរៀនតាមរយៈ <strong>វិញ្ញាណ (Senses)</strong>។</p>
+                    
+                    <p class="mb-4">អារីស្តូតគឺជាអ្នកវិទ្យាសាស្ត្រ និងជាអ្នករៀបចំសណ្តាប់ធ្នាប់ (Organizer) ដ៏អស្ចារ្យ។ គាត់បានបែងចែកធម្មជាតិជាក្រុមៗ៖</p>
+                    <ul class="list-disc ml-6 mb-4 text-slate-300">
+                        <li><strong>Inanimate:</strong> គ្មានជីវិត (ដុំថ្ម, ទឹក)។</li>
+                        <li><strong>Animate:</strong> មានជីវិត (រុក្ខជាតិ, សត្វ, មនុស្ស)។</li>
+                    </ul>
+                    <p class="mb-4">សម្រាប់អារីស្តូត មនុស្សគឺជា <strong>"សត្វដែលមានហេតុផល" (Rational Animal)</strong>។ ដើម្បីមានសុភមង្គល យើងត្រូវប្រើប្រាស់សមត្ថភាពពិសេសរបស់យើងឱ្យអស់ គឺការគិត។</p>
+
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-800 mb-2">មាគ៌ាកណ្តាល (The Golden Mean)</h4>
+                        <p>អារីស្តូតជឿថា សុភមង្គលកើតចេញពីតុល្យភាព៖</p>
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>កុំកំសាកពេក កុំប្រថុយពេក -> ត្រូវក្លាហាន (Courage)។</li>
+                            <li>កុំកំណាញ់ពេក កុំខ្ជះខ្ជាយពេក -> ត្រូវសប្បុរស (Generosity)។</li>
+                        </ul>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>មាន់ និង ភ្លៀង៖</strong> បើអ្នកជាប្លាតូ អ្នកនឹងបិទភ្នែកហើយគិតរកការពិតអំពីមាន់។ បើអ្នកជាអារីស្តូត អ្នកនឹងទៅអង្គុយមើលមាន់ កត់ត្រាថាវាមានជើងប៉ុន្មាន ពងយ៉ាងម៉េច។ អារីស្តូតគឺជាបិតានៃវិទ្យាសាស្ត្រជីវសាស្រ្ត។</p>
+                `,
+                quiz: {
+                    question: "តើអារីស្តូតខុសពីប្លាតូត្រង់ណា?",
+                    options: [
+                        "អារីស្តូតជឿលើទេវកថា",
+                        "ប្លាតូជឿលើពិភពនៃគំនិតដាច់ដោយឡែក ឯអារីស្តូតជឿថាការពិតស្ថិតនៅក្នុងវត្ថុដែលយើងមើលឃើញ (Empiricism)",
+                        "អារីស្តូតមិនចូលចិត្តសត្វ",
+                        "ពួកគេមានគំនិតដូចគ្នា"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ប្លាតូប្រើហេតុផលសុទ្ធ (Rationalism) ឯអារីស្តូតប្រើវិញ្ញាណនិងការសង្កេត (Empiricism)។"
+                }
+            },
+            {
+                title: "6. ឌេកាត៖ ខ្ញុំគិត ទើបខ្ញុំមាន (Descartes)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">ការសង្ស័យគ្រប់យ៉ាង</h3>
+                    <p class="mb-4">នៅសតវត្សទី ១៧ René Descartes ចង់សាងសង់ទស្សនវិជ្ជាពីមូលដ្ឋានគ្រឹះឡើងវិញ។ គាត់ចាប់ផ្តើមដោយការ <strong>សង្ស័យគ្រប់យ៉ាង (Methodical Doubt)</strong>។</p>
+                    <p class="mb-4">គាត់សង្ស័យសៀវភៅចាស់ៗ សង្ស័យគ្រូ សង្ស័យសូម្បីតែភ្នែកខ្លួនឯង (ព្រោះភ្នែកអាចមើលច្រឡំ)។ គាត់គិតថា "ចុះបើជីវិតនេះគ្រាន់តែជាសុបិន?"</p>
+                    
+                    <div class="letter-box bg-slate-100 text-slate-900 border-none">
+                        <p class="text-2xl text-center font-cinzel font-bold text-slate-800">"Cogito, ergo sum"</p>
+                        <p class="text-center text-slate-600">(I think, therefore I am)</p>
+                        <p class="text-center mt-2">ខ្ញុំគិត ដូច្នេះខ្ញុំមានវត្តមាន។</p>
+                    </div>
+
+                    <p class="mb-4 mt-6">មានរឿងមួយដែលគាត់មិនអាចសង្ស័យបាន គឺ <strong>"គាត់កំពុងសង្ស័យ"</strong>។ ការសង្ស័យគឺជាការគិត។ បើមានការគិត ត្រូវតែមាន "អ្នកគិត"។ នេះគឺជាការពិតដំបូងដែលមិនអាចប្រកែកបាន។</p>
+                    <p class="mb-4">Descartes ត្រូវបានហៅថាជាបិតានៃទស្សនវិជ្ជាទំនើប។ គាត់បែងចែកពិភពលោកជាពីរ៖ <strong>ចិត្ត (Mind)</strong> និង <strong>រូបធាតុ (Matter)</strong>។ នេះហៅថា Dualism។</p>
+                `,
+                scenario: `
+                    <p><strong>កុំព្យូទ័រ៖</strong> តើកុំព្យូទ័រមាន "ចិត្ត" ទេ? Descartes នឹងនិយាយថាអត់ទេ។ សម្រាប់គាត់ រាងកាយមនុស្សនិងសត្វគឺជាម៉ាស៊ីនស្មុគស្មាញ (Matter) ប៉ុន្តែមនុស្សមានព្រលឹង/ចិត្ត (Mind) ដែលអាចគិតបាន។</p>
+                `,
+                quiz: {
+                    question: "តើឃ្លា 'Cogito, ergo sum' មានន័យថាម៉េច?",
+                    options: [
+                        "ខ្ញុំដើរ ទើបខ្ញុំមាន",
+                        "ខ្ញុំគិត ទើបខ្ញុំមាន (ការគិតបញ្ជាក់ពីអត្ថិភាព)",
+                        "ខ្ញុំមានលុយ ទើបខ្ញុំមាន",
+                        "ព្រះជាម្ចាស់បង្កើតខ្ញុំ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ទោះបីជាអ្វីៗទាំងអស់ជាការបោកបញ្ឆោតក៏ដោយ ក៏ត្រូវតែមាន 'នរណាម្នាក់' ដែលកំពុងត្រូវបានបោកបញ្ឆោត។ នោះគឺជាអ្នក។"
+                }
+            },
+            {
+                title: "7. កង់៖ វ៉ែនតានៃហេតុផល (Kant)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">អ្នកផ្សះផ្សា</h3>
+                    <p class="mb-4">Immanuel Kant (សតវត្សទី ១៨) បានផ្សះផ្សារវាងអ្នកដែលជឿលើហេតុផល (Rationalists ដូចជា Descartes) និងអ្នកដែលជឿលើវិញ្ញាណ (Empiricists ដូចជា Hume)។</p>
+                    <p class="mb-4">Kant និយាយថា៖ ត្រូវហើយ ចំណេះដឹងទាំងអស់ចាប់ផ្តើមពីវិញ្ញាណ (ភ្នែកមើលឃើញ)។ ប៉ុន្តែ <strong>ខួរក្បាលរបស់យើងមិនមែននៅស្ងៀមទេ</strong>។ ខួរក្បាលមាន "ទម្រង់" ស្រាប់សម្រាប់រៀបចំទិន្នន័យនោះ។ ទម្រង់នោះគឺ <strong>ពេលវេលា និង ទីកន្លែង (Time and Space)</strong>។</p>
+
+                    <div class="bg-slate-800 p-6 rounded-lg border border-pink-500/30 my-6">
+                        <h4 class="text-xl font-bold text-pink-400 mb-3">👓 វ៉ែនតាពណ៌កុលាប</h4>
+                        <p>Kant ប្រៀបធៀបខួរក្បាលទៅនឹងវ៉ែនតាពណ៌កុលាប។</p>
+                        <p class="mt-2">បើអ្នកពាក់វ៉ែនតាពណ៌ក្រហម ពិភពលោកទាំងមូលនឹងមានពណ៌ក្រហម។ ពណ៌ក្រហមមិនមែនមកពីពិភពលោកទេ តែមកពីវ៉ែនតារបស់អ្នក។</p>
+                        <p class="mt-2">ដូចគ្នាដែរ យើងមិនអាចដឹងថាពិភពលោកពិតប្រាកដ (Das Ding an sich) ជាអ្វីទេ។ យើងដឹងតែអ្វីដែលខួរក្បាលយើងបកប្រែប៉ុណ្ណោះ។ ខួរក្បាលយើងដាក់ច្បាប់ "ហេតុនិងផល" ទៅលើអ្វីៗទាំងអស់។</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">ច្បាប់សីលធម៌ (Categorical Imperative)</h3>
+                    <p class="mb-4">Kant ជឿថាមានច្បាប់សីលធម៌នៅក្នុងចិត្តយើង។ ច្បាប់នោះគឺ៖ <strong>"ចូរធ្វើសកម្មភាព ហាក់ដូចជាទង្វើរបស់អ្នកនឹងក្លាយជាច្បាប់សកលសម្រាប់មនុស្សគ្រប់គ្នា។"</strong></p>
+                    <p class="mb-4">ឧទាហរណ៍៖ កុំកុហក។ ព្រោះបើមនុស្សគ្រប់គ្នាកុហក (ច្បាប់សកល) នោះពិភពលោកនឹងវិនាស។</p>
+                `,
+                scenario: `
+                    <p><strong>សំណួរ៖</strong> បើឃាតករមករកមិត្តភក្តិអ្នកដែលពួនក្នុងផ្ទះ តើអ្នកគួរកុហកថាគាត់មិននៅទេឬ? Kant (ដែលតឹងរ៉ឹង) នឹងថា "កុំកុហក" ព្រោះការកុហកគឺខុសជានិច្ច។ (នេះជាចំណុចចម្រូងចម្រាស!)</p>
+                `,
+                quiz: {
+                    question: "តើ Kant ប្រៀបធៀបខួរក្បាលរបស់យើងទៅនឹងអ្វី?",
+                    options: [
+                        "កុំព្យូទ័រ",
+                        "វ៉ែនតាដែលកែប្រែរបៀបដែលយើងមើលឃើញពិភពលោក",
+                        "កញ្ចក់ថ្លា",
+                        "បន្ទប់ងងឹត"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! យើងមិនឃើញពិភពលោកតាមបែបវាទេ យើងឃើញពិភពលោកតាមបែប 'យើង'។"
+                }
+            },
+            {
+                title: "8. សាត៖ យើងត្រូវបានកាត់ទោសឱ្យមានសេរីភាព (Sartre & Existentialism)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">អត្ថិភាព មុន អត្ថន័យ</h3>
+                    <p class="mb-4">Jean-Paul Sartre (សតវត្សទី ២០) គឺជាអ្នកទស្សនវិទូ "អត្ថិភាពនិយម" (Existentialist)។ គាត់និយាយថា សម្រាប់មនុស្ស <strong>"Existence precedes Essence"</strong> (អត្ថិភាព មកមុន អត្ថន័យ/ខ្លឹមសារ)។</p>
+                    <ul class="list-disc ml-6 mb-4 text-slate-300">
+                        <li>កាំបិត (វត្ថុ)៖ ជាងដែកមានគំនិត (Essence) ថាចង់ធ្វើកាំបិតសម្រាប់កាត់ ទើបគាត់បង្កើតវា (Existence)។ កាំបិតមានគោលបំណងស្រាប់។</li>
+                        <li>មនុស្ស៖ យើងកើតមក (Existence) ដោយទទេស្អាត។ គ្មានព្រះ ឬធម្មជាតិកំណត់ថា យើងត្រូវធ្វើជាអ្វីទេ។ យើងត្រូវបង្កើតអត្ថន័យ (Essence) ដោយខ្លួនឯង។</li>
+                    </ul>
+
+                    <div class="letter-box bg-slate-900 text-slate-200 border-slate-700">
+                        <p class="text-xl font-bold text-center text-red-400">"Man is condemned to be free."</p>
+                        <p class="text-center text-sm">(មនុស្សត្រូវបានកាត់ទោសឱ្យមានសេរីភាព)</p>
+                        <p class="mt-4">នេះស្តាប់ទៅដូចជាពិរោះ តែវាគួរឱ្យខ្លាច។ ព្រោះវាមានន័យថា <strong>យើងគ្មានលេសទេ</strong>។ យើងទទួលខុសត្រូវ ១០០% ចំពោះជីវិតយើង។ បើយើងបរាជ័យ យើងមិនអាចបន្ទោសព្រហ្មលិខិត ឬសង្គមបានទេ។</p>
+                    </div>
+
+                    <p class="mb-4 mt-6">Sartre និយាយថា យើងត្រូវបង្កើតន័យឱ្យជីវិតខ្លួនឯង។ បើយើងបណ្តោយឱ្យសង្គមដឹកមុខ យើងកំពុងរស់នៅដោយ <strong>"Bad Faith" (ការបោកប្រាស់ខ្លួនឯង)</strong>។</p>
+                `,
+                scenario: `
+                    <p><strong>ការជ្រើសរើស៖</strong> យុវជនម្នាក់សួរ Sartre ថា "តើខ្ញុំគួរទៅចូលបម្រើទ័ពការពារជាតិ ឬនៅមើលថែម្តាយចាស់?" Sartre ឆ្លើយថា "គ្មានសៀវភៅសីលធម៌ណាអាចប្រាប់អ្នកបានទេ។ អ្នកមានសេរីភាព។ ជ្រើសរើសចុះ នោះជម្រើសរបស់អ្នកនឹងក្លាយជាសីលធម៌របស់អ្នក។"</p>
+                `,
+                quiz: {
+                    question: "តើឃ្លា 'Existence precedes Essence' មានន័យថាម៉េច?",
+                    options: [
+                        "យើងមានវាសនាកំណត់តាំងពីកើត",
+                        "យើងកើតមកជាក្រដាសស រួចយើងបង្កើតអត្តសញ្ញាណនិងគោលបំណងជីវិតដោយខ្លួនឯងតាមក្រោយ",
+                        "ព្រះជាម្ចាស់មានផែនការសម្រាប់យើង",
+                        "ជីវិតគ្មានន័យទេ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! អ្នកគឺជាអ្នកនិពន្ធសៀវភៅជីវិតរបស់អ្នក។ គ្មាននរណាម្នាក់អាចសរសេរជំនួសអ្នកបានទេ។"
+                }
+            },
+            {
+                title: "9. ពិធីជប់លៀងសួនច្បារ (The Big Bang & Conclusion)",
+                content: `
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">យើងគឺជាផ្កាយ</h3>
+                    <p class="mb-4">នៅចុងបញ្ចប់នៃសៀវភៅ សូហ្វីបានរៀនអំពី <strong>The Big Bang</strong>។</p>
+                    <p class="mb-4">អ្វីៗទាំងអស់ក្នុងចក្រវាឡត្រូវបានបង្កើតឡើងពីសារធាតុតែមួយដែលផ្ទុះចេញពីចំណុចតូចមួយកាលពី ១៥ ពាន់លានឆ្នាំមុន។ អាតូមនៅក្នុងខ្លួនយើងធ្លាប់ជាផ្នែកនៃផ្កាយដែលឆេះរលាយ។</p>
+                    
+                    <div class="bg-gradient-to-r from-indigo-900 to-purple-900 p-8 rounded-xl text-center border border-indigo-500/50 my-8 shadow-[0_0_30px_rgba(79,70,229,0.3)]">
+                        <p class="text-2xl text-white font-serif italic mb-4">"យើងគឺជាធូលីផ្កាយ (Stardust) ដែលមានជីវិត។"</p>
+                        <p class="text-slate-300">យើងគឺជាវិធីដែលចក្រវាឡ ស្គាល់ខ្លួនឯង។ នៅពេលអ្នកសម្លឹងមើលផ្កាយ គឺចក្រវាឡកំពុងសម្លឹងមើលខ្លួនឯង។</p>
+                    </div>
+
+                    <p class="mb-4">សៀវភៅបញ្ចប់ដោយការដឹងថា សូហ្វីខ្លួនឯងគ្រាន់តែជាតួអង្គក្នុងសៀវភៅដែលសរសេរដោយអ្នកនិពន្ធម្នាក់ (The Major) ដើម្បីជាកាដូឱ្យកូនស្រីគាត់ (Hilde)។ នេះគឺជាការឆ្លុះបញ្ចាំងពីទស្សនវិជ្ជា៖ តើយើងពិតជាមានមែន ឬយើងគ្រាន់តែជាគំនិតរបស់ព្រះ?</p>
+                    <p class="mb-4">ទោះជាយ៉ាងណា ទស្សនវិជ្ជាបង្រៀនឱ្យយើងមិនទទួលយកពិភពលោកថាជារឿងធម្មតា។ ជីវិតគឺជាអាថ៌កំបាំងដ៏អស្ចារ្យ។</p>
+                `,
+                scenario: `
+                    <p><strong>កិច្ចការចុងក្រោយ៖</strong> ថ្ងៃនេះ សូមដើរចេញទៅក្រៅ មើលមេឃ ហើយសួរខ្លួនឯងម្តងទៀតនូវសំណួរដំបូង៖ <strong>"តើអ្នកជានរណា?"</strong> ហើយកុំទទួលយកចម្លើយដែលគ្រាន់តែជាឈ្មោះរបស់អ្នក។</p>
+                `,
+                quiz: {
+                    question: "តើមេរៀនសំខាន់បំផុតពីសៀវភៅ 'ពិភពរបស់សូហ្វី' គឺអ្វី?",
+                    options: [
+                        "ឱ្យចេះចាំឈ្មោះទស្សនវិទូ",
+                        "ឱ្យចេះតស៊ូនឹងវាសនា",
+                        "ឱ្យរក្សា 'ការងឿងឆ្ងល់' (Curiosity) និងមិនដែលបាត់បង់អារម្មណ៍អស្ចារ្យចំពោះជីវិត",
+                        "ឱ្យក្លាយជាអ្នកមាន"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ទស្សនវិជ្ជាមិនមែនជាការរៀនចម្លើយទេ តែជាការរៀនសួរសំណួរ។ កុំឱ្យទម្លាប់ធ្វើឱ្យអ្នកងងឹតភ្នែកចំពោះភាពអស្ចារ្យនៃពិភពលោក។"
+                }
+            }
+        ];
+
+        // App Logic
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-8 py-4 hover:bg-slate-800 transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-amber-500' : 'text-slate-400'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-slate-700">${index + 1}</span>
+                    <span class="truncate">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-slate-800');
+                b.classList.add('text-slate-400', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-amber-500', 'text-white', 'border-amber-500');
+                b.querySelector('.lesson-indicator').classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-slate-800');
+                activeBtn.classList.remove('text-slate-400', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-amber-500', 'text-white', 'border-amber-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `បញ្ចប់វគ្គសិក្សា <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` : 
+                `ទស្សនវិទូបន្ទាប់ <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+            
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-6 hidden p-6 rounded-xl text-lg border border-transparent shadow-lg bg-opacity-95";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-600 hover:bg-slate-700 transition flex items-center shadow-md group bg-slate-800 text-slate-300";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-slate-500 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-slate-400 group-hover:bg-amber-500 group-hover:text-white group-hover:border-amber-500 transition">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="font-medium group-hover:text-white">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-emerald-500', 'border-transparent');
+                
+                quizFeedback.className = "mt-6 p-6 rounded-xl bg-emerald-900/50 text-emerald-200 border border-emerald-500/50 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-emerald-400 text-xl block mb-2">ត្រឹមត្រូវ! ✨</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-6 p-6 rounded-xl bg-red-950/50 text-red-200 border border-red-500/50 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-xl block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("សូមអបអរសាទរ! អ្នកបានបញ្ចប់ការសិក្សាទស្សនវិជ្ជាហើយ។");
+            }
+        };
+
+        function launchConfetti() {
+            const colors = ['#f59e0b', '#fbbf24', '#fcd34d', '#3b82f6', '#8b5cf6'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 8 + 4 + 'px';
+                conf.style.height = Math.random() * 8 + 4 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(255,255,255,0.5)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 4 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
