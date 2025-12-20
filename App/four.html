@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Four Agreements - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #fefce8; /* Yellow-50 */
+            color: #422006; /* Yellow-950/Brown */
+            line-height: 1.9;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', cursive;
+        }
+        .fade-in {
+            animation: fadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #fef08a; /* Yellow-200 */
+            border-right: 4px solid #a16207; /* Yellow-700 */
+            color: #713f12; /* Yellow-900 */
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #14532d !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #7f1d1d !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fde047;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308;
+        }
+        .concept-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-left: 6px solid #eab308;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #a16207;
+            padding-left: 1.5rem;
+            color: #854d0e;
+            margin: 2rem 0;
+            background-color: #fffbeb;
+            padding: 1.5rem;
+            border-radius: 0 1rem 1rem 0;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white p-4 shadow-md flex justify-between items-center z-20 border-b border-yellow-100">
+        <h1 class="text-xl font-bold text-yellow-800 kh-title">The Four Agreements</h1>
+        <button id="menuBtn" class="text-yellow-800 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-white shadow-xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-yellow-100">
+        <div class="p-8 border-b border-yellow-50 hidden md:block bg-gradient-to-b from-yellow-50 to-white">
+            <h1 class="text-2xl font-bold text-yellow-900 kh-title leading-relaxed">កិច្ចសន្យាទាំង ៤</h1>
+            <p class="text-xs text-yellow-700 mt-2 font-medium uppercase tracking-wider">The Four Agreements</p>
+            <p class="text-xs text-gray-400 mt-1">Don Miguel Ruiz</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-6 space-y-1" id="lessonList">
+            <!-- Navigation Items will be injected here -->
+        </div>
+
+        <div class="p-6 border-t border-yellow-50 bg-yellow-50/50">
+            <div class="flex justify-between text-sm mb-2 text-yellow-900 font-bold">
+                <span>វឌ្ឍនភាព</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-yellow-200 rounded-full h-2.5 overflow-hidden">
+                <div id="progressBar" class="bg-yellow-600 h-2.5 rounded-full transition-all duration-700 shadow-sm" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]" id="mainContent">
+        <div class="max-w-5xl mx-auto p-6 md:p-12 pb-32">
+            
+            <!-- Welcome Screen (Initial State) -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[70vh] text-center fade-in">
+                <div class="bg-white/90 backdrop-blur-sm p-12 rounded-3xl shadow-2xl max-w-3xl border border-yellow-100 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+                    <div class="text-8xl mb-8 text-yellow-600">🌞</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 kh-title leading-tight">ស្វែងរកសេរីភាពផ្ទាល់ខ្លួន</h2>
+                    <p class="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto">
+                        ស្វាគមន៍មកកាន់ប្រាជ្ញា Toltec បុរាណ។<br>
+                        រៀនពីរបៀបបំបែកកិច្ចសន្យាដែលធ្វើឱ្យអ្នកឈឺចាប់ និងបង្កើតកិច្ចសន្យាថ្មីដែលនាំមកនូវសេចក្តីសុខ និងសេរីភាព។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition transform hover:-translate-y-1 text-xl flex items-center mx-auto ring-4 ring-yellow-100">
+                        <span>ចាប់ផ្តើមសិក្សា</span>
+                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content (Dynamic) -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-yellow-800 mb-8 font-bold text-sm uppercase tracking-wide bg-yellow-100 w-fit px-4 py-2 rounded-lg shadow-sm border border-yellow-200">
+                    <span id="chapterNumber">Introduction</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-yellow-950 mb-10 kh-title leading-snug"></h2>
+                
+                <div class="prose prose-lg md:prose-xl max-w-none text-gray-800 leading-loose font-light" id="lessonBody">
+                    <!-- Lesson HTML Content -->
+                </div>
+
+                <!-- Interactive Scenario / Example Box -->
+                <div id="scenarioBox" class="bg-white border-l-8 border-orange-500 p-8 rounded-r-xl mb-10 hidden shadow-md mt-12 ring-1 ring-gray-100">
+                    <h3 class="text-2xl font-bold text-orange-800 mb-4 flex items-center kh-title">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        ការអនុវត្តក្នុងជីវិតពិត (Practical Steps)
+                    </h3>
+                    <div id="scenarioContent" class="text-gray-800 text-lg"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white/80 backdrop-blur rounded-3xl shadow-xl p-8 md:p-12 border border-yellow-200 mt-16 relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-yellow-100 rounded-full opacity-50 blur-3xl"></div>
+                    
+                    <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center kh-title relative z-10">
+                        <span class="bg-yellow-500 text-white text-sm font-bold mr-4 px-4 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Quiz</span>
+                        សាកល្បងការយល់ដឹង
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-6 text-gray-900 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-6 hidden p-6 rounded-xl text-lg border border-transparent shadow-sm bg-opacity-90"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center mt-16 pt-8 border-t border-yellow-200/50">
+                    <button id="prevBtn" class="px-8 py-4 rounded-xl border border-yellow-300 text-yellow-800 hover:bg-white hover:shadow-md transition-all flex items-center bg-yellow-50">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        ត្រឡប់ក្រោយ
+                    </button>
+                    <button id="nextBtn" class="px-8 py-4 rounded-xl bg-yellow-600 text-white hover:bg-yellow-700 font-bold shadow-lg hover:shadow-yellow-200 flex items-center transition-all transform hover:-translate-y-1">
+                        បន្តទៅមុខ
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Full Detail Content for The Four Agreements
+        const lessons = [
+            {
+                title: "1. ការផ្សាំង និងសុបិននៃភពផែនដី (Domestication & The Dream of the Planet)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">តើយើងជានរណាពិតប្រាកដ?</h3>
+                    <p class="mb-4">Don Miguel Ruiz ចាប់ផ្តើមដោយការពន្យល់ថា អ្វីដែលយើងឃើញនិងឮនៅជុំវិញខ្លួនយើងនៅពេលនេះ គឺជា <strong>"សុបិន" (Dream)</strong>។ មនុស្សលោកកំពុងសុបិនគ្រប់ពេលវេលា ទោះបីជាពេលភ្ញាក់ក៏ដោយ។</p>
+                    <p class="mb-4">សង្គម មាតាបិតា សាសនា និងសាលារៀន បានបង្កើតសុបិនមួយរួមគ្នា ដែលហៅថា <strong>"សុបិននៃភពផែនដី" (The Dream of the Planet)</strong>។ សុបិននេះកំណត់ច្បាប់ថា យើងត្រូវជឿលើអ្វី ត្រូវធ្វើខ្លួនបែបណា និងត្រូវវិនិច្ឆ័យអ្វីថា "ល្អ" ឬ "អាក្រក់"។</p>
+
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-800 mb-2">🐾 ការផ្សាំងមនុស្ស (Domestication of Humans)</h4>
+                        <p>កាលពីក្មេង យើងមិនមានសិទ្ធិជ្រើសរើសជំនឿរបស់យើងទេ។ យើងត្រូវបាន "ផ្សាំង" ដូចជាសត្វចិញ្ចឹម៖</p>
+                        <ul class="list-disc ml-5 mt-2 space-y-2 text-gray-700">
+                            <li>នៅពេលយើងធ្វើតាមច្បាប់ប៉ាម៉ាក់ យើងទទួលបានការសរសើរ ("កូនល្អ")។ នេះគឺជា <strong>រង្វាន់</strong>។</li>
+                            <li>នៅពេលយើងធ្វើខុស យើងត្រូវបានស្តីបន្ទោស។ នេះគឺជា <strong>ការដាក់ទោស</strong>។</li>
+                        </ul>
+                        <p class="mt-2">ដោយសារយើងខ្លាចការដាក់ទោស និងឃ្លានរង្វាន់ (ការទទួលស្គាល់) យើងចាប់ផ្តើម <strong>"សម្តែង" (Pretend)</strong> ធ្វើជាមនុស្សម្នាក់ផ្សេងទៀត ដើម្បីផ្គាប់ចិត្តអ្នកដទៃ។ យើងបាត់បង់ខ្លួនឯងពិតប្រាកដ។ នេះហើយជា Domestication។</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">ចៅក្រម និងជនរងគ្រោះ (The Judge and The Victim)</h3>
+                    <p class="mb-4">ជាលទ្ធផលនៃការផ្សាំង យើងបង្កើតតួអង្គពីរនៅក្នុងចិត្តរបស់យើង៖</p>
+                    <ul class="list-none space-y-3">
+                        <li class="bg-white p-4 rounded shadow-sm border-l-4 border-red-500">
+                            <strong>👨‍⚖️ ចៅក្រម (The Judge):</strong> ជាសំឡេងដែលតែងតែវិនិច្ឆ័យយើងថា "ឯងមិនល្អគ្រប់គ្រាន់ទេ" "ឯងធ្វើខុសហើយ"។ វាវិនិច្ឆ័យដោយផ្អែកលើ "សៀវភៅច្បាប់" ដែលយើងមិនបានសរសេរ។
+                        </li>
+                        <li class="bg-white p-4 rounded shadow-sm border-l-4 border-blue-500">
+                            <strong>🤕 ជនរងគ្រោះ (The Victim):</strong> ជាផ្នែកដែលទទួលរងការវិនិច្ឆ័យនោះ។ "ខ្ញុំគួរឱ្យអាណិតណាស់" "ខ្ញុំមិនឆ្លាតទេ" "ខ្ញុំមិនស្អាតទេ"។
+                        </li>
+                    </ul>
+                    <p class="mb-4">កិច្ចសន្យាទាំង ៤ ត្រូវបានបង្កើតឡើងដើម្បីកម្ទេចចៅក្រមនេះ និងរំដោះជនរងគ្រោះឱ្យមានសេរីភាពវិញ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong></p>
+                    <p>សួរខ្លួនឯងថា៖ "តើមានជំនឿអ្វីខ្លះដែលខ្ញុំមានចំពោះខ្លួនឯង (ឧ. ខ្ញុំមិនពូកែគណិត, ខ្ញុំមុខអាក្រក់) ដែលមិនមែនជាការពិត ប៉ុន្តែខ្ញុំជឿវាព្រោះមានគេធ្លាប់ប្រាប់ខ្ញុំកាលពីក្មេង?"</p>
+                    <p>នោះគឺជា "កិច្ចសន្យាចាស់" ដែលអ្នកបានចុះហត្ថលេខាដោយមិនដឹងខ្លួន។</p>
+                `,
+                quiz: {
+                    question: "តើដំណើរការ 'Domestication' (ការផ្សាំង) ធ្វើឱ្យយើងបាត់បង់អ្វី?",
+                    options: [
+                        "បាត់បង់លុយកាក់",
+                        "បាត់បង់សេរីភាពក្នុងការធ្វើជាខ្លួនឯងពិតប្រាកដ (Authenticity)",
+                        "បាត់បង់ការចងចាំ",
+                        "បាត់បង់មិត្តភក្តិ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! យើងក្លាយជា 'តួអង្គ' ដែលសង្គមចង់បាន ជំនួសឱ្យការធ្វើជាខ្លួនឯង។ យើងរស់នៅដើម្បីផ្គាប់ចិត្តអ្នកដទៃព្រោះខ្លាចគេបដិសេធ។"
+                }
+            },
+            {
+                title: "2. កិច្ចសន្យាទី ១៖ មានសច្ចៈជាមួយពាក្យសម្តី (Be Impeccable With Your Word)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">កិច្ចសន្យាដែលសំខាន់បំផុត និងពិបាកបំផុត</h3>
+                    <p class="mb-4"><strong>"Be Impeccable With Your Word"</strong> (ចូរមានសច្ចៈជាមួយនឹងពាក្យសម្តីរបស់អ្នក)។</p>
+                    <p class="mb-4">ពាក្យសម្តីមិនមែនគ្រាន់តែជាសំឡេងទេ។ វាគឺជា <strong>"អំណាច" (Power)</strong>។ វាគឺជាមន្តអាគមន៍ដែលអាចបង្កើត ឬបំផ្លាញ។ ហ៊ីត្លែរ (Hitler) ប្រើពាក្យសម្តីដើម្បីបង្កើតសង្គ្រាមលោក និងសម្លាប់មនុស្សរាប់លាននាក់។ ម៉ាទីន លូធ័រ ឃីង ប្រើពាក្យសម្តីដើម្បីបង្កើតសន្តិភាព។</p>
+
+                    <div class="quote-box">
+                        "Impeccable" មកពីភាសាឡាតាំង "Pecatus" (Bap/Sin) និង "Im" (Without).<br>
+                        ដូច្នេះ "Impeccable" មានន័យថា "Without Sin" (គ្មានបាប)។
+                    </div>
+
+                    <p class="mb-4">តើអ្វីជា "បាប" នៅក្នុងបរិបទនេះ? បាបគឺជារាល់អ្វីដែលអ្នកធ្វើដែល <strong>ប្រឆាំងនឹងខ្លួនឯង</strong>។</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li>នៅពេលអ្នកជេរខ្លួនឯងថា "ខ្ញុំល្ងង់ណាស់" អ្នកកំពុងប្រើពាក្យសម្តីប្រឆាំងនឹងខ្លួនឯង។ នេះមិនមែន Impeccable ទេ។</li>
+                        <li>នៅពេលអ្នកនិយាយដើមគេ (Gossip) អ្នកកំពុងប្រើពាក្យសម្តីដើម្បីសាបព្រួសពិសពុល។</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">មន្តអាគមន៍ខ្មៅ (Black Magic)</h3>
+                    <p class="mb-4">ការនិយាយដើមគេ (Gossip) ត្រូវបានប្រៀបធៀបទៅនឹង "វីរុសកុំព្យូទ័រ"។ ពាក្យសម្តីមួយឃ្លាអាចផ្លាស់ប្តូរជីវិតមនុស្សម្នាក់។</p>
+                    <p class="mb-4">ឧទាហរណ៍៖ កូនស្រីតូចម្នាក់កំពុងច្រៀងលេងយ៉ាងសប្បាយ។ ម្តាយរបស់នាងកំពុងឈឺក្បាលខ្លាំង ហើយស្រែកថា "ឈប់ទៅ! សំឡេងឯងអាក្រក់ណាស់!"។ កូនស្រីជឿសម្តីនោះ ហើយឈប់ច្រៀងមួយជីវិត។ នាងបង្កើតកិច្ចសន្យាថ្មីថា "សំឡេងខ្ញុំអាក្រក់"។ នេះគឺជាឥទ្ធិពលនៃពាក្យសម្តីដែលមិនមានសច្ចៈ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការអនុវត្ត៖</strong></p>
+                    <p>១. ឈប់និយាយវិនិច្ឆ័យខ្លួនឯង (Self-judgment)។ ជំនួសឱ្យ "ខ្ញុំធាត់ហើយអាក្រក់" និយាយថា "ខ្ញុំនឹងថែរក្សារាងកាយខ្ញុំឱ្យល្អ"។</p>
+                    <p>២. ឈប់និយាយដើមគេ។ បើគ្មានពាក្យល្អនិយាយពីគេទេ កុំនិយាយអីល្អជាង។</p>
+                `,
+                quiz: {
+                    question: "តើពាក្យថា 'Impeccable' នៅក្នុងកិច្ចសន្យានេះមានន័យដូចម្តេច?",
+                    options: [
+                        "និយាយតែពាក្យពិរោះៗ",
+                        "មិនប្រើពាក្យសម្តីដើម្បីប្រឆាំងនឹងខ្លួនឯង ឬអ្នកដទៃ (Without Sin against oneself)",
+                        "កុំនិយាយកុហកសោះ",
+                        "និយាយតិចបំផុត"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! នៅពេលអ្នកប្រើពាក្យសម្តីដើម្បីបង្កើតក្តីស្រលាញ់ និងសេចក្តីពិត អ្នកកំពុងមានសច្ចៈ (Impeccable)។ នៅពេលអ្នកប្រើវាដើម្បីស្តីបន្ទោស ឬបង្កើតការស្អប់ អ្នកកំពុងធ្វើបាបខ្លួនឯង។"
+                }
+            },
+            {
+                title: "3. កិច្ចសន្យាទី ២៖ កុំប្រកាន់យកអ្វីៗជារឿងផ្ទាល់ខ្លួន (Don't Take Anything Personally)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">វាមិនមែនជារឿងរបស់អ្នកទេ</h3>
+                    <p class="mb-4">កិច្ចសន្យាទី ២ គឺ៖ <strong>"Don't Take Anything Personally"</strong>។</p>
+                    <p class="mb-4">មិនថាមានរឿងអ្វីកើតឡើងនៅជុំវិញខ្លួនអ្នកទេ សូមកុំយកវាជារឿងផ្ទាល់ខ្លួន។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-800 mb-2">💡 ការពិតដ៏សំខាន់</h4>
+                        <p class="text-lg font-medium">"អ្វីដែលអ្នកដទៃធ្វើ ឬនិយាយ វាមិនមែនដោយសារអ្នកទេ វាគឺដោយសារតែ **ពួកគេខ្លួនឯង**។"</p>
+                        <p class="mt-2 text-gray-700">រាល់មនុស្សទាំងអស់រស់នៅក្នុង "សុបិន" រៀងៗខ្លួន។ នៅពេលគេជេរអ្នក វាគឺជាការឆ្លុះបញ្ចាំងពីរបួស និងការភ័យខ្លាចនៅក្នុងចិត្តរបស់គេ មិនមែនជាការពិតអំពីអ្នកទេ។</p>
+                    </div>
+
+                    <p class="mb-4">ឧទាហរណ៍៖ បើមាននរណាម្នាក់នៅតាមផ្លូវស្រែកដាក់អ្នកថា "ឯងល្ងង់ណាស់!" ដោយមិនស្គាល់អ្នកសោះ។ ពាក្យនេះមិនមែនជារឿងរបស់អ្នកទេ វាជារឿងរបស់គេ។ បើអ្នកខឹង មានន័យថាអ្នកយល់ស្របនឹងគេ ហើយអ្នកទទួលយក "ពិសពុល" (Emotional Poison) របស់គេមកដាក់ក្នុងខ្លួន។</p>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">សារៈសំខាន់ផ្ទាល់ខ្លួន (Personal Importance)</h3>
+                    <p class="mb-4">ហេតុអ្វីយើងឆាប់ប្រកាន់? ព្រោះយើងមាន <strong>Personal Importance</strong> ឬ អត្មានិយម។ យើងគិតថាគ្រប់យ៉ាងក្នុងលោកនេះវិលជុំវិញ "យើង"។</p>
+                    <p class="mb-4">នៅពេលអ្នកឈប់ប្រកាន់៖</p>
+                    <ul class="list-disc ml-6 space-y-2">
+                        <li>អ្នកនឹងមិនឈឺចាប់ដោយសារពាក្យសម្តីអ្នកដទៃ។</li>
+                        <li>អ្នកមិនត្រូវការឱ្យគេទទួលស្គាល់ ឬកោតសរសើរ។</li>
+                        <li>អ្នកអាចដើរដោយបើកបេះដូងទូលាយ ដោយមិនខ្លាចគេធ្វើបាប។</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> មិត្តរួមការងាររិះគន់ការងាររបស់អ្នកយ៉ាងខ្លាំង។</p>
+                    <p><strong>ប្រតិកម្មចាស់ (Taking it personally):</strong> "គាត់ស្អប់ខ្ញុំ។ ខ្ញុំប្រហែលជាអន់មែនហើយ។" (កើតទុក្ខ)</p>
+                    <p><strong>ប្រតិកម្មថ្មី (Don't take it personally):</strong> "គាត់ប្រហែលជាកំពុងមានថ្ងៃមិនល្អ ឬគាត់មានទស្សនៈខុសពីខ្ញុំ។ យោបល់របស់គាត់ជារឿងរបស់គាត់។ ការងាររបស់ខ្ញុំជារឿងរបស់ខ្ញុំ។ ខ្ញុំនឹងស្តាប់ដើម្បីកែលម្អ តែមិនទទួលយកការវាយប្រហារទេ។"</p>
+                `,
+                quiz: {
+                    question: "នៅពេលនរណាម្នាក់ប្រព្រឹត្តមិនល្អដាក់យើង តើវាមានន័យដូចម្តេច?",
+                    options: [
+                        "យើងបានធ្វើខុសអ្វីមួយ",
+                        "គេជាមនុស្សអាក្រក់",
+                        "វាគឺជាការឆ្លុះបញ្ចាំងពីបញ្ហាផ្ទាល់ខ្លួន និងរបួសនៅក្នុងចិត្តរបស់គេ មិនមែនអំពីយើងទេ",
+                        "យើងគួរតែសងសឹក"
+                    ],
+                    correct: 2,
+                    explanation: "ត្រឹមត្រូវ! ដូចពាក្យគេថា 'Hurt people hurt people' (មនុស្សដែលឈឺចាប់ តែងតែធ្វើឱ្យគេឈឺចាប់)។ បើអ្នកយល់ចំណុចនេះ អ្នកនឹងអាណិតគេ ជាជាងខឹងគេ។"
+                }
+            },
+            {
+                title: "4. កិច្ចសន្យាទី ៣៖ កុំសន្មតរឿងរ៉ាវ (Don't Make Assumptions)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">ដើមហេតុនៃរឿងតែកាឡៃ (Drama)</h3>
+                    <p class="mb-4">យើងមានទម្លាប់សន្មតរឿងរ៉ាវអំពីអ្វីៗទាំងអស់។ បញ្ហាគឺ៖ <strong>យើងជឿថាការសន្មតរបស់យើងគឺជាការពិត។</strong></p>
+                    
+                    <p class="mb-4">យើងសន្មតថាអ្នកដទៃគិតដូចយើង មានអារម្មណ៍ដូចយើង និងវិនិច្ឆ័យដូចយើង។ នេះគឺជាការសន្មតដ៏ធំបំផុត និងគ្រោះថ្នាក់បំផុត។</p>
+
+                    <div class="concept-card bg-orange-50 border-orange-300">
+                        <h4 class="font-bold text-orange-900 mb-2">សេណារីយ៉ូនៃសេចក្តីស្នេហា</h4>
+                        <p>"បើយើងស្រលាញ់គ្នា គាត់គួរតែដឹងថាខ្ញុំចង់បានអ្វី ដោយមិនចាំបាច់ខ្ញុំប្រាប់។"</p>
+                        <p class="mt-2 text-red-600 font-bold">ខុសហើយ! គ្មាននរណាម្នាក់អាចអានចិត្តអ្នកបានទេ។</p>
+                        <p class="mt-2">នៅពេលគាត់មិនធ្វើតាមអ្វីដែលអ្នករំពឹង (ដែលអ្នកមិនបានប្រាប់) អ្នកក៏ខឹង ហើយគាត់ក៏ឆ្ងល់ថា "មានរឿងអី?"។ នេះហើយជា Drama។</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">សេចក្តីក្លាហានក្នុងការសួរ (The Courage to Ask)</h3>
+                    <p class="mb-4">វិធីដើម្បីបញ្ឈប់ការសន្មតគឺ៖ <strong>សួរសំណួរ (Ask Questions)</strong>។</p>
+                    <p class="mb-4">សូមមានសេចក្តីក្លាហានដើម្បីសួររកភាពច្បាស់លាស់។ "តើអ្នកមានន័យយ៉ាងម៉េច?" "តើអ្នកចង់បានអ្វីពិតប្រាកដ?"។ នៅពេលអ្នកដឹងចម្លើយច្បាស់លាស់ អ្នកមិនចាំបាច់សន្មតទៀតទេ។</p>
+                    <p class="mb-4">ម្យ៉ាងទៀត ត្រូវមានសេចក្តីក្លាហានក្នុងការ <strong>និយាយពីអ្វីដែលអ្នកចង់បាន</strong>។ កុំរំពឹងឱ្យគេទាយ។</p>
+                `,
+                scenario: `
+                    <p><strong>ស្ថានការណ៍៖</strong> មិត្តភក្តិដើរកាត់អ្នកហើយមិនញញឹមដាក់។</p>
+                    <p><strong>ការសន្មត៖</strong> "គាត់ខឹងខ្ញុំហើយ។ ខ្ញុំប្រហែលជាធ្វើអីខុសហើយ។"</p>
+                    <p><strong>ការពិតដែលអាចទៅរួច៖</strong> គាត់ប្រហែលជាភ្លេចវ៉ែនតា ឬកំពុងគិតរឿងការងារ មិនបានចាប់អារម្មណ៍អ្នកទេ។ កុំសន្មត! ផ្ញើសារសួរគាត់ថា "ម៉េចហើយគ្នា?" ល្អជាងអង្គុយកើតទុក្ខ។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីជាថ្នាំព្យាបាលដ៏ស័ក្តិសិទ្ធិសម្រាប់ការសន្មត (Assumptions)?",
+                    options: [
+                        "ការគិតវិភាគឱ្យបានច្រើន",
+                        "ការសួរសំណួរ (Asking Questions) និងការប្រាស្រ័យទាក់ទងច្បាស់លាស់",
+                        "ការនៅស្ងៀម",
+                        "ការសន្មតក្នុងផ្លូវល្អ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ការប្រាស្រ័យទាក់ទងច្បាស់លាស់គឺជាកូនសោ។ នៅថ្ងៃដែលអ្នកឈប់សន្មត អ្នកនឹងរស់នៅដោយគ្មានជម្លោះក្នុងចិត្ត។"
+                }
+            },
+            {
+                title: "5. កិច្ចសន្យាទី ៤៖ តែងតែធ្វើឱ្យអស់ពីសមត្ថភាព (Always Do Your Best)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">កិច្ចសន្យាដែលធ្វើឱ្យ ៣ ខាងលើដំណើរការ</h3>
+                    <p class="mb-4">កិច្ចសន្យាទី ៤ គឺសាមញ្ញណាស់៖ <strong>"Always Do Your Best"</strong> (តែងតែធ្វើឱ្យអស់ពីសមត្ថភាព)។</p>
+                    <p class="mb-4">ប៉ុន្តែត្រូវចាំថា៖ <strong>"Best" (ល្អបំផុត) របស់អ្នក គឺប្រែប្រួលគ្រប់ពេលវេលា។</strong></p>
+                    <ul class="list-disc ml-6 space-y-2 mb-6">
+                        <li>"Best" របស់អ្នកនៅពេលព្រឹកដែលស្រស់ស្រាយ គឺខុសពី "Best" របស់អ្នកនៅពេលយប់ដែលហត់នឿយ។</li>
+                        <li>"Best" របស់អ្នកនៅពេលឈឺ ខុសពីពេលជា។</li>
+                        <li>"Best" របស់អ្នកនៅពេលស្រវឹង ខុសពីពេលមានស្មារតី។</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">កុំធ្វើលើស កុំធ្វើខ្វះ</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <strong>បើអ្នកធ្វើលើសពីសមត្ថភាព (Overdo):</strong> អ្នកនឹងអស់កម្លាំង រាងកាយខូចខាត ហើយត្រូវការពេលយូរដើម្បីងើបឡើងវិញ។ វាមិនមាននិរន្តរភាពទេ។
+                        </div>
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <strong>បើអ្នកធ្វើតិចជាងសមត្ថភាព (Underdo):</strong> អ្នកនឹងមានវិប្បដិសារី (Regret) ស្តីបន្ទោសខ្លួនឯង និងមានអារម្មណ៍ថាខ្លួនឯងនៅខ្វះខាត។
+                        </div>
+                    </div>
+
+                    <p class="mb-4 mt-6">នៅពេលអ្នកធ្វើ "អស់ពីសមត្ថភាព" (មិនថាស្ថានការណ៍បែបណា) ចៅក្រមក្នុងចិត្តរបស់អ្នកមិនអាចកាត់ទោសអ្នកបានទេ។ "ខ្ញុំបានធ្វើអស់ពីលទ្ធភាពហើយ" គឺជាប្រយោគការពារខ្លួនដ៏មានអំណាចបំផុត។</p>
+                    
+                    <p class="mb-4">ការធ្វើឱ្យអស់ពីសមត្ថភាព គឺជាការធ្វើដោយសារអ្នក <strong>ស្រលាញ់</strong> វា មិនមែនដោយសាររំពឹងរង្វាន់ទេ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការអនុវត្ត៖</strong> ថ្ងៃនេះអ្នកឈឺក្បាល ប៉ុន្តែអ្នកត្រូវទៅធ្វើការ។</p>
+                    <p>"Best" របស់អ្នកនៅថ្ងៃនេះ គឺធ្វើការងារសំខាន់ៗឱ្យចប់ ហើយទៅសម្រាក។ កុំប្រៀបធៀបខ្លួនឯងទៅនឹងថ្ងៃដែលអ្នកខ្លាំងក្លា។ គ្រាន់តែធ្វើឱ្យល្អបំផុតតាមដែលស្ថានភាពអនុញ្ញាត អ្នកនឹងគ្មានវិប្បដិសារីទេ។</p>
+                `,
+                quiz: {
+                    question: "ហេតុអ្វីបានជា 'ល្អបំផុត' (Your Best) របស់យើងមិនថេរ?",
+                    options: [
+                        "ព្រោះយើងខ្ជិល",
+                        "ព្រោះវាអាស្រ័យលើកត្តារាងកាយ អារម្មណ៍ និងពេលវេលាដែលប្រែប្រួលជានិច្ច",
+                        "ព្រោះយើងមិនពូកែ",
+                        "ព្រោះយើងមិនបានតាំងចិត្ត"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ទទួលយកភាពប្រែប្រួលនេះ។ កុំដាក់សម្ពាធលើខ្លួនឯងឱ្យល្អឥតខ្ចោះគ្រប់ពេល។ គ្រាន់តែធ្វើឱ្យអស់ពីលទ្ធភាពក្នុងពេលបច្ចុប្បន្នគឺគ្រប់គ្រាន់ហើយ។"
+                }
+            },
+            {
+                title: "6. ផ្លូវឆ្ពោះទៅសេរីភាព (The Toltec Path to Freedom)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">ការបំបែកកិច្ចសន្យាចាស់</h3>
+                    <p class="mb-4">កិច្ចសន្យាទាំង ៤ ខាងលើ គឺជាអាវុធដើម្បីប្រយុទ្ធនឹងកិច្ចសន្យាចាស់ៗរាប់ពាន់ដែលធ្វើឱ្យយើងឈឺចាប់។</p>
+                    <p class="mb-4">Don Miguel Ruiz ហៅកិច្ចសន្យាអាក្រក់ៗថាជា <strong>"ប៉ារ៉ាស៊ីត" (The Parasite)</strong> ដែលរស់នៅក្នុងចិត្តរបស់យើង។ ប៉ារ៉ាស៊ីតនេះស៊ីអារម្មណ៍អវិជ្ជមានជាអាហារ។</p>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">ជំនាញ ៣ យ៉ាងដើម្បីក្លាយជាអ្នកចម្បាំង Toltec</h3>
+                    <ol class="list-decimal ml-6 space-y-4">
+                        <li>
+                            <strong>ការដឹងខ្លួន (Awareness):</strong> អ្នកត្រូវដឹងថាអ្នកកំពុងសុបិន។ អ្នកត្រូវមើលឃើញថា "ចៅក្រម" និង "ជនរងគ្រោះ" កំពុងគ្រប់គ្រងចិត្តអ្នក។ បើមិនដឹងខ្លួនទេ អ្នកមិនអាចផ្លាស់ប្តូរបានទេ។
+                        </li>
+                        <li>
+                            <strong>ការអត់ទោស (Forgiveness):</strong> អ្នកត្រូវអត់ទោសឱ្យអ្នកដទៃដែលធ្វើបាបអ្នក (ព្រោះពួកគេក៏ជាជនរងគ្រោះនៃការផ្សាំងដែរ)។ សំខាន់ជាងនេះ ត្រូវអត់ទោសឱ្យខ្លួនឯង។ ការអត់ទោសគឺជាវិធីតែមួយគត់ដើម្បីព្យាបាលរបួស។
+                        </li>
+                        <li>
+                            <strong>សេចក្តីស្លាប់ (Initiation of Death):</strong> មិនមែនស្លាប់រាងកាយទេ គឺការសម្លាប់ "ប៉ារ៉ាស៊ីត" ក្នុងចិត្ត។ គឺការហ៊ានប្រឈមមុខនឹងការភ័យខ្លាច ហើយរស់នៅរាល់ថ្ងៃដូចជាថ្ងៃចុងក្រោយ។
+                        </li>
+                    </ol>
+
+                    <p class="mb-4 mt-6">នៅពេលអ្នកបំបែកកិច្ចសន្យាចាស់ ហើយជំនួសដោយកិច្ចសន្យាថ្មីទាំង ៤ ជីវិតរបស់អ្នកនឹងផ្លាស់ប្តូរពី "ឋាននរក" មកជា "ឋានសួគ៌" នៅលើផែនដីនេះ។</p>
+                `,
+                scenario: `
+                    <p><strong>ពិធីនៃការអត់ទោស៖</strong></p>
+                    <p>សរសេរឈ្មោះមនុស្សដែលធ្វើឱ្យអ្នកឈឺចាប់ ហើយនិយាយថា "ខ្ញុំអត់ទោសឱ្យអ្នក"។ ធ្វើបែបនេះមិនមែនដើម្បីគេទេ គឺដើម្បីអ្នក។ អ្នកមិនចង់ផឹកថ្នាំពិសហើយរំពឹងឱ្យគេស្លាប់ទេ។ ការអត់ទោសគឺការឈប់ផឹកថ្នាំពិសនោះ។</p>
+                `,
+                quiz: {
+                    question: "តើអ្វីជា 'ប៉ារ៉ាស៊ីត' នៅក្នុងចិត្តរបស់យើង?",
+                    options: [
+                        "បាក់តេរី",
+                        "ជំនឿអវិជ្ជមាន ចៅក្រម និងជនរងគ្រោះ ដែលគ្រប់គ្រងជីវិតយើង",
+                        "មិត្តភក្តិអាក្រក់",
+                        "ជំងឺផ្លូវកាយ"
+                    ],
+                    correct: 1,
+                    explanation: "ត្រឹមត្រូវ! ប៉ារ៉ាស៊ីតគឺជាកម្មវិធីកុំព្យូទ័រដែលមានមេរោគនៅក្នុងខួរក្បាលរបស់យើង។ កិច្ចសន្យាទាំង ៤ គឺជា Antivirus។"
+                }
+            },
+            {
+                title: "7. សុបិនថ្មី (The New Dream)",
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">ស្ថានសួគ៌នៅលើដី</h3>
+                    <p class="mb-4">អ្នកមិនចាំបាច់ស្លាប់ដើម្បីទៅកាន់ស្ថានសួគ៌ទេ។ ស្ថានសួគ៌គឺជាស្ថានភាពនៃចិត្ត (State of Mind)។</p>
+                    <p class="mb-4">នៅពេលអ្នកអនុវត្តកិច្ចសន្យាទាំង ៤៖</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4">
+                        <li>អ្នកប្រើពាក្យសម្តីដើម្បីបង្កើតក្តីស្រលាញ់ (Impeccable Word)។</li>
+                        <li>អ្នកមានភាពស៊ាំនឹងពាក្យសម្តីអ្នកដទៃ (Don't Take Personally)។</li>
+                        <li>អ្នកមានទំនាក់ទំនងច្បាស់លាស់ និងស្មោះត្រង់ (Don't Make Assumptions)។</li>
+                        <li>អ្នករីករាយនឹងសកម្មភាពរបស់អ្នក ដោយមិនវិនិច្ឆ័យខ្លួនឯង (Do Your Best)។</li>
+                    </ul>
+                    <p class="mb-4">នេះគឺជា <strong>"សុបិនថ្មី"</strong>។ អ្នកមានសេរីភាពធ្វើជាខ្លួនឯង។ អ្នកមិនខ្លាចការវិនិច្ឆ័យ។ អ្នករស់នៅដោយក្តីស្រលាញ់ និងការដឹងគុណ។</p>
+                    <p class="text-xl font-bold text-center text-yellow-800 mt-8 italic">"ជីវិតគឺជាសិល្បៈ។ អ្នកគឺជាសិល្បករ។ សុបិនរបស់អ្នកគឺជាស្នាដៃឯករបស់អ្នក។"</p>
+                `,
+                scenario: `
+                    <p><strong>ការចាប់ផ្តើមថ្ងៃនេះ៖</strong></p>
+                    <p>ភ្លេចអតីតកាល។ ថ្ងៃនេះគឺជាការចាប់ផ្តើមនៃសុបិនថ្មី។ តើអ្នកចង់ឱ្យសុបិនរបស់អ្នកមានរូបរាងបែបណា?</p>
+                `,
+                quiz: {
+                    question: "តើគោលដៅចុងក្រោយនៃសៀវភៅនេះគឺអ្វី?",
+                    options: [
+                        "ក្លាយជាអ្នកមាន",
+                        "រស់នៅក្នុងសេរីភាពផ្ទាល់ខ្លួន ក្តីស្រលាញ់ និងបង្កើត 'សុបិនថ្មី' នៃជីវិត",
+                        "គ្រប់គ្រងអ្នកដទៃ",
+                        "ទៅបួស"
+                    ],
+                    correct: 1,
+                    explanation: "សូមអបអរសាទរ! អ្នកបានបញ្ចប់ការសិក្សាសៀវភៅ The Four Agreements ហើយ។ សូមយកកិច្ចសន្យាទាំង ៤ ទៅអនុវត្តដើម្បីផ្លាស់ប្តូរជីវិតរបស់អ្នក!"
+                }
+            }
+        ];
+
+        // App Logic
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-8 py-4 hover:bg-yellow-50 transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-yellow-900' : 'text-gray-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0]; // Use Khmer title
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold">${index + 1}</span>
+                    <span class="truncate">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-yellow-50');
+                b.classList.add('text-gray-500', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-yellow-600', 'text-white');
+                b.querySelector('.lesson-indicator').classList.add('bg-yellow-100', 'text-yellow-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-yellow-50');
+                activeBtn.classList.remove('text-gray-500', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-yellow-100', 'text-yellow-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-yellow-600', 'text-white');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Lesson ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `បញ្ចប់វគ្គសិក្សា <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` : 
+                `បន្តទៅមុខ <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+            
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-6 hidden p-6 rounded-xl text-lg border border-transparent shadow-sm";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-yellow-200 hover:bg-yellow-50 transition flex items-center shadow-sm group bg-white";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-yellow-300 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white transition">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="text-gray-700 font-medium group-hover:text-yellow-900">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-400', 'border-transparent');
+                
+                quizFeedback.className = "mt-6 p-6 rounded-xl bg-green-50 text-green-900 border border-green-200 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-green-700 text-xl block mb-2">ត្រឹមត្រូវ! 🌟</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-400', 'border-transparent');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-6 p-6 rounded-xl bg-red-50 text-red-900 border border-red-200 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-red-700 text-xl block mb-2">មិនត្រឹមត្រូវទេ 🥀</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("សូមអបអរសាទរ! អ្នកបានបញ្ចប់វគ្គសិក្សានេះហើយ។");
+            }
+        };
+
+        function launchConfetti() {
+            const colors = ['#ca8a04', '#eab308', '#facc15', '#fde047'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 10 + 5 + 'px';
+                conf.style.height = Math.random() * 10 + 5 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 4 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.1); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/150);
+                    conf.style.transform = `rotate(${frame * 10}deg)`;
+                    frame++;
+                    if(frame < 150) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
