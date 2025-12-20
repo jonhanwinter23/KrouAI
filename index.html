@@ -856,6 +856,13 @@
         // Initialize auth check
         checkAuth();
         
+        // Auto-open login modal if coming from locked course
+        if (window.location.search.includes('login=true')) {
+            setTimeout(() => {
+                if (!currentUser) showAuthModal();
+            }, 500);
+        }
+        
         // ========== PARTICLES & UI ==========
         
         // Create floating particles
