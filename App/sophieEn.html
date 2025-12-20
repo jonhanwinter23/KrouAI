@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophie's World - Complete Philosophy Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #020617; /* Slate-950 */
+            color: #cbd5e1; /* Slate-300 */
+            line-height: 1.9;
+        }
+        h1, h2, h3, h4, h5, .display-font {
+            font-family: 'Cinzel', serif;
+        }
+        .ui-font {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #1e293b; /* Slate-800 */
+            border-right: 4px solid #f59e0b; /* Amber-500 */
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #064e3b !important;
+            border-color: #10b981 !important;
+            color: #d1fae5 !important;
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border-color: #ef4444 !important;
+            color: #fecaca !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .concept-card {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(5px);
+            font-family: 'Inter', sans-serif;
+        }
+        .letter-box {
+            background-color: #fffbeb; 
+            color: #451a03; 
+            padding: 2rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            font-family: 'Merriweather', serif;
+            position: relative;
+            transform: rotate(-1deg);
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-900 p-4 shadow-md flex justify-between items-center z-20 border-b border-slate-800">
+        <h1 class="text-lg font-bold text-amber-500 display-font">Sophie's World</h1>
+        <div class="flex items-center gap-3">
+            <a href="sophie.html" class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-300">🌐 ខ្មែរ</a>
+            <button id="menuBtn" class="text-slate-300 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-slate-950 shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-slate-800/50 ui-font">
+        <div class="p-6 border-b border-slate-800/50 hidden md:block bg-gradient-to-b from-slate-900 to-slate-950">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold text-amber-500 display-font tracking-wider">Sophie's World</h1>
+                <a href="sophie.html" class="flex items-center gap-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-full text-xs text-slate-300 hover:text-white transition border border-slate-700">
+                    🌐 ខ្មែរ
+                </a>
+            </div>
+            <p class="text-xs text-slate-500 mt-2 font-light uppercase tracking-widest">The History of Philosophy</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-0.5" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-900">
+            <div class="flex justify-between text-xs mb-2 text-amber-500 font-bold uppercase tracking-wide">
+                <span>Wisdom Progress</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div id="progressBar" class="bg-amber-600 h-1.5 rounded-full transition-all duration-500 box-shadow-glow" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] bg-slate-900" id="mainContent">
+        <div class="max-w-4xl mx-auto p-6 md:p-12 pb-32">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[80vh] text-center fade-in">
+                <div class="bg-slate-800/60 backdrop-blur-md p-10 rounded-2xl shadow-2xl max-w-2xl border border-slate-700/50">
+                    <div class="text-7xl mb-6 animate-pulse">🐇🎩</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 display-font leading-tight">Who are you?</h2>
+                    <p class="text-lg text-slate-400 mb-8 leading-relaxed font-light font-sans">
+                        Welcome to a 3,000-year journey through the history of thought.<br>
+                        Based on the best-selling novel by Jostein Gaarder.<br>
+                        <span class="text-sm italic text-slate-500 mt-2 block">Are you ready to climb out of the rabbit's fur?</span>
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transition transform hover:-translate-y-1 text-lg flex items-center mx-auto border border-amber-500/50 ui-font tracking-wide">
+                        <span>Open the First Letter</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-amber-500 mb-6 font-bold text-xs uppercase tracking-widest border border-amber-900/30 bg-amber-950/10 w-fit px-3 py-1 rounded-full ui-font">
+                    <span id="chapterNumber">Chapter 1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-8 leading-snug border-b border-slate-800 pb-6 display-font text-shadow"></h2>
+                
+                <div class="prose prose-invert prose-lg max-w-none text-slate-300 leading-loose font-light" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-slate-800/80 border-l-4 border-amber-500 p-8 rounded-r-lg mb-8 hidden shadow-lg mt-12 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl text-amber-500/5 display-font select-none">?</div>
+                    <h3 class="text-xl font-bold text-amber-400 mb-3 flex items-center display-font relative z-10">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Thought Experiment
+                    </h3>
+                    <div id="scenarioContent" class="text-slate-200 relative z-10 ui-font"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-slate-800/40 backdrop-blur rounded-2xl shadow-xl p-8 border border-slate-700/50 mt-16 relative overflow-hidden">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center relative z-10 display-font">
+                        <span class="bg-amber-600 text-white text-xs font-bold mr-3 px-3 py-1 rounded-full uppercase tracking-wider ui-font shadow-md">Quiz</span>
+                        Test Your Wisdom
+                    </h3>
+                    <div id="quizContainer" class="relative z-10 ui-font">
+                        <p id="quizQuestion" class="text-lg font-medium mb-4 text-slate-200"></p>
+                        <div id="quizOptions" class="space-y-3"></div>
+                        <div id="quizFeedback" class="mt-4 hidden p-4 rounded-lg text-base border border-transparent shadow-sm bg-opacity-90 transition-all"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-12 pt-6 border-t border-slate-800 ui-font">
+                    <button id="prevBtn" class="px-6 py-3 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-sm font-bold uppercase tracking-wider">
+                        ← Previous
+                    </button>
+                    <button id="nextBtn" class="px-6 py-3 rounded-lg bg-amber-600 text-white hover:bg-amber-700 font-bold shadow-lg hover:shadow-amber-500/20 flex items-center transition-all text-sm uppercase tracking-wider transform hover:-translate-y-0.5">
+                        Next Philosopher →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL ENGLISH CONTENT FOR ALL 35 CHAPTERS
+        const lessons = [
+            {
+                title: "1. The Garden of Eden",
+                content: `
+                    <div class="letter-box">
+                        <p><strong>Dear Sophie,</strong></p>
+                        <p>Who are you?</p>
+                        <p>Where does the world come from?</p>
+                    </div>
+                    <p class="mb-4">Sophie Amundsen, a 14-year-old Norwegian schoolgirl, returns home to find a mysterious letter in her mailbox. It has no stamp, only a simple, earth-shattering question: <strong>"Who are you?"</strong></p>
+                    <p class="mb-4">She stands before the mirror, staring into her own eyes. She is Sophie, but what if she had been given a different name? Would she be a different person? Is she her name? Her body? Her thoughts?</p>
+                    <p class="mb-4">Moments later, a second letter arrives: <strong>"Where does the world come from?"</strong> Sophie realizes she has no idea. These questions pull her out of her ordinary life and into the world of philosophy.</p>
+                    <p class="mb-4">The Garden of Eden represents the state of innocence before knowledge. Sophie is about to bite the apple of philosophy.</p>
+                `,
+                scenario: `
+                    <p><strong>Try this:</strong> Look at a common object, like a spoon, as if you are an alien seeing it for the very first time. Strip away the name "spoon" and its function. What is it really? This state of "un-knowing" is the starting point of philosophy.</p>
+                `,
+                quiz: { question: "What is the primary function of the questions Sophie receives?", options: ["To scare her", "To awaken her sense of wonder and curiosity", "To invite her to a party", "To ask for money"], correct: 1, explanation: "Correct! Philosophy begins with wonder. We must stop taking the world for granted to truly understand it." }
+            },
+            {
+                title: "2. The Top Hat",
+                content: `
+                    <p class="mb-4">Sophie receives a package from a mysterious philosopher named Alberto Knox. He introduces a powerful metaphor:</p>
+                    <p class="mb-4">Imagine the universe is a white rabbit being pulled out of a magician's top hat. We are all microscopic creatures living deep within the rabbit's fur.</p>
+                    <p class="mb-4">Most people (adults) are so comfortable burying themselves deep in the warm fur—focusing on everyday concerns like food, money, and status—that they never look up. They forget the magic of existence.</p>
+                    <div class="concept-card">
+                        <h4 class="font-bold text-amber-500 mb-2">The Philosopher's Role</h4>
+                        <p>Philosophers are the daring few who try to climb up the fine hairs of the fur to stare right into the Magician's eyes. They risk falling, and they risk being ridiculed by those comfortable in the fur, but they want to see the Truth.</p>
+                    </div>
+                    <p class="mb-4">Alberto warns Sophie: "The only thing we require to be good philosophers is the faculty of wonder."</p>
+                `,
+                scenario: `
+                    <p>Have you ever suddenly felt how strange it is that you exist at all? That is you climbing up the rabbit's fur. Don't crawl back down!</p>
+                `,
+                quiz: { question: "In the Top Hat metaphor, who are the people buried deep in the rabbit's fur?", options: ["Philosophers", "Children", "Ordinary people who have lost their sense of wonder", "Magicians"], correct: 2, explanation: "Correct! They have become 'habituated' to the world and no longer ask the big questions." }
+            },
+            {
+                title: "3. The Myths",
+                content: `
+                    <p class="mb-4">Before philosophy, humans explained the world through <strong>Myths</strong>. These were stories about gods that explained natural phenomena.</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4 text-slate-400">
+                        <li>Why does it rain? Because Thor is swinging his hammer.</li>
+                        <li>Why do seasons change? Because Persephone was kidnapped to the underworld.</li>
+                    </ul>
+                    <p class="mb-4">Myths provided comfort and order. People performed rituals to appease the gods and ensure rain or harvest. However, around 600 BC in Greece, people began to question these stories. They sought explanations based on <strong>reason</strong> and <strong>nature</strong>, not supernatural entities.</p>
+                    <p class="mb-4">This shift from a mythical worldview to a rational worldview marked the birth of Western philosophy.</p>
+                `,
+                scenario: `
+                    <p>If your computer crashes, do you blame an evil spirit (Myth) or do you look for a software bug (Reason)? The transition to philosophy was exactly this shift in thinking applied to the universe.</p>
+                `,
+                quiz: { question: "What distinguishes philosophy from mythology?", options: ["Philosophy relies on old stories", "Philosophy seeks natural explanations through reason (Logos)", "Mythology is more scientific", "There is no difference"], correct: 1, explanation: "Correct! Philosophy moved away from gods (Mythos) to reason (Logos)." }
+            },
+            {
+                title: "4. The Natural Philosophers",
+                content: `
+                    <p class="mb-4">The earliest Greek philosophers are called the "Natural Philosophers" because they were concerned with the natural world and its processes. They asked: <strong>"Is there a basic substance (Arche) from which everything is made?"</strong></p>
+                    <div class="grid grid-cols-1 gap-4 mb-4">
+                        <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                            <strong class="text-amber-500">Thales:</strong> Believed the source of everything was <strong>Water</strong>. (He noticed life needs moisture, and water changes states).
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                            <strong class="text-amber-500">Anaximenes:</strong> Believed the source was <strong>Air</strong> (or vapor). Rarefied air becomes fire; condensed air becomes water and earth.
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                            <strong class="text-amber-500">Empedocles:</strong> Believed nature consisted of four roots: <strong>Earth, Air, Fire, and Water</strong>. Changes happen when these elements mix (Love) or separate (Strife).
+                        </div>
+                    </div>
+                    <p class="mb-4">While their answers might seem wrong today, their <em>method</em> was scientific: asking questions about the physical world without relying on gods.</p>
+                `,
+                scenario: `
+                    <p><strong>Heraclitus vs. Parmenides:</strong> Heraclitus said "Everything flows" (You can't step in the same river twice). Parmenides said "Nothing changes" (Our senses deceive us). Who was right? Empedocles synthesized them: The elements don't change, but their combinations do.</p>
+                `,
+                quiz: { question: "What was the main goal of the Natural Philosophers?", options: ["To prove Zeus existed", "To find the underlying substance of nature without using religion", "To become rich", "To map the stars"], correct: 1, explanation: "Correct! They were the first scientists." }
+            },
+            {
+                title: "5. Democritus",
+                content: `
+                    <p class="mb-4">Sophie receives a package of LEGO blocks. Why? To explain the philosophy of Democritus (460-370 BC).</p>
+                    <p class="mb-4">Democritus solved the problem of change by proposing the <strong>Atom Theory</strong>. He argued that everything is built of tiny, invisible, eternal, and immutable blocks called "atoms" (Greek for 'uncuttable').</p>
+                    <p class="mb-4"><strong>The LEGO Analogy:</strong> Just like LEGOs, atoms can be assembled into a tree, disassembled, and reassembled into a horse. The blocks themselves never change or die; only the arrangement changes.</p>
+                    <p class="mb-4">Democritus was a <strong>Materialist</strong>. He believed only atoms and the void exist. No immortal soul, no design—just mechanical laws of nature.</p>
+                `,
+                scenario: `
+                    <p>Look at your hand. It seems solid, but it's mostly empty space with trillions of atoms vibrating. Democritus figured this out using only his mind, 2,000 years before modern science proved him right.</p>
+                `,
+                quiz: { question: "Why are LEGO blocks a good analogy for atoms?", options: ["They are colorful", "They are indestructible and can be rearranged into different forms", "They are made of plastic", "They are expensive"], correct: 1, explanation: "Correct! Atoms are the eternal building blocks of nature." }
+            },
+            {
+                title: "6. Fate",
+                content: `
+                    <p class="mb-4">The Ancient Greeks were strong believers in <strong>Fate</strong> (Fatalism). They believed the outcome of life was predetermined.</p>
+                    <p class="mb-4">They consulted the <strong>Oracle at Delphi</strong> to know their future. Above the temple entrance was the famous inscription: <strong>"Know Thyself"</strong>.</p>
+                    <p class="mb-4">This meant: Know that you are human, not a god. Do not try to escape your destiny. Greek tragedies (like Oedipus Rex) often showed that trying to avoid fate only makes it happen.</p>
+                    <p class="mb-4">The natural philosophers tried to find natural laws (like atoms) to break free from this superstition. They wanted to understand the cause of sickness (Hippocrates) rather than blaming it on fate or divine punishment.</p>
+                `,
+                scenario: `
+                    <p>Do you check your horoscope? That is a remnant of fatalism. The belief that stars determine your life rather than your choices.</p>
+                `,
+                quiz: { question: "What did the inscription 'Know Thyself' warn people about?", options: ["To study anatomy", "To remember they are mortal and subject to fate", "To be selfish", "To learn history"], correct: 1, explanation: "Correct! It was a reminder of human limitations." }
+            },
+            {
+                title: "7. Socrates",
+                content: `
+                    <p class="mb-4">Socrates (470-399 BC) marks a shift from studying nature to studying <strong>Man and Society</strong>. He never wrote a single word; we know him through his student, Plato.</p>
+                    <p class="mb-4"><strong>The Midwife of Ideas:</strong> Socrates didn't teach. He asked questions. He feigned ignorance (Socratic Irony) to force people to use their own reason. He believed the truth lies within every person, waiting to be "born."</p>
+                    <div class="concept-card text-center">
+                        <p class="text-xl italic font-serif">"One thing I know is that I know nothing."</p>
+                    </div>
+                    <p class="mb-4">He was an annoying gadfly to the powerful people of Athens, questioning their wisdom. Eventually, he was sentenced to death for "corrupting the youth." He drank hemlock poison rather than flee, staying true to his principles and the laws of his city.</p>
+                `,
+                scenario: `
+                    <p>Socrates believed that "He who knows what is right will do right." He equated knowledge with virtue. Do you agree? Can you know something is wrong (like smoking) and do it anyway?</p>
+                `,
+                quiz: { question: "What was Socrates' main method?", options: ["Lecturing", "Dialogue and asking questions (The Socratic Method)", "Writing books", "Meditation"], correct: 1, explanation: "Correct! He engaged in conversation to help people discover truths themselves." }
+            },
+            {
+                title: "8. Athens",
+                content: `
+                    <p class="mb-4">Sophie watches a video tape where Alberto takes her on a tour of ancient Athens. This city is the cradle of Western civilization.</p>
+                    <p class="mb-4">She sees the Acropolis and the Agora (marketplace) where Socrates walked. Athens gave birth to democracy, theater, architecture, and philosophy. It was a vibrant hub where ideas were currency.</p>
+                    <p class="mb-4">It was here that Plato founded his Academy and Aristotle founded his Lyceum. The intellectual DNA of the West was written in these streets.</p>
+                `,
+                scenario: `
+                    <p>Imagine a city where politicians are questioned daily by philosophers in the street. That was Athens.</p>
+                `,
+                quiz: { question: "Why is Athens historically significant?", options: ["It had good food", "It is the birthplace of Western philosophy and democracy", "It won many wars", "It is a myth"], correct: 1, explanation: "Correct! The foundations of Western thought were laid here." }
+            },
+            {
+                title: "9. Plato",
+                content: `
+                    <p class="mb-4">Plato (427-347 BC), Socrates' student, was concerned with the relationship between what is eternal and what "flows."</p>
+                    <p class="mb-4">He believed the physical world (World of Senses) is full of imperfect, temporary things. A horse gets old and dies. But the <em>concept</em> of a horse (The Form of a Horse) is eternal and perfect.</p>
+                    <div class="concept-card">
+                        <h4 class="font-bold text-amber-500 mb-2">The Theory of Ideas</h4>
+                        <p>Plato believed in a separate reality called the <strong>World of Ideas</strong>. This is where the perfect "molds" of everything exist. Our souls come from there, which is why we recognize a horse even if we've never seen that specific one before.</p>
+                    </div>
+                    <p class="mb-4"><strong>The Allegory of the Cave:</strong> Imagine prisoners chained in a cave, seeing only shadows on the wall cast by a fire. They think the shadows are reality. The philosopher is the one who escapes, sees the sun (Truth/Ideas), and returns to tell the others, who think he is crazy.</p>
+                `,
+                scenario: `
+                    <p>Think of a circle. You can draw one, but it will never be mathematically perfect. The perfect circle exists only as an Idea in your mind (and in the World of Ideas).</p>
+                `,
+                quiz: { question: "According to Plato, what is true reality?", options: ["The shadows on the wall", "The World of Senses", "The World of Ideas (Forms)", "The physical body"], correct: 2, explanation: "Correct! The physical world is just a poor copy of the perfect World of Ideas." }
+            },
+            {
+                title: "10. The Major's Cabin",
+                content: `
+                    <p class="mb-4">Sophie finds a small cabin in the woods. Inside, she discovers a brass mirror where she sees a reflection blink back at her (when she didn't blink!). She also finds the wallet of Hilde Møller Knag.</p>
+                    <p class="mb-4">This chapter deepens the mystery. Who is Hilde? Why do her belongings keep appearing in Sophie's life? The boundaries of Sophie's reality are starting to blur, paralleling the philosophical journey of questioning reality.</p>
+                `,
+                scenario: `
+                    <p>The mirror represents self-reflection. Philosophy is the mirror in which we see our true selves, sometimes behaving unexpectedly.</p>
+                `,
+                quiz: { question: "What strange event happens with the mirror?", options: ["It breaks", "The reflection blinks with both eyes while Sophie blinks only one", "It disappears", "It speaks"], correct: 1, explanation: "Correct! A hint that Sophie's reality might not be governed by normal physical laws." }
+            },
+            {
+                title: "11. Aristotle",
+                content: `
+                    <p class="mb-4">Aristotle (384-322 BC) was Plato's student but disagreed with him completely. He was a scientist and a biologist at heart.</p>
+                    <p class="mb-4">He rejected the "World of Ideas." He said: <strong>"Nothing exists in the mind that was not first in the senses."</strong> The "form" of a horse exists <em>inside</em> the horse, not in heaven.</p>
+                    <p class="mb-4">He categorized nature (plants, animals, humans) and logic. He believed humans are "Rational Animals."</p>
+                    <p class="mb-4"><strong>The Golden Mean:</strong> Ethics is about balance. Courage is the mean between cowardice and recklessness. Generosity is the mean between stinginess and extravagance. Happiness (Eudaimonia) comes from living a balanced, rational life.</p>
+                `,
+                scenario: `
+                    <p>Plato points up (to the eternal ideas). Aristotle points down (to the earth/nature). Look at Raphael's painting "The School of Athens" to see this depicted.</p>
+                `,
+                quiz: { question: "How did Aristotle differ from Plato?", options: ["He believed in myths", "He relied on senses and observation (Empiricism) rather than pure reason", "He hated philosophy", "He was a poet"], correct: 1, explanation: "Correct! He brought philosophy down to earth." }
+            },
+            {
+                title: "12. Hellenism",
+                content: `
+                    <p class="mb-4">The period after Alexander the Great, where Greek culture spread across borders. The main concern became: <strong>"How can we live a good life and find salvation?"</strong></p>
+                    <ul class="list-disc ml-6 space-y-3 text-slate-300 mb-4">
+                        <li><strong>Cynics:</strong> Happiness is not found in external things (money, power). Diogenes lived in a barrel to prove he needed nothing.</li>
+                        <li><strong>Stoics:</strong> Accept destiny. There is a universal reason (Logos). Don't get emotional about things you can't control. (Stoic Calm).</li>
+                        <li><strong>Epicureans:</strong> The goal is pleasure (absence of pain). "Carpe Diem." But enjoy in moderation to avoid suffering later.</li>
+                        <li><strong>Neoplatonism:</strong> Plotinus taught that the world is a span between two poles: The One (God/Light) and Darkness (absence of light).</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p>If you lose your phone and stay calm because "it's just a thing," you are being a Stoic.</p>
+                `,
+                quiz: { question: "What is the core belief of Stoicism?", options: ["Pursue luxury", "Endure pain and accept destiny without complaint", "Seek maximum pleasure", "Worship the sun"], correct: 1, explanation: "Correct! Control your internal reaction to external events." }
+            },
+            {
+                title: "13. The Postcards",
+                content: `
+                    <p class="mb-4">Sophie and Alberto go camping. They find yet another postcard from the Major to Hilde, stamped from Lebanon. It reads as if the Major knows exactly what Sophie is doing.</p>
+                    <p class="mb-4">The dates on the postcards are peculiar—they are dated June 15, the day of Sophie's (and Hilde's) birthday, even though it is currently May. The feeling of being watched or controlled intensifies.</p>
+                `,
+                scenario: `
+                    <p>This is the concept of <strong>Determinism</strong> in fiction. The characters feel the hand of the author.</p>
+                `,
+                quiz: { question: "Where are the postcards coming from?", options: ["Paris", "Lebanon (UN Battalion)", "New York", "Space"], correct: 1, explanation: "Correct! From Hilde's father, who is a UN observer." }
+            },
+            {
+                title: "14. Two Cultures",
+                content: `
+                    <p class="mb-4">Western civilization has two roots:</p>
+                    <ol class="list-decimal ml-6 space-y-3 text-slate-300 mb-4">
+                        <li><strong>Indo-Europeans:</strong> (Greeks, Romans). Polytheism. Visual culture ("seeing" the truth). Cyclical view of history (history repeats). Philosophy and Reason.</li>
+                        <li><strong>Semites:</strong> (Jews, Christians, Muslims). Monotheism. Auditory culture ("hearing" God's word). Linear view of history (Creation -> Judgment Day). Religion and Faith.</li>
+                    </ol>
+                    <p class="mb-4">Christianity merged these two. It took the Jewish roots (Jesus was a Jew) and spread using Greek language and philosophy (Paul the Apostle in Athens).</p>
+                `,
+                scenario: `
+                    <p>Look at a church. The architecture might be Greek/Roman, but the book they read is Semitic. We are a blend.</p>
+                `,
+                quiz: { question: "What view of history do Semitic cultures generally hold?", options: ["Cyclical (Circles)", "Linear (Straight line from start to end)", "Random", "Static"], correct: 1, explanation: "Correct! History has a beginning (Creation) and an end (Redemption)." }
+            },
+            {
+                title: "15. The Middle Ages",
+                content: `
+                    <p class="mb-4">Often called the "Dark Ages," but actually a period of gestation (400-1400 AD). Philosophy was the "handmaid of theology."</p>
+                    <ul class="list-disc ml-6 space-y-3 mb-4 text-slate-300">
+                        <li><strong>St. Augustine:</strong> Christianized Plato. The "World of Ideas" exists in the mind of God. Evil is just the absence of God (like darkness is the absence of light).</li>
+                        <li><strong>St. Thomas Aquinas:</strong> Christianized Aristotle. He tried to synthesize Faith and Reason. He said there are two paths to truth: The Bible (Revelation) and Logic/Nature (Reason). They do not contradict because both come from God.</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p>Imagine trying to explain angels using logic. That was the medieval project.</p>
+                `,
+                quiz: { question: "What was the main philosophical goal of the Middle Ages?", options: ["To disprove God", "To reconcile Greek philosophy with Christian theology", "To invent the internet", "To worship nature"], correct: 1, explanation: "Correct! Faith + Reason." }
+            },
+            {
+                title: "16. The Renaissance",
+                content: `
+                    <p class="mb-4">The "Rebirth" of antiquity (14th-16th century). Man became the center of the universe again (<strong>Humanism</strong>).</p>
+                    <p class="mb-4"><strong>New Scientific Method:</strong> Knowledge through observation and experiment (Empiricism). Not just reading Aristotle.</p>
+                    <p class="mb-4"><strong>Heliocentrism:</strong> Copernicus, Kepler, and Galileo proved the Earth orbits the Sun. This was a shock! We are no longer the center of the universe. Yet, Newton showed that the same laws of gravity apply everywhere, making the universe understandable.</p>
+                `,
+                scenario: `
+                    <p><strong>"Go to the source"</strong> (Ad fontes). Don't trust the old books; look at the stars yourself.</p>
+                `,
+                quiz: { question: "What shift occurred in the Renaissance?", options: ["God became the only focus", "Humanity and nature became the focus (Humanism)", "People stopped reading", "The earth became flat"], correct: 1, explanation: "Correct! A celebration of human potential." }
+            },
+            {
+                title: "17. The Baroque",
+                content: `
+                    <p class="mb-4">The 17th Century. A time of contrasts: magnificent palaces vs. extreme poverty. The mottos were <strong>"Carpe Diem"</strong> (Seize the day) and <strong>"Memento Mori"</strong> (Remember you must die).</p>
+                    <p class="mb-4">Philosophy was torn between <strong>Idealism</strong> (life is like a theater/dream - Shakespeare, Calderón) and <strong>Materialism</strong> (everything is machinery - Hobbes). Even the universe was seen as a giant mechanism (Newton).</p>
+                `,
+                scenario: `
+                    <p>"Life is a dream." If life is a dream, who is the dreamer? (A hint for Sophie).</p>
+                `,
+                quiz: { question: "What characterizes Baroque art and thought?", options: ["Simplicity", "Dramatic contrast, tension, and awareness of death", "Optimism only", "Science fiction"], correct: 1, explanation: "Correct! Rich, complex, and dramatic." }
+            },
+            {
+                title: "18. Descartes",
+                content: `
+                    <p class="mb-4">René Descartes (1596-1650) wanted to clear away all the rubble of old thoughts and start fresh. He decided to doubt everything.</p>
+                    <p class="mb-4">He doubted his senses (dreams feel real). He doubted math (a demon could trick him). But he realized one thing he couldn't doubt: <strong>The fact that he was doubting.</strong></p>
+                    <div class="letter-box bg-slate-100 text-slate-900 border-none">
+                        <p class="text-2xl text-center font-bold text-slate-800">"Cogito, ergo sum"</p>
+                        <p class="text-center text-slate-600">(I think, therefore I am)</p>
+                    </div>
+                    <p class="mb-4">He established <strong>Dualism</strong>: There are two substances—Thought (Mind) and Extension (Matter). The body is a machine, but the mind is free.</p>
+                `,
+                scenario: `
+                    <p>Are you a robot? Descartes would say: If you can question your existence, you are not just a machine.</p>
+                `,
+                quiz: { question: "What is the one thing Descartes could not doubt?", options: ["That the sky is blue", "That he was thinking/doubting", "That God exists", "That birds fly"], correct: 1, explanation: "Correct! Doubting is thinking, and thinking requires a thinker." }
+            },
+            {
+                title: "19. Spinoza",
+                content: `
+                    <p class="mb-4">Baruch Spinoza (1632-1677) rejected Dualism. He believed in <strong>Monism</strong>.</p>
+                    <p class="mb-4">There is only ONE substance: <strong>God (or Nature)</strong>. Everything—flowers, humans, stars—are just different "modes" of God. God is not a puppeteer in the sky; God IS the world.</p>
+                    <p class="mb-4"><strong>Determinism:</strong> We do not have free will. We are like cells in a body; we act according to the laws of nature. True freedom comes from understanding these laws and seeing things <em>"sub specie aeternitatis"</em> (from the perspective of eternity).</p>
+                `,
+                scenario: `
+                    <p>Stop crying over a broken glass. In the grand scheme of the eternal universe, the glass was meant to break. Accepting this is Spinoza's peace.</p>
+                `,
+                quiz: { question: "What was Spinoza's view of God?", options: ["An old man in the sky", "God is Nature and everything that exists (Pantheism)", "God does not exist", "God is angry"], correct: 1, explanation: "Correct! 'Deus sive Natura' (God or Nature)." }
+            },
+            {
+                title: "20. Locke",
+                content: `
+                    <p class="mb-4">John Locke (1632-1704) was an <strong>Empiricist</strong>. He opposed Descartes' idea of innate ideas.</p>
+                    <p class="mb-4">He said the mind at birth is a <strong>Tabula Rasa</strong> (Blank Slate). Everything we know comes from sensory experience.</p>
+                    <p class="mb-4">He distinguished between:</p>
+                    <ul class="list-disc ml-6 text-slate-300 mb-4">
+                        <li><strong>Primary Qualities:</strong> Size, weight, number (Objective, in the object itself).</li>
+                        <li><strong>Secondary Qualities:</strong> Color, smell, taste (Subjective, produced by our senses).</li>
+                    </ul>
+                    <p class="mb-4">He also championed liberalism and natural rights: Life, Liberty, and Property.</p>
+                `,
+                scenario: `
+                    <p>If a tree falls in a forest and no one hears it, does it make a sound? Locke might say: It creates sound waves (Primary), but "sound" (Secondary) requires an ear.</p>
+                `,
+                quiz: { question: "According to Locke, where do ideas come from?", options: ["We are born with them", "Sensory experience (Sensation and Reflection)", "Magic", "Dreams"], correct: 1, explanation: "Correct! Nothing is in the intellect that was not first in the senses." }
+            },
+            {
+                title: "21. Hume",
+                content: `
+                    <p class="mb-4">David Hume (1711-1776) took Empiricism to the extreme. He was a <strong>Skeptic</strong>.</p>
+                    <p class="mb-4">He argued that we cannot prove the existence of God or the soul because we haven't experienced them. He even questioned the <strong>Law of Causality</strong>.</p>
+                    <p class="mb-4">When billiard ball A hits ball B, we see motion. We do NOT see "cause." We only expect ball B to move because of <strong>Habit</strong>. We cannot prove the sun will rise tomorrow; we just expect it to.</p>
+                    <p class="mb-4"><strong>Ethics:</strong> Morality is based on <em>feelings</em> (sentiment), not reason. Seeing a crime makes us <em>feel</em> bad; logic doesn't tell us it's wrong.</p>
+                `,
+                scenario: `
+                    <p>Hume warns against the "Naturalistic Fallacy": Just because everyone does something (Is) doesn't mean it's right (Ought).</p>
+                `,
+                quiz: { question: "Why do we believe the sun will rise tomorrow, according to Hume?", options: ["Logical proof", "Habit/Custom", "Divine promise", "Scientific certainty"], correct: 1, explanation: "Correct! We've seen it happen many times, so we expect it, but we can't prove it must happen." }
+            },
+            {
+                title: "22. Berkeley",
+                content: `
+                    <p class="mb-4">George Berkeley (1685-1753) was an Irish Bishop who questioned matter itself. He felt materialism threatened faith.</p>
+                    <p class="mb-4">He argued that things only exist because we perceive them. <strong>"Esse est percipi"</strong> (To be is to be perceived). But what about when we aren't looking? They exist because <strong>God</strong> perceives them constantly.</p>
+                    <p class="mb-4">He suggested the entire world might not be physical matter, but ideas in the mind of God. This hits Sophie hard. Is her world just an idea in the Major's mind?</p>
+                `,
+                scenario: `
+                    <p>The Matrix. Are you living in a physical world or a simulation? Berkeley said it's a spiritual simulation run by God.</p>
+                `,
+                quiz: { question: "According to Berkeley, what is the 'substance' of the world?", options: ["Atoms", "Spirit/God's perception", "Water", "Fire"], correct: 1, explanation: "Correct! He denied the existence of material substance." }
+            },
+            {
+                title: "23. Bjerkely",
+                content: `
+                    <p class="mb-4"><strong>MAJOR PLOT TWIST.</strong> The perspective shifts. We are no longer reading about Sophie; we are reading about <strong>Hilde Møller Knag</strong>.</p>
+                    <p class="mb-4">Hilde wakes up on her birthday (June 15) and receives a gift from her father: a binder entitled <em>"Sophie's World."</em></p>
+                    <p class="mb-4">Sophie and Alberto are indeed fictional characters in a book written by the Major for Hilde. The Major is the "God" of Sophie's world (like Berkeley's God). Sophie realizes this and begins to talk to Hilde through the book.</p>
+                `,
+                scenario: `
+                    <p>Imagine reading a book and the main character suddenly looks up and says your name. That is what happens here.</p>
+                `,
+                quiz: { question: "What is the relationship between Sophie and Hilde?", options: ["Sisters", "Friends", "Sophie is a character in a book read by Hilde", "Enemies"], correct: 2, explanation: "Correct! The layers of reality are revealed." }
+            },
+            {
+                title: "24. The Enlightenment",
+                content: `
+                    <p class="mb-4">The Age of Reason (18th Century France). Thinkers like Voltaire, Rousseau, and Montesquieu.</p>
+                    <p class="mb-4">Key Ideas:</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4 text-slate-300">
+                        <li><strong>Opposition to Authority:</strong> Questioning the church and kings.</li>
+                        <li><strong>Rationalism:</strong> Faith in human reason to solve problems.</li>
+                        <li><strong>Optimism:</strong> The world will progress through education.</li>
+                        <li><strong>Return to Nature:</strong> "Civilization corrupts." (Rousseau). The "Noble Savage."</li>
+                        <li><strong>Human Rights:</strong> Freedom of speech and religion.</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p>The French Revolution was the explosive result of these ideas. "Liberty, Equality, Fraternity."</p>
+                `,
+                quiz: { question: "What did Enlightenment thinkers believe would save humanity?", options: ["Prayer", "Reason and Education", "More kings", "Gold"], correct: 1, explanation: "Correct! They wanted to 'enlighten' the dark ages of ignorance." }
+            },
+            {
+                title: "25. Kant",
+                content: `
+                    <p class="mb-4">Immanuel Kant (1724-1804) saved philosophy from Hume's skepticism. He synthesized Rationalism and Empiricism.</p>
+                    <p class="mb-4">He said: Our knowledge comes from senses (Empiricism), BUT our mind shapes that knowledge (Rationalism). The mind has "structures" like <strong>Time, Space, and Causality</strong>. These are the "glasses" we can't take off.</p>
+                    <p class="mb-4">We can never know the world "in itself" (<em>Das Ding an sich</em>), only the world "as it appears to us."</p>
+                    <p class="mb-4"><strong>Categorical Imperative:</strong> A universal moral law. "Act only according to that maxim whereby you can at the same time will that it should become a universal law." (e.g., Do not lie, because if everyone lied, truth would vanish).</p>
+                `,
+                scenario: `
+                    <p>Sophie and Alberto realize they are constrained by the "time and space" of the book, but they might have a "free will" that the author didn't anticipate.</p>
+                `,
+                quiz: { question: "What is Kant's 'Categorical Imperative'?", options: ["Do whatever you want", "A moral law that applies to everyone in all situations", "A suggestion", "A religious rule"], correct: 1, explanation: "Correct! It is duty-based ethics." }
+            },
+            {
+                title: "26. Romanticism",
+                content: `
+                    <p class="mb-4">Europe's last great cultural epoch (start of 19th Century). A reaction against the cool reason of the Enlightenment.</p>
+                    <p class="mb-4">Keywords: <strong>Feeling, Imagination, Experience, Yearning.</strong></p>
+                    <p class="mb-4">The artist was seen as a genius who creates reality, like God. They loved nature, mysteries, and the dark/supernatural. (Think: Beethoven, Byron, Shelley).</p>
+                    <p class="mb-4"><strong>Schelling:</strong> Nature is visible Spirit; Spirit is invisible Nature. World Soul.</p>
+                `,
+                scenario: `
+                    <p>This connects to the plot: The Major (the artist) is creating Sophie's world using his imagination.</p>
+                `,
+                quiz: { question: "What did Romantics value most?", options: ["Reason and Logic", "Feelings, Imagination, and Nature", "Money and Industry", "Rules and Order"], correct: 1, explanation: "Correct! They celebrated the mysteries of life." }
+            },
+            {
+                title: "27. Hegel",
+                content: `
+                    <p class="mb-4">G.W.F. Hegel (1770-1831). He didn't see eternal truths. He saw truth as a <strong>historical process</strong>, like a flowing river.</p>
+                    <p class="mb-4"><strong>The Dialectic Process:</strong> History moves through conflict.</p>
+                    <ol class="list-decimal ml-6 space-y-2 mb-4 text-slate-300">
+                        <li><strong>Thesis:</strong> An idea appears.</li>
+                        <li><strong>Antithesis:</strong> A conflicting idea challenges it.</li>
+                        <li><strong>Synthesis:</strong> The best of both merge into a new idea. (Which becomes the new Thesis).</li>
+                    </ol>
+                    <p class="mb-4">The "World Spirit" is slowly becoming conscious of itself through humans.</p>
+                `,
+                scenario: `
+                    <p>Conflict is necessary for progress. Without the antithesis, the thesis stagnates.</p>
+                `,
+                quiz: { question: "How does history progress according to Hegel?", options: ["In a straight line", "In circles", "Through the dialectic process (Thesis-Antithesis-Synthesis)", "Randomly"], correct: 2, explanation: "Correct! Progress comes from the clash of ideas." }
+            },
+            {
+                title: "28. Kierkegaard",
+                content: `
+                    <p class="mb-4">Søren Kierkegaard (1813-1855) was furious with Hegel. He said Hegel forgot the <strong>Individual</strong>. Objective truth is irrelevant; what matters is <strong>"Subjective Truth"</strong> (Truth for <em>me</em>).</p>
+                    <p class="mb-4">He focused on <strong>Existence</strong> and the anxiety of choice.</p>
+                    <p class="mb-4">Three Stages of Life:</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4 text-slate-300">
+                        <li><strong>Aesthetic Stage:</strong> Living for pleasure. Leads to boredom/angst.</li>
+                        <li><strong>Ethical Stage:</strong> Living by rules and duty.</li>
+                        <li><strong>Religious Stage:</strong> Taking a "Leap of Faith" into Christianity. This is the only cure for existential angst.</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p>He is the father of Existentialism. "Truth is subjectivity."</p>
+                `,
+                quiz: { question: "What did Kierkegaard value more than objective systems?", options: ["The Individual and their personal choices", "Society", "History", "Nature"], correct: 0, explanation: "Correct! He focused on the individual's relationship with God." }
+            },
+            {
+                title: "29. Marx",
+                content: `
+                    <p class="mb-4">Karl Marx (1818-1883) was a <strong>Historical Materialist</strong>. He turned Hegel upside down.</p>
+                    <p class="mb-4">He argued that ideas don't drive history; <strong>economic forces (Material Base)</strong> drive history.</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4 text-slate-300">
+                        <li><strong>Base:</strong> Conditions of production (factories, resources, labor).</li>
+                        <li><strong>Superstructure:</strong> Art, law, religion, philosophy.</li>
+                    </ul>
+                    <p class="mb-4">The Base determines the Superstructure. History is the history of <strong>Class Struggle</strong> (Slave vs Master, Serf vs Lord, Worker vs Capitalist). He predicted the workers (Proletariat) would overthrow the owners (Bourgeoisie) to create a communist society.</p>
+                `,
+                scenario: `
+                    <p>"Philosophers have only interpreted the world; the point is to change it."</p>
+                `,
+                quiz: { question: "What drives history according to Marx?", options: ["Great ideas", "Material and economic forces", "God", "Love"], correct: 1, explanation: "Correct! The economy shapes our thoughts." }
+            },
+            {
+                title: "30. Darwin",
+                content: `
+                    <p class="mb-4">Charles Darwin (1809-1882) challenged the biblical view of creation with <strong>"On the Origin of Species."</strong></p>
+                    <p class="mb-4">He proposed <strong>Evolution by Natural Selection</strong>:</p>
+                    <ol class="list-decimal ml-6 space-y-2 mb-4 text-slate-300">
+                        <li>More individuals are born than can survive.</li>
+                        <li>There is variation among individuals.</li>
+                        <li>Those with traits best suited to the environment survive ("Survival of the Fittest").</li>
+                        <li>They pass those traits to offspring.</li>
+                    </ol>
+                    <p class="mb-4">This removed the need for a "Designer" in nature. Man is not a divine being, but a result of a long biological process.</p>
+                `,
+                scenario: `
+                    <p>Sophie gets a picture of Noah's Ark. Darwin showed we don't need the Ark story to explain animal diversity.</p>
+                `,
+                quiz: { question: "What is the mechanism of evolution?", options: ["Divine intervention", "Natural Selection", "Accident", "Magic"], correct: 1, explanation: "Correct! Nature selects the traits that help survival." }
+            },
+            {
+                title: "31. Freud",
+                content: `
+                    <p class="mb-4">Sigmund Freud (1856-1939) discovered the <strong>Unconscious</strong>. We are not fully in control of our own minds.</p>
+                    <p class="mb-4">The Mind's Structure:</p>
+                    <ul class="list-disc ml-6 space-y-2 mb-4 text-slate-300">
+                        <li><strong>Id:</strong> Primal drives (pleasure, aggression). "I want it now!"</li>
+                        <li><strong>Superego:</strong> Moral conscience (society's rules). "That's wrong!"</li>
+                        <li><strong>Ego:</strong> The referee dealing with reality.</li>
+                    </ul>
+                    <p class="mb-4">He believed repressed desires (often sexual) surface in dreams or slips of the tongue ("Freudian Slips").</p>
+                `,
+                scenario: `
+                    <p>Art and literature can be "Sublimation"—channeling forbidden drives into acceptable creativity.</p>
+                `,
+                quiz: { question: "What did Freud explore?", options: ["The stars", "The Unconscious mind", "Economics", "Plants"], correct: 1, explanation: "Correct! He showed that rational man is driven by irrational instincts." }
+            },
+            {
+                title: "32. Our Own Time",
+                content: `
+                    <p class="mb-4">20th Century Existentialism. Jean-Paul Sartre. <strong>"Existence precedes Essence."</strong></p>
+                    <p class="mb-4">A knife has a purpose (essence) before it is made. Humans exist <em>first</em>, and then define their purpose later. There is no God, so there is no human nature.</p>
+                    <p class="mb-4">We are "condemned to be free." We must make choices, and we are responsible for them. Avoiding this responsibility is "Bad Faith."</p>
+                    <p class="mb-4">In the plot: Sophie and Alberto realize they are trapped in a book. But they decide to use their "free will" to fight the plot.</p>
+                `,
+                scenario: `
+                    <p>Even if you are in prison, you are free to decide how you mentally react to it. That is existential freedom.</p>
+                `,
+                quiz: { question: "What is the core motto of Existentialism?", options: ["Think before you act", "Existence precedes Essence", "God defines us", "Science is truth"], correct: 1, explanation: "Correct! We create our own definition." }
+            },
+            {
+                title: "33. The Garden Party",
+                content: `
+                    <p class="mb-4">A philosophical garden party is held for Sophie's 15th birthday. The Major (author) goes wild, making characters act crazy to teach Hilde a lesson.</p>
+                    <p class="mb-4">Chaos ensues. But amidst the distraction, Sophie and Alberto execute their plan. They slip away from the story. They escape the Major's mind (the book) and enter the "real world" (Hilde's world).</p>
+                `,
+                scenario: `
+                    <p>This is Plato's Cave escape. They leave the shadow world for the real world.</p>
+                `,
+                quiz: { question: "What do Sophie and Alberto do at the party?", options: ["Eat cake", "Escape the book into the 'real' world", "Dance", "Sleep"], correct: 1, explanation: "Correct! They achieve true liberation." }
+            },
+            {
+                title: "34. Counterpoint",
+                content: `
+                    <p class="mb-4">Sophie and Alberto are now in Oslo (Hilde's world). But they are <strong>"spirit"</strong> (characters/ideas). They are invisible to humans. They cannot move physical objects easily.</p>
+                    <p class="mb-4">They watch Hilde and the Major. Sophie tries to communicate. She learns that while she isn't "flesh and blood," she is immortal as an Idea. As long as people read the book, she lives.</p>
+                `,
+                scenario: `
+                    <p>Are fictional characters real? In a way, yes. Sherlock Holmes is more "real" and influential than many people who actually lived.</p>
+                `,
+                quiz: { question: "What form do Sophie and Alberto take in the real world?", options: ["Humans", "Invisible spirits/ideas", "Ghosts", "Animals"], correct: 1, explanation: "Correct! They exist as pure thought." }
+            },
+            {
+                title: "35. The Big Bang",
+                content: `
+                    <p class="mb-4">The final lesson looks at the cosmos. The universe began 15 billion years ago with the <strong>Big Bang</strong>. All matter was concentrated in a single point.</p>
+                    <p class="mb-4">We are made of atoms created in stars. <strong>"We are stardust."</strong></p>
+                    <p class="mb-4">The book ends with a sense of cosmic wonder. The universe is waking up to itself through us. Sophie (wisdom) is the universe trying to understand itself.</p>
+                    <div class="concept-card text-center">
+                        <p class="text-xl font-bold text-amber-500">"We are the spark from the great fire."</p>
+                    </div>
+                `,
+                scenario: `
+                    <p>Look up at the stars tonight. You are looking at your history. You are the universe observing itself.</p>
+                `,
+                quiz: { question: "What are we made of, fundamentally?", options: ["Mud", "Stardust (atoms from stars)", "Plastic", "Nothing"], correct: 1, explanation: "Correct! We are part of the cosmic evolution." }
+            }
+        ];
+
+        // Logic
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-3 hover:bg-slate-900 transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-amber-500' : 'text-slate-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-slate-500 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-slate-800">${index + 1}</span>
+                    <span class="truncate display-font tracking-wide">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-slate-900');
+                b.classList.add('text-slate-500', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-amber-500', 'text-white', 'border-amber-500');
+                b.querySelector('.lesson-indicator').classList.add('bg-slate-900', 'text-slate-500', 'border-slate-800');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-slate-900');
+                activeBtn.classList.remove('text-slate-500', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-slate-900', 'text-slate-500', 'border-slate-800');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-amber-500', 'text-white', 'border-amber-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `Complete Course` : 
+                `Next Chapter`;
+            
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-4 hidden p-4 rounded-lg text-base border border-transparent shadow-sm bg-opacity-90";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition flex items-center shadow-md group bg-slate-900/50 text-slate-300";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-slate-600 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-slate-500 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600 transition">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="font-medium group-hover:text-white ui-font">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-green-900/50 text-green-200 border border-green-500/50 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2 display-font">Correct! ✨</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-4 p-4 rounded-lg bg-red-950/50 text-red-200 border border-red-500/50 fade-in shadow-inner";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2 display-font">Incorrect</strong> The correct answer is: <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => {
+            if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1);
+        };
+
+        nextBtn.onclick = () => {
+            if (currentLessonIndex < lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1);
+            } else {
+                alert("Congratulations! You have completed the entire course.");
+            }
+        };
+
+        function launchConfetti() {
+            const colors = ['#f59e0b', '#fbbf24', '#3b82f6', '#8b5cf6', '#10b981'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 8 + 4 + 'px';
+                conf.style.height = Math.random() * 8 + 4 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(255,255,255,0.5)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 4 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
