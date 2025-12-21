@@ -248,8 +248,8 @@
 <body class="h-screen flex flex-col md:flex-row overflow-hidden">
 
     <!-- Fantasy Background Audio -->
-    <audio id="bgMusic" loop preload="auto" crossorigin="anonymous">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop preload="auto">
+        <source src="../MP3/wizard-rider-enchanted-fantasy-orchestral-369658.mp3" type="audio/mpeg">
     </audio>
     
     <!-- Sound Toggle Button -->
@@ -283,22 +283,26 @@
             if (hint) hint.style.display = 'none';
             
             if (isMuted) {
-                // Update UI immediately
-                updateSoundUI(true);
-                
-                // Play tone immediately (this always works)
-                playTone();
-                
-                // Also try MP3 in background
+                // Play MP3
                 if (bgMusic) {
-                    bgMusic.volume = 0.5;
-                    bgMusic.play().catch(e => console.log('MP3 failed:', e));
+                    bgMusic.volume = 0.4;
+                    bgMusic.play()
+                        .then(() => {
+                            console.log('🎵 Fantasy music playing!');
+                            updateSoundUI(true);
+                        })
+                        .catch(e => {
+                            console.log('MP3 failed:', e);
+                            // Fallback to tone
+                            playTone();
+                            updateSoundUI(true);
+                        });
                 }
             } else {
-                // Stop everything
-                updateSoundUI(false);
-                stopTone();
+                // Stop music
                 if (bgMusic) bgMusic.pause();
+                stopTone();
+                updateSoundUI(false);
             }
         }
         
@@ -351,13 +355,9 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 oscillator.start();
-                console.log('🔊 TONE IS NOW PLAYING!');
-                
-                // Visual confirmation
-                alert('🔊 សំឡេងកំពុងចាក់! (Sound is playing!)');
+                console.log('🔊 Fallback tone playing');
             } catch(e) {
                 console.error('Tone error:', e);
-                alert('❌ Audio error: ' + e.message);
             }
         }
         
