@@ -145,8 +145,22 @@
         <div class="unlock-modal">
             <div class="text-6xl mb-4">🔐</div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2 kh-text-title">មេរៀន Premium</h3>
-            <p class="text-gray-600 mb-6">បញ្ចូលលេខកូដដើម្បីបើកមេរៀនទាំងអស់</p>
             
+            <!-- Credits Section -->
+            <div id="creditsSection" class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-amber-700 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-amber-600">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-orange-600 transition disabled:opacity-50">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-500 text-xs mt-2 hidden text-center"></p>
+            </div>
+            
+            <div class="text-center text-gray-400 text-sm mb-4">ឬ</div>
+            
+            <p class="text-gray-600 mb-3 text-sm">បញ្ចូលកូដដើម្បីបើកសោ:</p>
             <input type="text" id="unlockCodeInput" 
                 placeholder="បញ្ចូលកូដរបស់អ្នក..."
                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-center text-lg font-mono uppercase tracking-widest focus:border-sky-500 focus:outline-none mb-3">
@@ -154,7 +168,7 @@
             <div id="codeError" class="text-red-500 text-sm mb-4 hidden">កូដមិនត្រឹមត្រូវ សូមព្យាយាមម្តងទៀត</div>
             
             <button id="unlockBtn" onclick="tryUnlock()" class="w-full bg-gradient-to-r from-sky-600 to-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:from-sky-700 hover:to-blue-700 transition mb-3 disabled:opacity-50">
-                បើកសោ 🔓
+                បើកសោដោយកូដ 🔓
             </button>
             
             <button onclick="closeLockOverlay()" class="text-gray-500 hover:text-gray-700 text-sm">
@@ -162,8 +176,8 @@
             </button>
             
             <div class="mt-6 pt-4 border-t border-gray-100">
-                <p class="text-xs text-gray-400">មិនទាន់មានកូដ? ទាក់ទងយើងតាម Telegram</p>
-                <a href="#" class="text-sky-600 text-sm font-medium hover:underline">@KrouAI</a>
+                <p class="text-xs text-gray-400">មិនទាន់មាន Credits? <a href="https://link-sandbox.payway.com.kh/SA66349h" target="_blank" class="text-amber-600 hover:underline">ទិញ 20 Credits = 2000៛</a></p>
+                <p class="text-xs text-gray-400 mt-1">រួចទាក់ទង <a href="https://t.me/KrouAI" class="text-sky-600 hover:underline">@KrouAI</a> តាម Telegram</p>
             </div>
         </div>
     </div>
@@ -289,6 +303,114 @@
         }
         checkLoginRequired();
         
+        // ========== CREDITS SYSTEM ==========
+        const BOOK_ID = 'conversations';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let unlockedBooks = [];
+        
+        // Load user credits from Supabase
+        async function loadUserCredits() {
+            const { data: { user } } = await supabaseAuth.auth.getUser();
+            if (!user) return;
+            
+            try {
+                const { data, error } = await supabaseAuth
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    unlockedBooks = data.unlocked_books || [];
+                    updateCreditsDisplay();
+                    
+                    // If this book is already unlocked via credits, unlock it
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        localStorage.setItem('krouai_premium_unlocked', 'true');
+                        updateNavWithLockStatus();
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading credits:', err);
+            }
+        }
+        
+        // Update credits display in modal
+        function updateCreditsDisplay() {
+            const display = document.getElementById('userCreditsDisplay');
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            if (display) display.textContent = userCredits + ' 💰';
+            if (btn) {
+                btn.disabled = userCredits < UNLOCK_COST;
+                if (userCredits < UNLOCK_COST) {
+                    btn.classList.add('opacity-50');
+                } else {
+                    btn.classList.remove('opacity-50');
+                }
+            }
+        }
+        
+        // Unlock with credits
+        async function unlockWithCredits() {
+            const { data: { user } } = await supabaseAuth.auth.getUser();
+            if (!user) {
+                document.getElementById('creditsError').textContent = 'សូមចូលគណនីជាមុនសិន';
+                document.getElementById('creditsError').classList.remove('hidden');
+                return;
+            }
+            
+            if (userCredits < UNLOCK_COST) {
+                document.getElementById('creditsError').textContent = 'Credits មិនគ្រប់គ្រាន់។ សូមទិញបន្ថែម!';
+                document.getElementById('creditsError').classList.remove('hidden');
+                return;
+            }
+            
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                // Call the spend_credits function in Supabase
+                const { data, error } = await supabaseAuth.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    userCredits = data.credits;
+                    unlockedBooks.push(BOOK_ID);
+                    localStorage.setItem('krouai_premium_unlocked', 'true');
+                    closeLockOverlay();
+                    updateNavWithLockStatus();
+                    
+                    if (pendingLessonIndex !== null) {
+                        loadLesson(pendingLessonIndex);
+                        pendingLessonIndex = null;
+                    }
+                    
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោមេរៀន Premium ទាំងអស់!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message || 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Error spending credits:', err);
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+        
+        // Load credits on page load
+        loadUserCredits();
+        
         // ========== STATIC CODE VALIDATION (GitHub Pages Compatible) ==========
         // Codes are loaded from valid_codes.json (pre-generated)
         let VALID_CODES = [];
@@ -326,8 +448,10 @@
             document.getElementById('lockOverlay').classList.add('active');
             document.getElementById('unlockCodeInput').focus();
             document.getElementById('codeError').classList.add('hidden');
+            document.getElementById('creditsError').classList.add('hidden');
             document.getElementById('unlockBtn').disabled = false;
-            document.getElementById('unlockBtn').textContent = 'បើកសោ 🔓';
+            document.getElementById('unlockBtn').textContent = 'បើកសោដោយកូដ 🔓';
+            updateCreditsDisplay();
         }
         
         // Close lock overlay

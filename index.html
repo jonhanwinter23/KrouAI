@@ -242,6 +242,15 @@
                                     <p class="text-xs text-gray-500">Logged in as</p>
                                     <p id="dropdownEmail" class="text-sm text-white truncate"></p>
                                 </div>
+                                <div class="px-4 py-3 border-b border-white/10 bg-amber-500/10">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-amber-400">💰 Credits</span>
+                                        <span id="userCredits" class="text-lg font-bold text-amber-400">0</span>
+                                    </div>
+                                    <button onclick="showPaymentModal()" class="mt-2 w-full text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 py-1.5 rounded-lg transition">
+                                        + Top Up Credits
+                                    </button>
+                                </div>
                                 <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-400 hover:bg-white/5 transition">
                                     🚪 Logout
                                 </button>
@@ -265,22 +274,29 @@
             </div>
             
             <div class="bg-white/5 rounded-xl p-4 mb-6">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-gray-400">តម្លៃក្នុងមួយសៀវភៅ</span>
-                    <span class="text-2xl font-bold text-amber-400">$0.5 <span class="text-lg text-gray-400">/ 2000៛</span></span>
+                <div class="text-center mb-4">
+                    <p class="text-gray-400 text-sm">គណនីរបស់អ្នកមាន</p>
+                    <p class="text-3xl font-bold text-amber-400"><span id="modalCredits">0</span> 💰</p>
+                    <p class="text-gray-500 text-xs">credits</p>
                 </div>
-                <p class="text-sm text-gray-400 mb-3">ជ្រើសរើorg សៀវភៅដែលអ្នកចង់រៀន:</p>
-                <ul class="text-sm text-gray-300 space-y-2">
-                    <li>📘 Crucial Conversations (8 មេរៀន)</li>
-                    <li>📗 Psychology of Money (17 មេរៀន)</li>
-                    <li>📙 Atomic Habits (21 មេរៀន)</li>
-                    <li>📕 The Four Agreements</li>
-                    <li>📓 Personality Isn't Permanent</li>
-                </ul>
+                <div class="bg-slate-800 rounded-lg p-3 mb-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">1 Credit</span>
+                        <span class="text-white">= 100៛</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">20 Credits</span>
+                        <span class="text-white">= 2000៛ ($0.5)</span>
+                    </div>
+                    <div class="flex justify-between text-sm mt-2 pt-2 border-t border-white/10">
+                        <span class="text-amber-400">1 សៀវភៅ</span>
+                        <span class="text-amber-400 font-bold">= 20 Credits</span>
+                    </div>
+                </div>
             </div>
             
             <a href="https://link-sandbox.payway.com.kh/SA66349h" target="_blank" class="block w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-amber-500/30 transition text-center mb-4">
-                💳 បង់ប្រាក់ $0.5 / 2000៛
+                💳 ទិញ 20 Credits - 2000៛
             </a>
             
             <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center">
@@ -671,6 +687,86 @@
                     </div>
                 </a>
                 
+                <!-- Course 7: The Little Prince (Premium) -->
+                <a href="App/little.html" class="course-card relative block bg-gradient-to-br from-slate-900/80 to-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-indigo-500/20 cursor-pointer group">
+                    <div class="card-glow bg-indigo-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-3xl">🌹</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-sm font-medium border border-amber-500/30">
+                            👑 20 Credits
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-3 kh-text-title text-slate-100 group-hover:text-white transition-colors">
+                        ព្រះអង្គម្ចាស់តូច
+                    </h3>
+                    <p class="text-sm text-indigo-300/80 uppercase tracking-wider mb-4 font-medium">
+                        The Little Prince
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        រឿងព្រេងនិទានដ៏ស្រស់ស្អាតអំពីមិត្តភាព ស្នេហា និងអត្ថន័យនៃជីវិត។
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                                Classic
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500 transition-colors">
+                            <svg class="w-5 h-5 text-indigo-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Course 8: Sapiens (Premium) -->
+                <a href="App/sapien.html" class="course-card relative block bg-gradient-to-br from-slate-900/80 to-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-orange-500/20 cursor-pointer group">
+                    <div class="card-glow bg-orange-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-600 to-red-700 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-3xl">🧬</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-sm font-medium border border-amber-500/30">
+                            👑 20 Credits
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-3 kh-text-title text-slate-100 group-hover:text-white transition-colors">
+                        Sapiens
+                    </h3>
+                    <p class="text-sm text-orange-300/80 uppercase tracking-wider mb-4 font-medium">
+                        A Brief History of Humankind
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        ប្រវត្តិសាស្រ្តនៃមនុស្សជាតិ។ ពីសត្វស្វានៅអាហ្វ្រិកដល់អ្នកគ្រប់គ្រងពិភពលោក។
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                                Bestseller
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
+                            <svg class="w-5 h-5 text-orange-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                
             </div>
             
             <!-- Coming Soon Card -->
@@ -883,6 +979,42 @@
             document.getElementById('userEmail').textContent = user.email;
             document.getElementById('dropdownEmail').textContent = user.email;
             document.getElementById('userInitial').textContent = user.email.charAt(0).toUpperCase();
+            loadUserCredits();
+        }
+        
+        // Load user credits from Supabase
+        async function loadUserCredits() {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (error && error.code === 'PGRST116') {
+                    // No record found, create one
+                    await supabaseClient.from('user_credits').insert({
+                        user_id: currentUser.id,
+                        credits: 0,
+                        unlocked_books: []
+                    });
+                    updateCreditsDisplay(0);
+                } else if (data) {
+                    window.userCredits = data.credits;
+                    window.unlockedBooks = data.unlocked_books || [];
+                    updateCreditsDisplay(data.credits);
+                }
+            } catch (err) {
+                console.error('Error loading credits:', err);
+            }
+        }
+        
+        // Update credits display
+        function updateCreditsDisplay(credits) {
+            document.getElementById('userCredits').textContent = credits;
+            document.getElementById('modalCredits').textContent = credits;
         }
         
         // Update UI when logged out

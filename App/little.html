@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Little Prince - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #0f172a; /* Slate-950 (Night Sky) */
+            color: #e2e8f0; /* Slate-200 */
+            line-height: 1.9;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #1e293b; /* Slate-800 */
+            border-right: 4px solid #fbbf24; /* Amber-400 (Stars) */
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #064e3b !important;
+            border-color: #10b981 !important;
+            color: #d1fae5 !important;
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border-color: #ef4444 !important;
+            color: #fecaca !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .concept-card {
+            background: rgba(30, 41, 59, 0.7); /* Translucent Blue */
+            padding: 2rem;
+            border-radius: 1rem;
+            border-left: 5px solid #fbbf24;
+            margin: 2rem 0;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #fbbf24;
+            padding-left: 1.5rem;
+            color: #fcd34d;
+            margin: 2rem 0;
+            background-color: rgba(251, 191, 36, 0.1); 
+            padding: 1.5rem;
+            border-radius: 0 1rem 1rem 0;
+            font-size: 1.1rem;
+        }
+        details {
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #475569;
+        }
+        details[open] {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #fbbf24;
+        }
+        summary {
+            font-weight: bold;
+            color: #fbbf24;
+            outline: none;
+        }
+        .stars-bg {
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-900 p-4 shadow-md flex justify-between items-center z-20 border-b border-slate-800">
+        <h1 class="text-lg font-bold text-amber-400 en-title">The Little Prince</h1>
+        <button id="menuBtn" class="text-slate-300 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-slate-950 shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-slate-800">
+        <div class="p-8 border-b border-slate-800 hidden md:block bg-slate-900">
+            <h1 class="text-2xl font-bold text-amber-400 en-title tracking-widest mb-1">THE LITTLE PRINCE</h1>
+            <p class="text-xs text-slate-400 font-bold uppercase tracking-wide">Le Petit Prince</p>
+            <p class="text-xs text-slate-500 mt-2 italic">Antoine de Saint-Exupéry</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-slate-800 bg-slate-900">
+            <div class="flex justify-between text-xs mb-2 text-amber-400 font-bold uppercase">
+                <span>Journey Progress</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div id="progressBar" class="bg-amber-500 h-1.5 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(251,191,36,0.5)]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-slate-900" id="mainContent">
+        <div class="stars-bg"></div>
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-slate-800/60 backdrop-blur-md p-16 rounded-3xl shadow-2xl max-w-3xl border border-slate-700 relative overflow-hidden">
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-amber-400/20 rounded-full blur-3xl animate-pulse"></div>
+                    <div class="text-8xl mb-8">🤴🦊🌹</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-8 kh-title leading-tight">ព្រះអង្គម្ចាស់តូច</h2>
+                    <p class="text-xl text-slate-300 mb-12 leading-loose font-medium text-justify px-4">
+                        "មនុស្សធំមិនដែលយល់អ្វីដោយខ្លួនឯងទេ ហើយវាពិតជាគួរឱ្យធុញសម្រាប់កុមារដែលត្រូវពន្យល់ពួកគេជារៀងរហូត។"<br><br>
+                        នេះមិនមែនជារឿងនិទានកុមារធម្មតាទេ តែជាសៀវភៅទស្សនវិជ្ជាអំពី <strong>សេចក្តីស្រលាញ់ ភាពឯកា និងការស្វែងរកអត្ថន័យជីវិត</strong>។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 text-xl flex items-center mx-auto tracking-widest border border-amber-300/50">
+                        <span>ចាប់ផ្តើមដំណើរ</span>
+                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-amber-500 mb-10 font-bold text-sm uppercase tracking-widest border-b border-slate-700 w-full pb-4">
+                    <span id="chapterNumber" class="bg-slate-800 px-3 py-1 rounded border border-slate-700">Lesson 1</span>
+                    <span class="flex-1 text-right text-slate-500">Philosophy of Childhood</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-10 leading-snug kh-title text-shadow-md"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-slate-800/80 border-l-4 border-amber-500 p-8 rounded-r-xl mb-16 hidden shadow-xl mt-16 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-9xl text-amber-500/5 select-none font-serif">?</div>
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        ការឆ្លុះបញ្ចាំង (Reflection)
+                    </h3>
+                    <div id="scenarioContent" class="text-slate-300 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-slate-800/50 rounded-2xl shadow-2xl p-10 md:p-14 border border-slate-700 mt-20 relative overflow-hidden backdrop-blur-sm">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl"></div>
+                    <h3 class="text-2xl font-bold text-white mb-8 flex items-center relative z-10 kh-title border-b border-slate-700 pb-4">
+                        <span class="bg-amber-600 text-white text-sm font-bold mr-4 px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">Quiz</span>
+                        តើអ្នកមើលឃើញដោយបេះដូងទេ?
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-8 text-slate-200 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-slate-900/80"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-20 pt-8 border-t border-slate-700">
+                    <button id="prevBtn" class="px-8 py-4 rounded-lg border border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-wider">
+                        ← មុន
+                    </button>
+                    <button id="nextBtn" class="px-8 py-4 rounded-lg bg-amber-500 text-slate-900 hover:bg-amber-400 font-bold shadow-lg flex items-center transition-all text-lg uppercase tracking-wider transform hover:-translate-y-1">
+                        បន្ទាប់ →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // DATA CONTENT (Philosophical Analysis of The Little Prince in Khmer)
+        const lessons = [
+            {
+                title: "1. មួក ឬ ពស់ថ្លាន់? (The Hat or the Boa?)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការបាត់បង់ការស្រមើស្រមៃ</h3>
+                    <p class="mb-6">រឿងចាប់ផ្តើមជាមួយអ្នកនិពន្ធ (The Narrator) កាលពីគាត់អាយុ ៦ ឆ្នាំ។ គាត់បានគូររូបភាពមួយ។ គាត់សួរមនុស្សធំថា៖ "តើរូបនេះធ្វើឱ្យអ្នកខ្លាចទេ?"។</p>
+                    <p class="mb-6">មនុស្សធំឆ្លើយថា៖ <strong>"ហេតុអ្វីត្រូវខ្លាចមួក?"</strong></p>
+                    <p class="mb-6">ប៉ុន្តែវាមិនមែនជាមួកទេ។ វាគឺជា <strong>ពស់ថ្លាន់ដែលកំពុងលេបដំរី (Boa Constrictor digesting an elephant)</strong>។ ដើម្បីឱ្យមនុស្សធំយល់ ក្មេងប្រុសត្រូវគូររូបទី ២ ដែលបង្ហាញដំរីនៅខាងក្នុងពស់។ មនុស្សធំប្រាប់គាត់ឱ្យឈប់គូររូប ហើយទៅរៀនភូមិសាស្ត្រ ឬគណិតវិទ្យាវិញ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-amber-400 mb-4">🎨 មេរៀនទី ១៖ ពិភពនៃមនុស្សធំ (The World of Grown-ups)</h4>
+                        <p>មនុស្សធំមើលឃើញតែ <strong>"សំបកក្រៅ" (Surface)</strong>។ ពួកគេវិនិច្ឆ័យអ្វីៗតាមរយៈប្រយោជន៍ (Utility) និងតួលេខ (Figures)។ ពួកគេបាត់បង់សមត្ថភាពមើលឃើញអ្វីដែលនៅ "ខាងក្នុង"។</p>
+                        <p class="mt-4">អ្នកនិពន្ធមានអារម្មណ៍ឯកាពេញមួយជីវិត ព្រោះគាត់ត្រូវចុះសម្រុងនឹងពិភពលោកដែលគ្មានការស្រមើស្រមៃនេះ។ គាត់ក្លាយជាអ្នកបើកយន្តហោះ ប៉ុន្តែចិត្តរបស់គាត់នៅតែស្វែងរកនរណាម្នាក់ដែលអាចមើលឃើញ "ដំរីក្នុងពស់ថ្លាន់"។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការពិសោធន៍៖</strong> បង្ហាញគំនូរមិនច្បាស់មួយទៅមិត្តភក្តិ។ បើគេសួរថា "នេះជាស្អី?" គេកំពុងប្រើខួរក្បាល។ បើគេសើច ហើយបង្កើតរឿងនិទានអំពីវា គេកំពុងប្រើបេះដូង។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាមនុស្សធំមើលឃើញរូបគំនូរទី ១ ថាជាមួក?", options: ["ព្រោះពួកគេពាក់វ៉ែនតា", "ព្រោះពួកគេបាត់បង់សមត្ថភាពមើលឃើញអ្វីដែលលាក់កំបាំង (Imagination) និងវិនិច្ឆ័យតែសំបកក្រៅ", "ព្រោះក្មេងគូរមិនស្អាត", "ព្រោះពួកគេឃ្លាន"], correct: 1, explanation: "ត្រឹមត្រូវ! មនុស្សធំត្រូវការការពន្យល់ច្បាស់លាស់ (រូបទី ២) ទើបយល់។ ពួកគេខ្វះការស្រមើស្រមៃ។" }
+            },
+            {
+                title: "2. ចូរគូររូបចៀមមួយឱ្យខ្ញុំ (Draw Me a Sheep)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការជួបគ្នាដ៏អស្ចារ្យ</h3>
+                    <p class="mb-6">យន្តហោះរបស់អ្នកនិពន្ធបានធ្លាក់នៅកណ្តាលវាលខ្សាច់សាហារ៉ា (Sahara Desert)។ គាត់ដាច់ទឹក និងប្រឈមមុខនឹងសេចក្តីស្លាប់។ នៅព្រឹកមួយ គាត់ត្រូវបានដាស់ដោយសំឡេងក្មេងប្រុសម្នាក់៖ <strong>"សូមមេត្តា... គូររូបចៀមមួយឱ្យខ្ញុំ"</strong>។</p>
+                    <p class="mb-6">នោះគឺជាព្រះអង្គម្ចាស់តូច (The Little Prince)។ អ្នកនិពន្ធគូររូបដំរីក្នុងពស់ថ្លាន់ឱ្យគាត់មើល។ អស្ចារ្យណាស់! ព្រះអង្គម្ចាស់តូចស្រែកថា៖ "ទេ! ខ្ញុំមិនចង់បានដំរីក្នុងពស់ថ្លាន់ទេ។ ពស់ថ្លាន់គ្រោះថ្នាក់ណាស់ ហើយដំរីធំពេក។"</p>
+                    <p class="mb-6">អ្នកនិពន្ធព្យាយាមគូរចៀមជាច្រើនដង (ចៀមឈឺ, ចៀមចាស់, ចៀមឈ្មោល) តែព្រះអង្គម្ចាស់តូចបដិសេធទាំងអស់។ ចុងក្រោយ អ្នកនិពន្ធអស់ធ្មត់ ក៏គូរ <strong>"ប្រអប់មួយដែលមានរន្ធ"</strong> ហើយប្រាប់ថា "ចៀមដែលអ្នកចង់បាន នៅក្នុងប្រអប់នេះ"។</p>
+                    <div class="quote-box">
+                        ព្រះអង្គម្ចាស់តូចញញឹម៖ "នេះហើយជាអ្វីដែលខ្ញុំចង់បាន! តើអ្នកគិតថាចៀមនេះស៊ីស្មៅច្រើនទេ?"
+                    </div>
+                    <p class="mb-6"><strong>អត្ថន័យ៖</strong> រូបភាពដែលល្អបំផុត មិនមែនជារូបភាពដែលបង្ហាញគ្រប់យ៉ាងទេ តែជារូបភាពដែលទុកចន្លោះឱ្យយើង <strong>ស្រមើស្រមៃ</strong>។ ប្រអប់គឺជាសេរីភាព។ ចៀមក្នុងចិត្តរបស់ក្មេងប្រុស ល្អឥតខ្ចោះជាងចៀមដែលគូរនៅលើក្រដាស។</p>
+                `,
+                scenario: `
+                    <p><strong>Less is More:</strong> ពេលខ្លះ ការមិននិយាយត្រង់ៗ ឬការមិនបង្ហាញរូបភាពច្បាស់ ធ្វើឱ្យមានន័យជាង។ នេះជាមូលហេតុដែលយើងចូលចិត្តអានសៀវភៅជាងមើលកុន ព្រោះយើងអាចបង្កើតតួអង្គក្នុងចិត្តខ្លួនឯង។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាព្រះអង្គម្ចាស់តូចពេញចិត្តនឹងរូបប្រអប់?", options: ["ព្រោះគាត់ចូលចិត្តប្រអប់", "ព្រោះគាត់អាចប្រើការស្រមើស្រមៃរបស់គាត់ ដើម្បីមើលឃើញចៀមដែលគាត់ចង់បាននៅខាងក្នុង", "ព្រោះវាងាយស្រួលគូរ", "ព្រោះគាត់មិនចង់បានចៀមទៀតទេ"], correct: 1, explanation: "ត្រឹមត្រូវ! ភ្នែកមើលមិនឃើញអ្វីដែលសំខាន់ទេ។ (What is essential is invisible to the eye)." }
+            },
+            {
+                title: "3. ដើមបាវបាប់ (The Baobabs)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">វិន័យនិងការការពារ</h3>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចរស់នៅលើភពតូចមួយឈ្មោះ <strong>Asteroid B-612</strong>។ បញ្ហាធំបំផុតនៅលើភពនោះគឺ <strong>ដើមបាវបាប់ (Baobabs)</strong>។</p>
+                    <p class="mb-6">បាវបាប់ចាប់ផ្តើមដុះជាកូនរុក្ខជាតិតូចៗ។ បើអ្នកមិនដកវាចោលភ្លាមៗនៅពេលវានៅតូចទេ វានឹងដុះធំឡើង ចាក់ឫសពេញភព ហើយធ្វើឱ្យភពបែកជាចំណែកៗ។</p>
+                    
+                    <div class="concept-card border-red-500">
+                        <h4 class="text-xl font-bold text-red-400 mb-4">🌳 និមិត្តរូបនៃបាវបាប់ (Metaphor of Baobabs)</h4>
+                        <p class="mb-3">បាវបាប់តំណាងឱ្យ <strong>"ទម្លាប់អាក្រក់"</strong> ឬ <strong>"គំនិតអវិជ្ជមាន"</strong>។</p>
+                        <ul class="list-disc ml-6 space-y-2 text-slate-300">
+                            <li>នៅពេលវានៅតូច (គ្រាន់តែជាគំនិតអាក្រក់មួយ ឬកំហុសតូចមួយ) វាងាយស្រួលដកណាស់។</li>
+                            <li>បើអ្នកទុកវាចោល (Procrastination/Laziness) វានឹងចាក់ឫសជ្រៅ រហូតដល់គ្រប់គ្រងជីវិតអ្នក ឬបំផ្លាញពិភពលោករបស់អ្នក។</li>
+                        </ul>
+                        <p class="mt-4 italic">"វាជាបញ្ហានៃវិន័យ (It is a question of discipline)," ព្រះអង្គម្ចាស់តូចពោល។ "នៅពេលអ្នកលុបមុខពេលព្រឹក អ្នកត្រូវតែលុបមុខឱ្យភពរបស់អ្នកដែរ។"</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong> តើមាន "បាវបាប់" អ្វីខ្លះនៅក្នុងចិត្តរបស់អ្នកនៅពេលនេះ? កំហឹង? ការច្រណែន? ភាពខ្ជិល? ដកវាចោលឥឡូវនេះ មុនពេលវាក្លាយជាដើមឈើធំដែលអ្នកកាប់លែងផ្តាច់។</p>
+                `,
+                quiz: { question: "តើដើមបាវបាប់តំណាងឱ្យអ្វីនៅក្នុងជីវិតពិត?", options: ["ដើមឈើធំៗនៅអាហ្រ្វិក", "បញ្ហាតូចតាច ឬទម្លាប់អាក្រក់ដែលត្រូវដោះស្រាយភ្លាមៗមុនពេលវារីកធំហើយគ្រប់គ្រងយើង", "សត្វចិញ្ចឹម", "ផ្កាកុលាប"], correct: 1, explanation: "ត្រឹមត្រូវ! ការពន្យារពេល (Delaying action) ធ្វើឱ្យបញ្ហាតូចក្លាយជាមហន្តរាយ។" }
+            },
+            {
+                title: "4. ផ្កាកុលាប (The Rose)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">សេចក្តីស្រលាញ់ និងភាពស្មុគស្មាញ</h3>
+                    <p class="mb-6">នៅលើភពរបស់ព្រះអង្គម្ចាស់តូច មានផ្កាមួយទងដែលគាត់ស្រលាញ់ខ្លាំងណាស់។ នាងស្អាត តែនាងមាន <strong>អំនួត (Vain)</strong> និងទាមទារច្រើន។</p>
+                    <p class="mb-6">នាងសុំឱ្យគាត់ដាក់កញ្ចក់បាំងខ្យល់។ នាងកុហកថាស្រុកកំណើតនាងនៅកន្លែងផ្សេង (ទាំងដែលនាងកើតចេញពីគ្រាប់នៅទីនោះ)។ ភាពទាមទារនិងពាក្យសម្តីរបស់នាង ធ្វើឱ្យព្រះអង្គម្ចាស់តូចហត់នឿយ ហើយសម្រេចចិត្តរត់គេចខ្លួន។</p>
+                    <p class="mb-6">ប៉ុន្តែនៅពេលគាត់ចាកចេញ គាត់ទើបដឹងថាគាត់ស្រលាញ់នាងប៉ុណ្ណា។</p>
+                    
+                    <div class="quote-box">
+                        "ខ្ញុំមិនគួរវិនិច្ឆ័យនាងតាមពាក្យសម្តីរបស់នាងទេ ខ្ញុំគួរតែវិនិច្ឆ័យតាមទង្វើរបស់នាង។ នាងបានធ្វើឱ្យភពខ្ញុំក្រអូប... ខ្ញុំនៅក្មេងពេក មិនចេះពីរបៀបស្រលាញ់នាង។"
+                    </div>
+
+                    <p class="mb-6"><strong>មេរៀន៖</strong> ផ្កាកុលាបតំណាងឱ្យស្ត្រី ឬមនុស្សដែលយើងស្រលាញ់។ ពួកគេអាចនឹងមានចរិតឆ្នឆ្នើម ឬមានបន្លា (ការពារខ្លួន)។ ប៉ុន្តែនៅពីក្រោយបន្លានោះ គឺជាភាពទន់ខ្សោយដែលត្រូវការការការពារ។ ព្រះអង្គម្ចាស់តូចស្តាយក្រោយដែលរត់ចោលនាង ព្រោះគាត់មើលមិនឃើញក្តីស្រលាញ់ដែលលាក់នៅពីក្រោយភាពឆ្នឆ្នើមនោះ។</p>
+                `,
+                scenario: `
+                    <p><strong>ទំនាក់ទំនង៖</strong> តើអ្នកធ្លាប់ឈ្លោះជាមួយមនុស្សជាទីស្រលាញ់ព្រោះពាក្យសម្តីអាក្រក់មួយម៉ាត់ទេ? មើលឱ្យជ្រៅជាងពាក្យសម្តី។ មើលទង្វើ។ តើគេធ្វើឱ្យជីវិតអ្នក "ក្រអូប" ទេ?</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាព្រះអង្គម្ចាស់តូចស្តាយក្រោយដែលចាកចេញពីផ្កាកុលាប?", options: ["ព្រោះនាងជំពាក់លុយគាត់", "ព្រោះគាត់ដឹងថាពាក្យសម្តីឆ្នឆ្នើមរបស់នាង គ្រាន់តែជាល្បិចការពារភាពទន់ខ្សោយរបស់នាងប៉ុណ្ណោះ", "ព្រោះគ្មានអ្នកណាស្រោចទឹក", "ព្រោះនាងស្អាត"], correct: 1, explanation: "ត្រឹមត្រូវ! 'ខ្ញុំនៅក្មេងពេក មិនចេះពីរបៀបស្រលាញ់។' ការស្រលាញ់ត្រូវការការយល់ពីជម្រៅចិត្ត មិនមែនតែសំបកក្រៅទេ។" }
+            },
+            {
+                title: "5. ការធ្វើដំណើរ៖ ស្តេច និង មនុស្សមានអំនួត (The King & The Vain Man)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ភាពមិនសមហេតុផលនៃមនុស្សធំ</h3>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចធ្វើដំណើរទៅកាន់អាចម៍ផ្កាយផ្សេងៗ។ នៅទីនោះ គាត់ជួបមនុស្សធំដែលមានចរិតប្លែកៗ (ដែលតំណាងឱ្យចំណុចខ្សោយរបស់មនុស្ស)៖</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="concept-card">
+                            <h4 class="text-lg font-bold text-amber-400 mb-2">👑 ភពទី ១៖ ព្រះមហាក្សត្រ (The King)</h4>
+                            <p class="text-slate-300">គាត់អង្គុយលើបល្ល័ង្កម្នាក់ឯង។ គាត់អះអាងថាគាត់គ្រប់គ្រងចក្រវាឡទាំងមូល។ គាត់បញ្ជាឱ្យព្រះអាទិត្យលិច... ប៉ុន្តែបញ្ជាបានតែនៅម៉ោងដែលព្រះអាទិត្យត្រូវលិចប៉ុណ្ណោះ។</p>
+                            <p class="mt-2 text-sm text-slate-400"><strong>អត្ថន័យ៖</strong> តំណាងឱ្យមនុស្សដែលស្រេកឃ្លាន <strong>អំណាច (Power)</strong>។ ពួកគេចង់គ្រប់គ្រងអ្វីៗគ្រប់យ៉ាង សូម្បីតែរឿងដែលពួកគេមិនអាចគ្រប់គ្រងបាន។ អំណាចរបស់ពួកគេគឺក្លែងក្លាយ។</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4 class="text-lg font-bold text-amber-400 mb-2">🎩 ភពទី ២៖ មនុស្សមានអំនួត (The Vain Man)</h4>
+                            <p class="text-slate-300">គាត់ពាក់មួកមួយ។ រាល់ពេលមាននរណាទះដៃ គាត់ដោះមួកគំនាប់។ គាត់ចង់ឱ្យគេកោតសរសើរ ថាគាត់សង្ហាបំផុត ឆ្លាតបំផុត (ទាំងដែលនៅលើភពនោះមានតែគាត់ម្នាក់ឯង)។</p>
+                            <p class="mt-2 text-sm text-slate-400"><strong>អត្ថន័យ៖</strong> តំណាងឱ្យមនុស្សដែលត្រូវការ <strong>ការទទួលស្គាល់ (Validation)</strong> ពីអ្នកដទៃទើបមានអារម្មណ៍ថាខ្លួនមានតម្លៃ។</p>
+                        </div>
+                    </div>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចពោលថា៖ <strong>"មនុស្សធំ ពិតជាចម្លែកខ្លាំងណាស់។"</strong></p>
+                `,
+                scenario: `
+                    <p>តើអ្នកធ្លាប់ជួប "ស្តេច" ដែលចូលចិត្តបញ្ជា ឬ "មនុស្សមានអំនួត" ដែលចូលចិត្តឱ្យគេ Like លើ Facebook ទេ? ពួកគេរស់នៅក្នុងពិភពលោកតូចមួយរបស់ពួកគេ។</p>
+                `,
+                quiz: { question: "តើអ្វីជាបញ្ហារបស់ស្តេចនៅលើភពទី ១?", options: ["គាត់គ្មានប្រជារាស្ត្រ", "គាត់ជឿថាគាត់មានអំណាចលើអ្វីៗគ្រប់យ៉ាង ទាំងដែលតាមពិតគាត់គ្រាន់តែចេញបញ្ជាស្របតាមច្បាប់ធម្មជាតិ", "គាត់ឈឺ", "គាត់គ្មានមកុដ"], correct: 1, explanation: "ត្រឹមត្រូវ! អំណាចដែលគ្មានប្រាជ្ញា គឺជាអំណាចទទេ។" }
+            },
+            {
+                title: "6. អ្នកជំនួញ និង អ្នកអុជចង្កៀង (The Businessman & The Lamplighter)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការកាន់កាប់ និងកាតព្វកិច្ច</h3>
+                    
+                    <div class="concept-card bg-slate-800 border-l-4 border-blue-500">
+                        <h4 class="text-xl font-bold text-blue-400 mb-3">💼 ភពទី ៤៖ អ្នកជំនួញ (The Businessman)</h4>
+                        <p class="text-slate-300 mb-2">គាត់រវល់រាប់ផ្កាយ។ គាត់ថាគាត់ "ជាម្ចាស់" ផ្កាយទាំងនោះ ដើម្បីឱ្យគាត់ក្លាយជាអ្នកមាន ហើយទិញផ្កាយថែមទៀត។</p>
+                        <p class="text-slate-300 mb-2">ព្រះអង្គម្ចាស់តូចសួរថា៖ "តើលោកមានប្រយោជន៍អ្វីដល់ផ្កាយទាំងនោះ? ខ្ញុំមានផ្កាមួយទង ខ្ញុំស្រោចទឹកវា ខ្ញុំមានប្រយោជន៍ដល់វា។ តែលោកគ្មានប្រយោជន៍ដល់ផ្កាយទេ។"</p>
+                        <p class="text-sm italic text-slate-400"><strong>អត្ថន័យ៖</strong> <strong>សម្ភារៈនិយម (Materialism)</strong>។ ការកាន់កាប់របស់អ្វីមួយដែលយើងមិនអាចប្រើប្រាស់ ឬថែរក្សា គឺជាភាពឥតន័យ។</p>
+                    </div>
+
+                    <div class="concept-card bg-slate-800 border-l-4 border-yellow-500">
+                        <h4 class="text-xl font-bold text-yellow-400 mb-3">💡 ភពទី ៥៖ អ្នកអុជចង្កៀង (The Lamplighter)</h4>
+                        <p class="text-slate-300 mb-2">ភពគាត់វិលលឿនណាស់ មួយថ្ងៃមានតែ ១ នាទី។ គាត់ត្រូវអុជនិងពន្លត់ចង្កៀងរាល់ ១ នាទីម្តង តាមបញ្ជា។ គាត់ហត់ខ្លាំង។</p>
+                        <p class="text-slate-300">ព្រះអង្គម្ចាស់តូចគោរពគាត់ជាងគេ។ ហេតុអ្វី? <strong>"ព្រោះគាត់ខ្វល់ពីអ្វីផ្សេង ក្រៅពីខ្លួនឯង"</strong>។ គាត់មានការទទួលខុសត្រូវ។ ប៉ុន្តែគាត់ជាជនរងគ្រោះនៃទម្លាប់ដែលលែងមានន័យ។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Burnout:</strong> អ្នកអុជចង្កៀងតំណាងឱ្យមនុស្សដែលធ្វើការងារដដែលៗយ៉ាងលំបាក ដោយមិនហ៊ានឈប់សម្រាក ឬសួរថា "តើធ្វើដើម្បីអ្វី?"។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាព្រះអង្គម្ចាស់តូចគិតថាអ្នកជំនួញមិនមែនជាមនុស្សធ្ងន់ធ្ងរ (Serious)?", options: ["ព្រោះគាត់មិនចេះរាប់លេខ", "ព្រោះគាត់គិតថាការកាន់កាប់ (Ownership) សំខាន់ជាងការថែរក្សា (Care/Usefulness)", "ព្រោះគាត់ក្រ", "ព្រោះគាត់កំប្លែង"], correct: 1, explanation: "ត្រឹមត្រូវ! សម្រាប់ព្រះអង្គម្ចាស់តូច ការមានអ្វីមួយមានន័យថាអ្នកត្រូវទទួលខុសត្រូវលើវា។" }
+            },
+            {
+                title: "7. ផែនដី និងសួនផ្កាកុលាប (Earth & The Garden of Roses)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការបាក់ទឹកចិត្ត</h3>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចមកដល់ផែនដី។ គាត់បានឃើញសួនច្បារមួយដែលមានផ្កាកុលាប ៥០០០ ទង។ គាត់ទន់ជង្គង់ ហើយយំ។</p>
+                    <p class="mb-6">ហេតុអ្វី? ព្រោះផ្កាកុលាបរបស់គាត់ធ្លាប់ប្រាប់គាត់ថា <strong>"នាងគឺជាផ្កាតែមួយគត់ក្នុងចក្រវាឡ"</strong>។ ឥឡូវនេះ គាត់ឃើញថានាងគ្រាន់តែជាផ្កាធម្មតាមួយទង ក្នុងចំណោមផ្ការាប់ពាន់។</p>
+                    <p class="mb-6">គាត់គិតថា៖ "ខ្ញុំគិតថាខ្ញុំមានទ្រព្យសម្បត្តិមហាសាល (ផ្កា unique) តែតាមពិតខ្ញុំមានតែផ្កាធម្មតាមួយ។ ខ្ញុំមិនមែនជាព្រះអង្គម្ចាស់ដ៏អស្ចារ្យទេ។"</p>
+                    <p class="mb-6">នេះគឺជាចំណុចដែលយើងបាត់បង់ការបំភាន់ (Disillusionment)។ យើងរកឃើញថា អ្វីដែលយើងស្រលាញ់ មិនមែនពិសេសសម្រាប់ពិភពលោកទេ។ ប៉ុន្តែ... តើវាឈប់ពិសេសសម្រាប់យើងទេ?</p>
+                `,
+                scenario: `
+                    <p>ម្តាយរបស់អ្នកគ្រាន់តែជាស្ត្រីធម្មតាម្នាក់សម្រាប់ពិភពលោក។ ប៉ុន្តែសម្រាប់អ្នក គាត់គឺជាម្តាយតែមួយគត់។ តម្លៃមិនស្ថិតនៅលើវត្ថុនោះទេ តម្លៃស្ថិតនៅលើ <strong>ទំនាក់ទំនង (Relationship)</strong>។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាព្រះអង្គម្ចាស់តូចយំនៅពេលឃើញសួនផ្កាកុលាប?", options: ["ព្រោះគាត់នឹកផ្ទះ", "ព្រោះគាត់ដឹងថាផ្ការបស់គាត់បានកុហក ហើយនាងមិនមែនជាផ្កាតែមួយគត់ក្នុងលោក (Not unique)", "ព្រោះគាត់ចាញ់ផ្កា", "ព្រោះគាត់ឃ្លាន"], correct: 1, explanation: "ត្រឹមត្រូវ! គាត់មានអារម្មណ៍ថាចាញ់បោក។ ប៉ុន្តែគាត់នឹងរៀនមេរៀនថ្មីពីកញ្ជ្រោង។" }
+            },
+            {
+                title: "8. កញ្ជ្រោង និងអាថ៌កំបាំងនៃជីវិត (The Fox & The Secret)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការផ្សាំង (Taming)</h3>
+                    <p class="mb-6">នេះគឺជាជំពូកដែលសំខាន់បំផុត។ កញ្ជ្រោងមួយក្បាលបានបង្ហាញខ្លួន ហើយសុំឱ្យព្រះអង្គម្ចាស់តូច "ផ្សាំង" (Tame) វា។</p>
+                    <p class="mb-6"><strong>"Tame" មានន័យថា "បង្កើតចំណង" (To establish ties)។</strong></p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-slate-300">
+                        <li>កញ្ជ្រោងនិយាយថា៖ "ឥឡូវនេះ អ្នកគ្រាន់តែជាក្មេងប្រុសម្នាក់ដូចក្មេងប្រុសរាប់សែននាក់ផ្សេងទៀតសម្រាប់ខ្ញុំ។ ខ្ញុំមិនត្រូវការអ្នក។ ប៉ុន្តែបើអ្នកផ្សាំងខ្ញុំ... យើងនឹងត្រូវការគ្នាទៅវិញទៅមក។ អ្នកនឹងក្លាយជា <strong>មនុស្សតែមួយគត់ក្នុងលោក</strong> សម្រាប់ខ្ញុំ។"</li>
+                    </ul>
+                    <p class="mb-6">ក្រោយពេលព្រះអង្គម្ចាស់តូចផ្សាំងកញ្ជ្រោងហើយ គាត់ត្រឡប់ទៅមើលសួនផ្កាកុលាបវិញ។ គាត់និយាយទៅកាន់ផ្កាទាំង ៥០០០ នោះថា៖ <strong>"អ្នកទាំងអស់គ្នាស្អាត ប៉ុន្តែអ្នកទទេស្អាត។ គ្មាននរណាអាចស្លាប់ជំនួសអ្នកបានទេ។ ផ្ការបស់ខ្ញុំមួយទង សំខាន់ជាងអ្នកទាំងអស់គ្នា ព្រោះខ្ញុំបានស្រោចទឹកនាង ខ្ញុំបានការពារនាង។ នាងគឺជាផ្ការបស់ខ្ញុំ។"</strong></p>
+                    
+                    <div class="quote-box text-2xl font-bold text-amber-400 text-center border-none bg-slate-800 p-8">
+                        "Here is my secret... It is only with the heart that one can see rightly; what is essential is invisible to the eye."
+                    </div>
+                    <p class="text-center mt-2 text-slate-400">(មានតែបេះដូងទេដែលអាចមើលឃើញយ៉ាងត្រឹមត្រូវ អ្វីដែលសំខាន់បំផុតគឺមើលមិនឃើញដោយភ្នែកទទេឡើយ)</p>
+                `,
+                scenario: `
+                    <p><strong>ពេលវេលា៖</strong> "គឺពេលវេលាដែលអ្នកបានចំណាយលើផ្ការបស់អ្នក ដែលធ្វើឱ្យផ្ការបស់អ្នកមានតម្លៃខ្លាំងម្ល៉េះ។" តម្លៃមិនមែនជារបស់ដែលទិញបានទេ តម្លៃគឺជាពេលវេលានិងក្តីស្រលាញ់ដែលយើងវិនិយោគ។</p>
+                `,
+                quiz: { question: "តើអ្វីដែលធ្វើឱ្យផ្កាកុលាបរបស់ព្រះអង្គម្ចាស់តូច ខុសប្លែកពីផ្កាកុលាបរាប់ពាន់ផ្សេងទៀត?", options: ["នាងស្អាតជាង", "ពេលវេលា និងក្តីស្រលាញ់ដែលគាត់បានចំណាយលើនាង (Taming/Ties)", "នាងមានបន្លា", "នាងចេះនិយាយ"], correct: 1, explanation: "ត្រឹមត្រូវ! អ្នកទទួលខុសត្រូវជារៀងរហូតចំពោះអ្វីដែលអ្នកបានផ្សាំង (You become responsible, forever, for what you have tamed)." }
+            },
+            {
+                title: "9. អ្នកប្តូរក្បាលរថភ្លើង និងអ្នកលក់ថ្នាំ (The Switchman & The Merchant)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">ការប្រញាប់ប្រញាល់ដែលគ្មានន័យ</h3>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចជួបមនុស្សពីរនាក់ទៀតនៅផែនដី៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-4 text-slate-300">
+                        <li><strong>អ្នកប្តូរក្បាលរថភ្លើង (Switchman):</strong> គាត់ប្រាប់ថា មនុស្សជិះរថភ្លើងលឿនណាស់ ប៉ុន្តែគេមិនដឹងថាគេទៅណាទេ។ គេគ្រាន់តែចង់ទៅកន្លែងផ្សេង។ "មានតែក្មេងៗទេដែលអើតក្បាលមើលតាមបង្អួច"។ មនុស្សធំដេកលក់ ឬឈ្លោះគ្នា។</li>
+                        <li><strong>អ្នកលក់ថ្នាំ (Merchant):</strong> លក់ថ្នាំបំបាត់ការស្រេកទឹក។ គាត់ថា "ថ្នាំនេះចំណេញពេល ៥៣ នាទីក្នុងមួយសប្តាហ៍ (ព្រោះមិនបាច់ដើរទៅរកទឹក)"។</li>
+                    </ul>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចគិតថា៖ "បើខ្ញុំមានពេល ៥៣ នាទីសល់... ខ្ញុំនឹងដើរយឺតៗទៅរកប្រភពទឹក។" ការដើរទៅរកទឹក គឺជាក្តីសុខ មិនមែនជាការខាតពេលទេ។ មនុស្សធំចង់បានតែលទ្ធផល (បាត់ស្រេក) តែបាត់បង់សេចក្តីសុខនៃដំណើរ (ការផឹកទឹក)។</p>
+                `,
+                scenario: `
+                    <p><strong>Efficiency Trap:</strong> យើងមានឡាន មានអ៊ីនធឺណិត ដើម្បីចំណេញពេល។ តែយើងរវល់ជាងមុន។ តើយើងកំពុងរត់ទៅណា? តើយើងដឹងទេ?</p>
+                `,
+                quiz: { question: "តើព្រះអង្គម្ចាស់តូចយល់យ៉ាងណាចំពោះការ 'សន្សំពេលវេលា' របស់អ្នកលក់?", options: ["វាល្អណាស់", "វាគ្មានន័យ បើយើងមិនដឹងថាយកពេលនោះទៅធ្វើអ្វីដែលមានក្តីសុខ (ដូចជាដើរទៅរកទឹក)", "គាត់ចង់ទិញ", "គាត់មិនខ្វល់"], correct: 1, explanation: "ត្រឹមត្រូវ! ពេលវេលាមានតម្លៃនៅពេលយើង 'ចំណាយ' វាលើរឿងដែលមានន័យ មិនមែននៅពេលយើង 'សន្សំ' វាទុកចោលទេ។" }
+            },
+            {
+                title: "10. ការចាកចេញ និងអណ្តូងទឹក (The Departure)",
+                content: `
+                    <h3 class="text-2xl font-bold text-white mb-6">សេចក្តីស្លាប់មិនមែនជាទីបញ្ចប់</h3>
+                    <p class="mb-6">មួយឆ្នាំបានកន្លងផុតទៅ។ ព្រះអង្គម្ចាស់តូចនិងអ្នកនិពន្ធ បានរកឃើញអណ្តូងទឹកនៅកណ្តាលវាលខ្សាច់។ ទឹកនោះផ្អែមដូចតន្ត្រី ព្រោះវាបានមកពីការដើរហត់នឿយ។</p>
+                    <p class="mb-6">ព្រះអង្គម្ចាស់តូចត្រូវត្រឡប់ទៅភពគាត់វិញ។ រាងកាយរបស់គាត់ធ្ងន់ពេក គាត់មិនអាចយកទៅជាមួយបានទេ។ គាត់ត្រូវឱ្យ <strong>ពស់</strong> ខាំគាត់ ដើម្បីដោះលែងវិញ្ញាណចេញពីរាងកាយ។</p>
+                    <p class="mb-6">គាត់ប្រាប់អ្នកនិពន្ធថា៖ <strong>"វានឹងមើលទៅដូចជាខ្ញុំស្លាប់ ប៉ុន្តែវាមិនមែនជាការពិតទេ។... នៅពេលអ្នកមើលទៅលើមេឃ អ្នកនឹងឃើញផ្កាយទាំងអស់កំពុងសើច ព្រោះខ្ញុំកំពុងសើចនៅលើផ្កាយមួយក្នុងចំណោមនោះ។"</strong></p>
+                    <p class="mb-6">ការចាកចេញរបស់គាត់ គឺជាការត្រឡប់ទៅរកផ្កាកុលាបរបស់គាត់វិញ។ គាត់ទទួលខុសត្រូវលើនាង។</p>
+                    <p class="mb-6">សៀវភៅបញ្ចប់ដោយគំនូរវាលខ្សាច់ទទេស្អាត។ អ្នកនិពន្ធសុំឱ្យយើង៖ "បើអ្នកបានទៅដល់វាលខ្សាច់នោះ ហើយឃើញក្មេងប្រុសម្នាក់សើច សូមសរសេរប្រាប់ខ្ញុំផងថាគាត់បានត្រឡប់មកវិញ។"</p>
+                `,
+                scenario: `
+                    <p><strong>មរតក៖</strong> មនុស្សដែលយើងស្រលាញ់មិនដែលស្លាប់ទេ។ ពួកគេប្តូរទម្រង់ទៅជាផ្កាយ ទៅជាខ្យល់ ឬទៅជាការចងចាំដែលធ្វើឱ្យយើងញញឹម។ ពិភពលោកទាំងមូលផ្លាស់ប្តូរ ដោយសារតែមនុស្សម្នាក់នោះធ្លាប់នៅទីនេះ។</p>
+                `,
+                quiz: { question: "តើផ្កាយមានន័យយ៉ាងណាចំពោះអ្នកនិពន្ធ នៅពេលចុងបញ្ចប់?", options: ["ដុំភ្លើង", "វាគ្រាន់តែជាផ្កាយ", "វាជាកន្លែងដែលព្រះអង្គម្ចាស់តូចកំពុងសើច (ធ្វើឱ្យផ្កាយទាំងអស់មានជីវិត)", "វាជាពន្លឺ"], correct: 2, explanation: "ត្រឹមត្រូវ! ដោយសារគាត់ស្រលាញ់ព្រះអង្គម្ចាស់តូច ផ្កាយរាប់លានដែលមិនពាក់ព័ន្ធ ក៏ក្លាយជាមានន័យ។ នេះគឺជាអំណាចនៃសេចក្តីស្រលាញ់។" }
+            }
+        ];
+
+        // LOGIC FUNCTIONS
+        let currentLessonIndex = 0;
+        // ... (Logic remains identical to previous scripts: initNav, loadLesson, setupQuiz, checkAnswer, updateProgress, launchConfetti)
+        // Re-using the robust logic from the Sapiens/Sophie code block.
+        
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-slate-900 transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-amber-400' : 'text-slate-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-slate-500 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-slate-700">${index + 1}</span>
+                    <span class="truncate tracking-wide font-sans">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-slate-900');
+                b.classList.add('text-slate-500', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-amber-500', 'text-slate-900', 'border-amber-500');
+                b.querySelector('.lesson-indicator').classList.add('bg-slate-900', 'text-slate-500', 'border-slate-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-slate-900');
+                activeBtn.classList.remove('text-slate-500', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-slate-900', 'text-slate-500', 'border-slate-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-amber-500', 'text-slate-900', 'border-amber-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Lesson ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `បញ្ចប់` : 
+                `មេរៀនបន្ទាប់`;
+            
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-slate-900/80 transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition flex items-center shadow-md group bg-slate-800/50 text-slate-300";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-slate-600 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-slate-500 group-hover:bg-amber-500 group-hover:text-slate-900 group-hover:border-amber-500 transition">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="font-medium group-hover:text-white">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2">ត្រឹមត្រូវ! ✨</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("អ្នកបានបញ្ចប់ការសិក្សាហើយ។ សូមកុំភ្លេចមើលផ្កាយ!");
+        };
+
+        function launchConfetti() {
+            const colors = ['#fbbf24', '#f59e0b', '#d97706', '#fcd34d'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 6 + 3 + 'px';
+                conf.style.height = Math.random() * 6 + 3 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(251,191,36,0.8)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapiens: Deep Learning Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #fdfbf7;
+            color: #292524;
+            line-height: 1.8;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .sidebar-active {
+            background-color: #e7e5e4;
+            border-right: 4px solid #a8a29e;
+            color: #44403c;
+            font-weight: 700;
+        }
+        .concept-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid #d97706;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f5f5f4;
+        }
+        /* Optimized for reading long text */
+        .prose p {
+            margin-bottom: 1.5em;
+            text-align: justify;
+        }
+        details {
+            background: #f5f5f4;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            border: 1px solid #e7e5e4;
+        }
+        summary {
+            font-weight: 600;
+            color: #b45309;
+        }
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .prose { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#f5f5f4] p-4 shadow-sm flex justify-between items-center z-20 border-b border-[#e7e5e4]">
+        <h1 class="text-lg font-bold text-[#44403c] en-title">Sapiens</h1>
+        <button id="menuBtn" class="text-[#57534e] focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-[#fdfbf7] shadow-xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-[#e7e5e4]">
+        <div class="p-6 border-b border-[#e7e5e4] hidden md:block bg-[#fafaf9]">
+            <h1 class="text-xl font-bold text-[#292524] en-title tracking-wider mb-1">SAPIENS</h1>
+            <p class="text-xs text-[#78716c] font-bold uppercase tracking-wide">The Complete Course</p>
+        </div>
+        <div class="flex-1 overflow-y-auto py-2 space-y-0.5" id="lessonList"></div>
+        <div class="p-4 border-t border-[#e7e5e4] bg-[#fafaf9]">
+            <div class="w-full bg-[#e7e5e4] rounded-full h-1.5 overflow-hidden">
+                <div id="progressBar" class="bg-[#d97706] h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto relative bg-[#ffffff]" id="mainContent">
+        <div class="max-w-4xl mx-auto p-8 md:p-12 pb-32">
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[80vh] text-center">
+                <div class="text-6xl mb-6">🏛️</div>
+                <h2 class="text-3xl font-bold text-[#292524] mb-4 kh-title">សេបៀន៖ វគ្គសិក្សាលម្អិត</h2>
+                <p class="text-lg text-[#57534e] mb-8">ការវិភាគស៊ីជម្រៅលើប្រវត្តិសាស្ត្រមនុស្សជាតិទាំង ២០ ជំពូក។</p>
+                <button onclick="loadLesson(0)" class="bg-[#d97706] hover:bg-[#b45309] text-white font-bold py-3 px-8 rounded-lg shadow transition">ចាប់ផ្តើម</button>
+            </div>
+
+            <div id="lessonContainer" class="hidden">
+                <div class="flex items-center space-x-3 text-[#78716c] mb-6 font-bold text-xs uppercase tracking-widest border-b border-[#e7e5e4] pb-3">
+                    <span id="chapterNumber" class="bg-[#f5f5f4] px-2 py-1 rounded">Chapter 1</span>
+                </div>
+                <h2 id="lessonTitle" class="text-2xl md:text-3xl font-bold text-[#292524] mb-6 leading-snug kh-title"></h2>
+                <div class="prose prose-lg max-w-none text-[#44403c] font-light" id="lessonBody"></div>
+                <div id="scenarioBox" class="bg-[#fafaf9] border-l-4 border-[#78716c] p-6 rounded-r-lg mb-10 hidden shadow-sm mt-8">
+                    <h3 class="text-lg font-bold text-[#44403c] mb-2 kh-title">ការត្រិះរិះ (Critical Reflection)</h3>
+                    <div id="scenarioContent" class="text-[#57534e]"></div>
+                </div>
+                <div class="mt-12 pt-8 border-t border-[#e7e5e4] flex justify-between">
+                    <button id="prevBtn" class="px-6 py-2 rounded border border-[#d6d3d1] text-[#57534e] hover:bg-[#f5f5f4]">← មុន</button>
+                    <button id="nextBtn" class="px-6 py-2 rounded bg-[#d97706] text-white hover:bg-[#b45309] font-bold shadow">បន្ទាប់ →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR ALL 20 CHAPTERS
+        const lessons = [
+            // PART 1: THE COGNITIVE REVOLUTION (Chapters 1-4)
+            {
+                title: "1. សត្វដែលគ្មានសារៈសំខាន់ (An Animal of No Significance)",
+                content: `
+                    <p>ប្រហែល ១៣.៥ ពាន់លានឆ្នាំមុន Big Bang បានកើតឡើង បង្កើតជារូបធាតុ និងថាមពល។ ប៉ុន្តែរឿងរ៉ាវរបស់ "មនុស្ស" ទើបតែចាប់ផ្តើមថ្មីៗនេះទេ។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">១.១ គ្រួសារមនុស្សដែលយើងភ្លេច (The Human Family)</h4>
+                    <p>រឿងសំខាន់បំផុតដែលយើងត្រូវដឹងគឺ៖ <strong>"មនុស្ស" (Humans) មិនមែនមានន័យថា "Homo Sapiens" តែមួយមុខទេ។</strong> កាលពី ១០០,០០០ ឆ្នាំមុន ផែនដីមានមនុស្សយ៉ាងហោចណាស់ ៦ ប្រភេទរស់នៅព្រមគ្នា៖</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>Homo Neanderthalensis:</strong> នៅអឺរ៉ុប។ រឹងមាំជាង ខួរក្បាលធំជាង។</li>
+                        <li><strong>Homo Erectus:</strong> នៅអាស៊ី។ រស់នៅបានយូរបំផុត (២ លានឆ្នាំ)។</li>
+                        <li><strong>Homo Floresiensis:</strong> មនុស្សតឿនៅកោះផ្លូរ៉េស។</li>
+                    </ul>
+                    <p>យើង (Sapiens) គ្រាន់តែជាប្រភេទមួយក្នុងចំណោមនោះ។ យើងមិនមែនជាអ្នកខ្លាំងជាងគេទេ នៅពេលនោះយើងនៅកណ្តាលខ្សែសង្វាក់អាហារ (Food Chain)។ យើងខ្លាចតោ យើងស៊ីតែសាកសពដែលសល់ពីសត្វធំៗ។</p>
+                    
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">១.២ តម្លៃនៃខួរក្បាលធំ (Cost of Thinking)</h4>
+                    <p>ខួរក្បាលមនុស្សមានទំហំធំខុសពីធម្មតា (២-៣% នៃទម្ងន់ខ្លួន តែស៊ីថាមពល ២៥%)។ នេះជាបន្ទុកធ្ងន់។ ដើម្បីចិញ្ចឹមខួរក្បាលនេះ មនុស្សត្រូវបោះបង់ "សាច់ដុំ"។ យើងខ្សោយជាងស្វា តែយើងឆ្លាតជាង។</p>
+                    <p><strong>ការរកឃើញភ្លើង (Fire):</strong> ភ្លើងគឺជាអាវុធដំបូងដែលធ្វើឱ្យមនុស្សឡើងមកលើកំពូល។ ភ្លើងជួយចំអិនអាហារ។ អាហារឆ្អិនងាយរំលាយ ធ្វើឱ្យពោះវៀនខ្លី។ ថាមពលដែលសន្សំបានពីពោះវៀន ត្រូវបានបញ្ជូនទៅចិញ្ចឹមខួរក្បាល Jumbo Brain របស់យើង។</p>
+                `,
+                scenario: "ស្រមៃថាអ្នកជួប Neanderthal។ គាត់រឹងមាំជាងអ្នក។ បើវាយគ្នា អ្នកចាញ់។ តែហេតុអ្វីគាត់ផុតពូជ ហើយអ្នកនៅរស់? ចម្លើយគឺការសហការ។",
+            },
+            {
+                title: "2. ដើមឈើនៃចំណេះដឹង (The Tree of Knowledge)",
+                content: `
+                    <p>ប្រហែល ៧០,០០០ ឆ្នាំមុន <strong>"បដិវត្តន៍នៃការយល់ដឹង" (Cognitive Revolution)</strong> បានកើតឡើង។ ការផ្លាស់ប្តូរហ្សែនចៃដន្យបានធ្វើឱ្យខួរក្បាល Sapiens អាចគិត និងប្រើភាសាតាមរបៀបថ្មី។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ភាសាពិសេសរបស់ Sapiens</h4>
+                    <p>សត្វដទៃអាចប្រាស្រ័យទាក់ទងគ្នាបាន ("ប្រយ័ត្នតោ!")។ ប៉ុន្តែភាសា Sapiens មានលក្ខណៈពិសេស ២៖</p>
+                    <ol class="list-decimal ml-6 mb-4">
+                        <li><strong>Gossip (ការនិយាយដើម):</strong> យើងអាចនិយាយពីមនុស្សផ្សេងទៀតក្នុងក្រុម ("A ស្អប់ B")។ នេះជួយឱ្យយើងរស់នៅជាក្រុមបានរហូតដល់ ១៥០ នាក់។</li>
+                        <li><strong>Fiction (រឿងនិទាន/ការស្រមើស្រមៃ):</strong> នេះសំខាន់បំផុត។ យើងអាចនិយាយពីអ្វីដែល <strong>មិនមានពិត</strong> ដូចជា ព្រះ, ជាតិ, សិទ្ធិមនុស្ស, ក្រុមហ៊ុន។</li>
+                    </ol>
+                    <p>ស្វា ១០០០ ក្បាលមិនអាចសហការគ្នាបានទេ ព្រោះវាមិនស្គាល់គ្នា។ ប៉ុន្តែ Sapiens ១ លាននាក់អាចសហការគ្នាបាន ព្រោះពួកគេជឿលើ "រឿងនិទានរួម" (Common Myths) ដូចជាសាសនា ឬច្បាប់។</p>
+                    <div class="concept-card"><strong>Peugeot Legend:</strong> ក្រុមហ៊ុន Peugeot គឺជា Fiction។ វាមានពិតតែក្នុងច្បាប់ និងចិត្តរបស់យើង។ បើមនុស្សឈប់ជឿលើច្បាប់ក្រុមហ៊ុន Peugeot នឹងរលាយ ទោះបីរោងចក្រនៅដដែលក៏ដោយ។</div>
+                `,
+                scenario: "ក្រដាសប្រាក់ដុល្លារគឺជា Fiction។ វាមិនមានតម្លៃទេ តែយើងជឿថាវាមានតម្លៃ។ ជំនឿនេះហើយដែលធ្វើឱ្យយើងក្លាយជាម្ចាស់ផែនដី។",
+            },
+            {
+                title: "3. មួយថ្ងៃក្នុងជីវិតរបស់អ័ដាម និងអេវ៉ា",
+                content: `
+                    <p>Harari ហៅសង្គមអ្នកបរបាញ់ (Hunter-Gatherers) ថា <strong>"The Original Affluent Society" (សង្គមដែលសម្បូរបែបដំបូងគេ)</strong>។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ជីវិតដ៏ល្អប្រសើរ?</h4>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>ម៉ោងធ្វើការ៖</strong> ពួកគេធ្វើការតែ ៣-៤ ម៉ោង/ថ្ងៃ ដើម្បីរកអាហារ។ ពេលសល់ពួកគេលេង និងសម្រាក។ (យើងធ្វើការ ៨-១០ ម៉ោង)។</li>
+                        <li><strong>អាហារ៖</strong> ពួកគេស៊ីអាហារចម្រុះ (សាច់, ផ្លែឈើ, បន្លែ) ធ្វើឱ្យមានសុខភាពល្អ និងមិនខ្វះសារធាតុ។</li>
+                        <li><strong>សុខភាព៖</strong> ជំងឺឆ្លងរាតត្បាតមិនសូវមានទេ ព្រោះពួកគេរស់នៅជាក្រុមតូច និងចល័តជានិច្ច។</li>
+                    </ul>
+                    <p>ទោះជាយ៉ាងណា ជីវិតពួកគេឃោរឃៅណាស់ចំពោះមនុស្សខ្សោយ។ មនុស្សចាស់ ឬពិការ តែងតែត្រូវបានគេបោះបង់ចោលឬសម្លាប់ ដើម្បីកុំឱ្យជាបន្ទុកក្រុម។</p>
+                    <p><strong>The Gorging Gene:</strong> ហេតុអ្វីយើងចូលចិត្តញ៉ាំផ្អែម? ព្រោះកាលពី ៣០,០០០ ឆ្នាំមុន អាហារផ្អែម (ផ្លែឈើទុំ) កម្រណាស់។ បើជួប ត្រូវតែស៊ីឱ្យអស់ភ្លាម។ ហ្សែននេះនៅជាប់ខ្លួនយើងដល់សព្វថ្ងៃ ធ្វើឱ្យយើងញៀនស្ករ។</p>
+                `,
+                scenario: "រាងកាយយើងនៅសម័យថ្ម តែយើងរស់នៅសម័យ McDonald's។ នេះជាមូលហេតុនៃជំងឺធាត់។",
+            },
+            {
+                title: "4. ទឹកជំនន់ (The Flood)",
+                content: `
+                    <p>មុនបដិវត្តន៍កសិកម្ម Sapiens គឺជា <strong>"ឃាតករអេកូឡូស៊ី" (Ecological Serial Killer)</strong>។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">សោកនាដកម្មនៅអូស្ត្រាលី និងអាមេរិក</h4>
+                    <p>នៅពេល Sapiens ទៅដល់អូស្ត្រាលី (៤៥,០០០ ឆ្នាំមុន) និងអាមេរិក (១៦,០០០ ឆ្នាំមុន) សត្វយក្ស (Megafauna) ស្ទើរតែទាំងអស់បានផុតពូជ។</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>Diprotodon:</strong> Wombat យក្ស ទម្ងន់ ២ តោន។</li>
+                        <li><strong>Mammoth:</strong> ដំរីរោមក្រាស់។</li>
+                        <li><strong>Giant Sloth:</strong> សត្វស្លូទយក្ស។</li>
+                    </ul>
+                    <p>ហេតុអ្វី? ព្រោះសត្វនៅទីនោះមិនដែលឃើញមនុស្ស។ ពួកវាមិនចេះខ្លាចយើងទេ។ ពេលយើងទៅដល់ យើងសម្លាប់ពួកវាបានយ៉ាងងាយ។ កុំជឿថា "មនុស្សបុរាណរស់នៅចុះសម្រុងជាមួយធម្មជាតិ"។ យើងបានដុតព្រៃ និងសម្លាប់សត្វអស់ពាក់កណ្តាលពិភពលោក មុនពេលយើងចេះសរសេរអក្សរទៅទៀត។</p>
+                `,
+                scenario: "យើងគឺជាមូលហេតុនៃការផុតពូជសត្វដ៏ធំបំផុតក្នុងប្រវត្តិសាស្ត្រ។ ឥឡូវនេះ យើងកំពុងធ្វើវាម្តងទៀតតាមរយៈឧស្សាហកម្ម។",
+            },
+            // PART 2: THE AGRICULTURAL REVOLUTION (Chapters 5-8) - EXPANDED
+            {
+                title: "5. ការបោកប្រាស់ដ៏ធំបំផុត (History's Biggest Fraud)",
+                content: `
+                    <p>១០,០០០ ឆ្នាំមុន យើងចាប់ផ្តើមធ្វើកសិកម្ម។ យើងហៅវាថា "ការវិវត្ត" តែ Harari ហៅវាថា <strong>"ការបោកប្រាស់"</strong>។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ស្រូវសាលីជាចៅហ្វាយ (Wheat is Master)</h4>
+                    <p>យើងមិនបានផ្សាំងស្រូវទេ <strong>ស្រូវទេដែលផ្សាំងយើង</strong>។ ស្រូវជាស្មៅព្រៃ។ វាបង្ខំឱ្យយើងកាប់ព្រៃ ជីកដី ដកស្មៅ និងយាមវាពីព្រលឹមទល់ព្រលប់។ រាងកាយយើងមិនត្រូវបានបង្កើតមកសម្រាប់ធ្វើស្រែទេ (ឈឺខ្នង, ឈឺសន្លាក់)។</p>
+                    <p>ជាថ្នូរមកវិញ យើងទទួលបានអ្វី? អាហារច្រើនជាងមុន ប៉ុន្តែអន់ជាងមុន (ខ្វះវីតាមីន)។ យើងមានកូនច្រើនជាងមុន ប៉ុន្តែកូនស្លាប់ច្រើនជាងមុន។ យើងមានសុវត្ថិភាពពីសត្វសាហាវ តែប្រឈមនឹងជំងឺឆ្លង និងសង្គ្រាម។</p>
+                    <div class="concept-card"><strong>អន្ទាក់នៃភាពងាយស្រួល (Luxury Trap):</strong> មនុស្សគិតថាធ្វើស្រែនឹងស្រួល។ តែអាហារសល់ ធ្វើឱ្យប្រជាជនកើនឡើង។ មនុស្សកាន់តែច្រើន ត្រូវធ្វើការកាន់តែធ្ងន់។ យើងមិនអាចត្រឡប់ទៅបរបាញ់វិញបានទេ ព្រោះមនុស្សច្រើនពេកហើយ។ យើងជាប់អន្ទាក់។</div>
+                `,
+                scenario: "តើជីវិតកសិករសម័យបុរាណ សប្បាយជាងអ្នកបរបាញ់ទេ? ភាគច្រើនគឺអត់ទេ។ ពួកគេក្លាយជាម៉ាស៊ីនផលិតកូន និងផលិតស្រូវ ដើម្បីចិញ្ចឹមអ្នកដឹកនាំ។",
+            },
+            {
+                title: "6. ការកសាងពីរ៉ាមីត (Building Pyramids)",
+                content: `
+                    <p>កសិកម្មធ្វើឱ្យមនុស្សរស់នៅកកកុញ។ ដើម្បីកុំឱ្យពួកគេសម្លាប់គ្នា យើងបង្កើត <strong>"សណ្តាប់ធ្នាប់ដែលស្រមើស្រមៃ" (Imagined Orders)</strong>។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">កូដនៃហាំមូរ៉ាប៊ី vs សិទ្ធិមនុស្ស</h4>
+                    <p>ច្បាប់ Hammurabi (១៧៧៦ មុនគ.ស) ចែងថា "មនុស្សមាន ៣ ថ្នាក់៖ អភិជន, រាស្ត្រ, ទាសករ"។ សហរដ្ឋអាមេរិក (១៧៧៦) ចែងថា "មនុស្សទាំងអស់កើតមកស្មើគ្នា"។</p>
+                    <p>តើមួយណាពិត? <strong>គ្មានមួយណាពិតទេក្នុងជីវសាស្ត្រ។</strong> មនុស្សកើតមកមិនស្មើគ្នាទេ (ហ្សែនខុសគ្នា) ហើយធម្មជាតិមិនស្គាល់ "សិទ្ធិ" ទេ។ "សិទ្ធិមនុស្ស" គឺជាជំនឿដែលយើងបង្កើតឡើងដើម្បីឱ្យសង្គមមានយុត្តិធម៌។</p>
+                    <p>ពីរ៉ាមីតអេហ្ស៊ីប មិនមែនសាងសង់ដោយកម្លាំងទេ តែសាងសង់ដោយ <strong>ជំនឿ</strong>។ កម្មករជឿថា ផារ៉ោនជាព្រះ។ បើគ្មានជំនឿនេះទេ គ្មាននរណាសាងសង់វាទេ។ សង្គមយើងសព្វថ្ងៃក៏ដូចគ្នា យើងសាងសង់ក្រុមហ៊ុន និងរដ្ឋ ដោយសារយើងជឿលើច្បាប់និងលុយ។</p>
+                `,
+                scenario: "សាកស្រមៃប្រាប់ទាសករអេហ្ស៊ីបថា 'ផារ៉ោនគ្រាន់តែជាមនុស្សធម្មតា'។ ពួកគេនឹងសើចដាក់អ្នក ព្រោះសម្រាប់ពួកគេ ផារ៉ោនជាព្រះពិតៗ។ តើយើងកំពុងជឿលើអ្វី ដែលអនាគតនឹងសើចដាក់យើង?",
+            },
+            {
+                title: "7. ការផ្ទុកលើសចំណុះនៃការចងចាំ (Memory Overload)",
+                content: `
+                    <p>សង្គមធំត្រូវការទិន្នន័យ (Data)។ ខួរក្បាលមនុស្សមិនអាចចាំថា "អ្នកណាជំពាក់ពន្ធប៉ុន្មាន" បានទេ។ ដូច្នេះ ជនជាតិ Sumerians បានបង្កើត <strong>"ការសរសេរ" (Writing)</strong>។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ពីការចងចាំ មកជាឯកសារ</h4>
+                    <p>អក្សរដំបូងមិនមែនសម្រាប់សរសេរកំណាព្យទេ តែសម្រាប់ <strong>គណនេយ្យ (Accounting)</strong>។ "Kushim ទទួលបានស្រូវ ២៩,០៨៦ បាវ"។ ការសរសេរបានផ្លាស់ប្តូររបៀបដែលមនុស្សគិត។</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>ការគិតបែបធម្មជាតិ (Association):</strong> ប្រើការចងចាំក្នុងខួរក្បាល។</li>
+                        <li><strong>ការគិតបែបការិយាល័យ (Bureaucracy):</strong> ប្រើតារាង លេខ និងឯកសារ។</li>
+                    </ul>
+                    <p>បើគ្មានការសរសេរទេ យើងមិនអាចមានចក្រភព រដ្ឋាភិបាល ឬក្រុមហ៊ុនទេ។ ការសរសេរគឺជា AI ដំបូងរបស់មនុស្ស (External Memory)។</p>
+                `,
+                scenario: "សាកព្យាយាមគ្រប់គ្រងលុយក្នុងក្រុមហ៊ុនដោយមិនកត់ត្រា។ វាមិនអាចទៅរួចទេ។ ការសរសេរគឺជាឧបករណ៍នៃការគ្រប់គ្រង (Control)។",
+            },
+            {
+                title: "8. មិនមានយុត្តិធម៌ក្នុងប្រវត្តិសាស្ត្រ (No Justice in History)",
+                content: `
+                    <p>រាល់សង្គមតែងតែមាន <strong>ឋានានុក្រម (Hierarchies)</strong>៖ អ្នកមាន/អ្នកក្រ, បុរស/ស្ត្រី, ស្បែកស/ស្បែកខ្មៅ។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">រង្វង់នៃភាពអាក្រក់ (Vicious Circle)</h4>
+                    <p>ឋានានុក្រមភាគច្រើនមិនមែនកើតពីធម្មជាតិទេ តែកើតពី <strong>"រឿងចៃដន្យក្នុងប្រវត្តិសាស្ត្រ"</strong>។</p>
+                    <ol class="list-decimal ml-6 mb-4">
+                        <li>ជនជាតិអឺរ៉ុបនាំទាសករអាហ្រ្វិកមកអាមេរិក (ហេតុផលសេដ្ឋកិច្ច)។</li>
+                        <li>ដើម្បីការពារទង្វើនេះ គេបង្កើតជំនឿថា "ស្បែកខ្មៅល្ងង់"។</li>
+                        <li>គេហាមស្បែកខ្មៅមិនឱ្យរៀន -> ស្បែកខ្មៅក្លាយជាក្រ។</li>
+                        <li>គេមើលឃើញស្បែកខ្មៅក្រ ក៏ថា "ឃើញទេ! ពួកគេពិតជាល្ងង់" (បញ្ជាក់ជំនឿដើម)។</li>
+                    </ol>
+                    <p><strong>ធម្មជាតិ vs វប្បធម៌៖</strong> "ជីវសាស្ត្រអនុញ្ញាត (Biology enables), វប្បធម៌ហាមឃាត់ (Culture forbids)"។ តាមធម្មជាតិ ស្ត្រីអាចធ្វើការធ្ងន់បាន តែវប្បធម៌ហាមឃាត់។ ការរើសអើងគឺជាផលិតផលនៃវប្បធម៌។</p>
+                `,
+                scenario: "តើហេតុអ្វីបានជាសង្គមស្ទើរតែទាំងអស់ផ្តល់អំណាចឱ្យបុរសជាងស្ត្រី (Patriarchy)? Harari ព្យាយាមរកចម្លើយ (កម្លាំងកាយ? ភាពកាចសាហាវ?) តែគ្មានចម្លើយណាដែលសមហេតុផលគ្រប់គ្រាន់ទេ។ វាប្រហែលជាគ្រាន់តែជារឿងចៃដន្យដែលរីករាលដាល។",
+            },
+            // PART 3: THE UNIFICATION OF HUMANKIND (Chapters 9-13) - EXPANDED
+            {
+                title: "9. ព្រួញនៃប្រវត្តិសាស្ត្រ (The Arrow of History)",
+                content: `
+                    <p>មនុស្សចូលចិត្តនិយាយថា "វប្បធម៌ផ្សេងៗគ្នាកំពុងបែកបាក់"។ ប៉ុន្តែ Harari និយាយថា បើមើលពីលើ (Bird's eye view) ប្រវត្តិសាស្ត្រមានទិសដៅតែមួយគត់គឺ៖ <strong>ការរួបរួម (Unification)</strong>។</p>
+                    <p>១០០០ ឆ្នាំមុន ផែនដីមាន "ពិភពលោក" ដាច់ដោយឡែកជាច្រើន (Aztec នៅម៉ិកស៊ិក មិនស្គាល់ Mongol នៅអាស៊ី)។ សព្វថ្ងៃនេះ យើងមានពិភពលោកតែមួយ។ យើងប្រើប្រព័ន្ធតែមួយ៖</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>សេដ្ឋកិច្ចតែមួយ៖</strong> ទីផ្សារសកល។</li>
+                        <li><strong>នយោបាយតែមួយ៖</strong> រដ្ឋ/អង្គការសហប្រជាជាតិ។</li>
+                        <li><strong>គំនិតតែមួយ៖</strong> វិទ្យាសាស្ត្រ និង មូលធននិយម។</li>
+                    </ul>
+                    <p>កម្លាំង ៣ ដែលបង្រួបបង្រួមយើងគឺ៖ ១. លុយ (Money), ២. ចក្រភព (Empire), ៣. សាសនា (Religion)។</p>
+                `,
+                scenario: "ទោះបីជាយើងឈ្លោះគ្នា (អាមេរិក vs ចិន) តែយើងឈ្លោះគ្នានៅលើឆាកតែមួយ ដោយប្រើច្បាប់សេដ្ឋកិច្ច និងការទូតដូចគ្នា។",
+            },
+            {
+                title: "10. ក្លិននៃលុយ (The Scent of Money)",
+                content: `
+                    <p>លុយគឺជាកម្លាំងបង្រួបបង្រួមខ្លាំងបំផុត។ <strong>"លុយមិនធុំក្លិនទេ"</strong> (វាមិនរើសអើង)។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">លុយ = ទំនុកចិត្ត (Money is Trust)</h4>
+                    <p>លុយមិនមែនជាកាក់ ឬក្រដាសទេ។ លុយគឺជា <strong>ប្រព័ន្ធនៃការជឿទុកចិត្ត (Mutual Trust)</strong>។</p>
+                    <p>Osama Bin Laden ស្អប់អាមេរិក ស្អប់វប្បធម៌អាមេរិក ប៉ុន្តែគាត់ស្រលាញ់លុយដុល្លារអាមេរិក។ លុយគឺជាភាសាតែមួយគត់ដែលមនុស្សគ្រប់គ្នា (សូម្បីតែសត្រូវ) និយាយស្តាប់គ្នាបាន។ វាអនុញ្ញាតឱ្យយើងសហការជាមួយមនុស្សចម្លែកដែលយើងមិនទុកចិត្ត។ (ខ្ញុំមិនទុកចិត្តអ្នក តែខ្ញុំទុកចិត្តលុយដែលអ្នកកាន់)។</p>
+                `,
+                scenario: "កសិករលក់ស្រូវ ដើម្បីយកក្រដាស (លុយ)។ គាត់យកក្រដាសនោះទៅឱ្យគ្រូពេទ្យ ដើម្បីព្យាបាលជំងឺ។ គ្រូពេទ្យយកក្រដាសនោះទៅជួលផ្ទះ។ ក្រដាសនោះគ្មានតម្លៃទេ តែវាជា 'ការសន្យា' ដែលគ្រប់គ្នាជឿ។",
+            },
+            {
+                title: "11. ចក្ខុវិស័យនៃចក្រភព (Imperial Visions)",
+                content: `
+                    <p>ចក្រភព (Empire) គឺជាទម្រង់នយោបាយដែលជោគជ័យបំផុតក្នុងប្រវត្តិសាស្ត្រ។</p>
+                    <p>យើងតែងតែមើលឃើញចក្រភពថាអាក្រក់ (សម្លាប់, ជិះជាន់)។ ប៉ុន្តែចក្រភពក៏បានផ្តល់នូវ៖ <strong>សន្តិភាព, ច្បាប់, សិល្បៈ, និងភាសា</strong>។</p>
+                    <p>ជនជាតិឥណ្ឌាបច្ចុប្បន្ន និយាយភាសាអង់គ្លេស លេងកីឡា Cricket និងប្រើប្រព័ន្ធច្បាប់អង់គ្លេស។ ទាំងនេះគឺជាកេរដំណែលនៃចក្រភពអង់គ្លេស។ យើងមិនអាចបដិសេធចក្រភពដោយមិនបដិសេធវប្បធម៌ខ្លួនឯងបានទេ។</p>
+                    <p>Harari និយាយថា៖ <strong>"ចក្រភពបានរំលាយ 'ពួកយើង' និង 'ពួកគេ' ឱ្យក្លាយជា 'យើងទាំងអស់គ្នា'។"</strong></p>
+                `,
+                scenario: "តើអ្នកចង់ឱ្យពិភពលោកបែកបាក់ជាកុលសម្ព័ន្ធតូចៗវិញទេ? ប្រហែលជាអត់ទេ។ ចក្រភព (ទោះបីឃោរឃៅ) បានបង្កើតមូលដ្ឋានគ្រឹះនៃសាកលភាវូបនីយកម្ម។",
+            },
+            {
+                title: "12. ច្បាប់នៃសាសនា (The Law of Religion)",
+                content: `
+                    <p>សាសនាគឺជាប្រព័ន្ធនៃជំនឿដែលផ្តល់ <strong>"ភាពស្របច្បាប់ពីលើមនុស្ស" (Superhuman Legitimacy)</strong>។</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>Animism (សម័យបរបាញ់):</strong> ជឿលើវិញ្ញាណសត្វ/រុក្ខជាតិ។ (ក្នុងស្រុក)។</li>
+                        <li><strong>Polytheism (សម័យកសិកម្ម):</strong> ជឿលើព្រះជាច្រើន។ ព្រះនីមួយៗតំណាងឱ្យកម្លាំងធម្មជាតិ។ ពួកគេបើកចំហ (Open-minded)។</li>
+                        <li><strong>Monotheism (សម័យចក្រភព):</strong> ជឿលើព្រះតែមួយ (គ្រឹស្ត, អ៊ីស្លាម)។ ពួកគេចង្អៀតចង្អល់ (Fanatic) ព្រោះបើព្រះមានតែមួយ អ្នកដែលមិនជឿគឺជាអ្នកខុស។</li>
+                    </ul>
+                    <p><strong>សាសនាថ្មី (Ideologies):</strong> Harari ហៅ កុម្មុយនីស្ត, មូលធននិយម, និង សេរីនិយម ថាជា "សាសនាធម្មជាតិ"។ ពួកវាក៏មានគម្ពីរ (Das Kapital) និងព្យាការី (Marx) ដូចសាសនាដែរ។</p>
+                `,
+                scenario: "សេរីនិយម (Liberalism) ជឿលើ 'សិទ្ធិមនុស្ស'។ អ្នកមិនអាចរកឃើញសិទ្ធិមនុស្សក្នុង DNA ទេ។ វាគឺជាជំនឿសាសនាមួយដែលលើកតម្កើងមនុស្សជាព្រះ។",
+            },
+            {
+                title: "13. អាថ៌កំបាំងនៃជោគជ័យ (The Secret of Success)",
+                content: `
+                    <p>តើប្រវត្តិសាស្ត្រមានយុត្តិធម៌ទេ? អត់ទេ។ <strong>ប្រវត្តិសាស្ត្រគឺជាភាពវឹកវរ (Chaos)។</strong></p>
+                    <p>វប្បធម៌ដែលជោគជ័យ មិនមែនជាវប្បធម៌ដែល "ល្អ" សម្រាប់មនុស្សទេ។ វាគឺជាវប្បធម៌ដែលពូកែ "រីកសាយភាយ"។ នេះហៅថា <strong>Memetics</strong> (វប្បធម៌ដូចជាមេរោគ)។</p>
+                    <p>ឧទាហរណ៍៖ ការប្រកួតអាវុធ (Arms Race)។ ប្រទេសទាំងពីរសុទ្ធតែវេទនាដោយសារចំណាយលុយទិញអាវុធ តែគេមិនអាចឈប់បានទេ។ ប្រព័ន្ធ (System) រីកចម្រើន តែបុគ្គល (Individual) កើតទុក្ខ។ ប្រវត្តិសាស្ត្រមិនខ្វល់ពីសុភមង្គលរបស់អ្នកទេ។</p>
+                `,
+                scenario: "ហេតុអ្វីសាសនាគ្រឹស្តឈ្នះ? មិនមែនព្រោះវាពិតជាងគេទេ តែព្រោះវាមានយុទ្ធសាស្ត្រផ្សព្វផ្សាយល្អជាងគេ (Missionary) និងជួបសំណាងនយោបាយ (ស្តេច Constantine)។",
+            },
+            // PART 4: THE SCIENTIFIC REVOLUTION (Chapters 14-20) - EXPANDED
+            {
+                title: "14. ការរកឃើញភាពល្ងង់ខ្លៅ (The Discovery of Ignorance)",
+                content: `
+                    <p>នៅឆ្នាំ ១៥០០ បដិវត្តន៍វិទ្យាសាស្ត្របានចាប់ផ្តើមនៅអឺរ៉ុប។ ភាពខុសគ្នាធំបំផុតរវាងវិទ្យាសាស្ត្រ និងចំណេះដឹងបុរាណគឺ៖ <strong>ការទទួលស្គាល់ភាពល្ងង់ខ្លៅ (Ignoramus)</strong>។</p>
+                    <ul class="list-disc ml-6 mb-4">
+                        <li><strong>បុរាណ៖</strong> "អ្វីៗដែលសំខាន់ ត្រូវបានសរសេរក្នុងគម្ពីរអស់ហើយ។ បើគម្ពីរមិននិយាយ មានន័យថាវាមិនសំខាន់។"</li>
+                        <li><strong>វិទ្យាសាស្ត្រ៖</strong> "យើងមិនដឹងទេ។ យើងត្រូវទៅស្រាវជ្រាវ។"</li>
+                    </ul>
+                    <p>គោលដៅនៃវិទ្យាសាស្ត្រមិនមែនត្រឹមតែ "ដឹង" ទេ គឺដើម្បី "ធ្វើ" (Power)។ បច្ចេកវិទ្យាគឺជាលទ្ធផលនៃវិទ្យាសាស្ត្រ។ ការទទួលស្គាល់ថាខ្លួនមិនដឹង បានបើកទ្វារឱ្យមានការរីកចម្រើនយ៉ាងលឿនក្នុងរយៈពេល ៥០០ ឆ្នាំចុងក្រោយ។</p>
+                `,
+                scenario: "ផែនទីសម័យបុរាណតែងតែគូរពេញ (កន្លែងមិនស្គាល់ គេដាក់រូបនាគ)។ ផែនទីសម័យវិទ្យាសាស្ត្រដំបូង ទុកកន្លែងនោះឱ្យ 'ទំនេរ'។ កន្លែងទំនេរនេះហើយដែលទាក់ទាញអ្នករុករក។",
+            },
+            {
+                title: "15. អាពាហ៍ពិពាហ៍រវាងវិទ្យាសាស្ត្រនិងចក្រភព (Science and Empire)",
+                content: `
+                    <p>ហេតុអ្វីអឺរ៉ុប (ដែលក្រីក្រនៅឆ្នាំ ១៥០០) អាចយកឈ្នះអាស៊ី (ដែលជាមហាអំណាច) នៅឆ្នាំ ១៩០០? ចម្លើយគឺ៖ <strong>វិទ្យាសាស្ត្រ + ចក្រភព</strong>។</p>
+                    <p>ចក្រភពអឺរ៉ុបមានចិត្តចង់ "រុករកនិងត្រួតត្រា"។ អ្នកវិទ្យាសាស្ត្រផ្តល់អាវុធ ថ្នាំពេទ្យ និងចំណេះដឹង។ ចក្រភពផ្តល់លុយនិងការការពារ។</p>
+                    <p>ជនជាតិចិននិងពែរ្ស ពូកែខាងបច្ចេកវិទ្យាដែរ ប៉ុន្តែពួកគេខ្វះ <strong>"ចិត្តគំនិតរុករក"</strong>។ ពួកគេគិតថាខ្លួនឯងនៅកណ្តាលពិភពលោកហើយ មិនចាំបាច់ទៅរុករកកន្លែងផ្សេងទេ។ អឺរ៉ុបមានអារម្មណ៍ថាខ្លួនមិនសំខាន់ ទើបខំរុករក។</p>
+                `,
+                scenario: "Captain Cook ទៅអូស្ត្រាលីដើម្បីសិក្សាភពសុក្រ (វិទ្យាសាស្ត្រ) ហើយក៏ឆ្លៀតដណ្តើមយកទ្វីបនោះឱ្យអង់គ្លេស (ចក្រភព)។ វិទ្យាសាស្ត្រនិងចក្រភពគឺជាដៃគូស្នេហា។",
+            },
+            {
+                title: "16. លទ្ធិមូលធននិយម (The Capitalist Creed)",
+                content: `
+                    <p>មូលធននិយម (Capitalism) មិនមែនគ្រាន់តែជាប្រព័ន្ធសេដ្ឋកិច្ចទេ វាជាសាសនា។ គោលលទ្ធិរបស់វាគឺ៖ <strong>"កំណើន" (Growth)</strong>។</p>
+                    <p>សេដ្ឋកិច្ចបុរាណជា Zero-sum game (បើខ្ញុំចំណេញ អ្នកត្រូវតែខាត)។ មូលធននិយមជឿថា Win-Win (បើខ្ញុំចំណេញ ខ្ញុំនឹងបើករោងចក្រ អ្នកនឹងមានការងារធ្វើ យើងទាំងពីរនឹងមានបាន)។</p>
+                    <p>គន្លឹះគឺ <strong>"ឥណទាន" (Credit)</strong>។ ឥណទានគឺ "ការយកអនាគតមកចាយថ្ងៃនេះ"។ វាដំណើរការបាន លុះត្រាតែយើងជឿថា "ថ្ងៃស្អែកនឹងល្អជាងថ្ងៃនេះ"។ នេះគឺជាបដិវត្តន៍នៃទំនុកចិត្ត។</p>
+                `,
+                scenario: "អ្នកមានក្នុងសម័យបុរាណ យកលុយទៅកប់ទុក ឬសាងសង់ចេតិយ។ អ្នកមានក្នុងសម័យមូលធននិយម យកលុយទៅ 'វិនិយោគ' (Reinvest)។ លុយដែលនៅស្ងៀម គឺជាលុយដែលស្លាប់។",
+            },
+            {
+                title: "17. កង់នៃឧស្សាហកម្ម (The Wheels of Industry)",
+                content: `
+                    <p>បញ្ហាសេដ្ឋកិច្ចពីមុនគឺ "ផលិតកម្ម" (Production)។ បដិវត្តន៍ឧស្សាហកម្មបានដោះស្រាយបញ្ហានេះតាមរយៈ <strong>ការបំប្លែងថាមពល</strong> (ចំហាយទឹក, អគ្គិសនី)។</p>
+                    <p>ឥឡូវបញ្ហាគឺ "ការប្រើប្រាស់" (Consumption)។ រោងចក្រផលិតរបស់ច្រើនពេក។ តើនរណាទិញ? មូលធននិយមត្រូវបង្កើតសាសនាថ្មីគឺ <strong>"Consumerism" (លទ្ធិអ្នកប្រើប្រាស់)</strong>។</p>
+                    <p>សាសនានេះបង្រៀនថា៖ "ការទិញរបស់ថ្មី នឹងធ្វើឱ្យអ្នកសប្បាយចិត្ត"។ សីលធម៌សម័យមុនប្រាប់ឱ្យសន្សំសំចៃ។ សីលធម៌សម័យថ្មីប្រាប់ឱ្យ "ទិញថែម!"។</p>
+                `,
+                scenario: "រាល់បុណ្យទាន (ចូលឆ្នាំ, បុណ្យណូអែល) ត្រូវបានក្លាយជាពិធីបុណ្យនៃការដើរផ្សារ (Shopping Festival)។ យើងគោរពសាសនា Consumerism ដោយមិនដឹងខ្លួន។",
+            },
+            {
+                title: "18. បដិវត្តន៍អចិន្រ្តៃយ៍ (A Permanent Revolution)",
+                content: `
+                    <p>ពិភពលោកសម័យទំនើបមានសន្តិភាពជាងមុន ប៉ុន្តែឯកាជាងមុន។ ការផ្លាស់ប្តូរធំបំផុតគឺ៖ <strong>ការដួលរលំនៃគ្រួសារនិងសហគមន៍</strong>។</p>
+                    <p>រាប់ម៉ឺនឆ្នាំមកហើយ គ្រួសារគឺជាអ្វីៗគ្រប់យ៉ាង (ធនាគារ, សាលារៀន, ពេទ្យ, ប៉ូលីស)។ ឥឡូវនេះ <strong>រដ្ឋ និង ទីផ្សារ (State and Market)</strong> បានចូលមកជំនួស។</p>
+                    <ul class="list-disc ml-6">
+                        <li>ត្រូវការលុយ? ទៅធនាគារ។</li>
+                        <li>ត្រូវការសុវត្ថិភាព? ហៅប៉ូលីស។</li>
+                        <li>ចាស់ជរា? ទៅមណ្ឌលចាស់ជរា។</li>
+                    </ul>
+                    <p>យើងមានសេរីភាពជា <strong>"បុគ្គល" (Individual)</strong>។ យើងមិនចាំបាច់ស្តាប់បង្គាប់មេកុលសម្ព័ន្ធទេ។ ប៉ុន្តែយើងបាត់បង់ភាពកក់ក្តៅ និងសុវត្ថិភាពផ្លូវចិត្ត។ យើងក្លាយជាមនុស្សឯកាក្នុងហ្វូងមនុស្ស។</p>
+                `,
+                scenario: "Imagined Communities: យើងមិនស្គាល់អ្នកជិតខាងទេ ប៉ុន្តែយើងមានអារម្មណ៍ស្និទ្ធស្នាលជាមួយ 'ជាតិ' (Nation) ដែលជាសហគមន៍ស្រមើស្រមៃ។",
+            },
+            {
+                title: "19. ហើយពួកគេរស់នៅយ៉ាងមានក្តីសុខ (Happily Ever After)",
+                content: `
+                    <p>តើយើងសប្បាយចិត្តជាងដូនតារបស់យើងទេ? Harari សង្ស័យ។</p>
+                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">សមីការនៃសុភមង្គល</h4>
+                    <p><strong>សុភមង្គល = ការពិត - ការរំពឹងទុក</strong></p>
+                    <p>ជីវិតយើងល្អជាងមុន (ម៉ាស៊ីនត្រជាក់, ថ្នាំពេទ្យ) ប៉ុន្តែការរំពឹងទុករបស់យើងហោះឡើងខ្ពស់កប់ពពក (តាមរយៈការមើល Facebook/Instagram)។ ដូច្នេះយើងនៅតែមិនពេញចិត្ត។</p>
+                    <p>ម្យ៉ាងទៀត សុភមង្គលអាស្រ័យលើ <strong>ជីវសាស្ត្រ</strong> (អរម៉ូន Serotonin/Dopamine)។ ធម្មជាតិកំណត់កម្រិតសុភមង្គលរបស់យើងឱ្យនៅថេរ (Hedonic Treadmill)។ ឈ្នះឆ្នោត ឬពិការជើង យូរៗទៅយើងនឹងត្រឡប់មកមានអារម្មណ៍ធម្មតាវិញ។</p>
+                    <p>គន្លឹះអាចជា <strong>"អត្ថន័យ" (Meaning)</strong>។ ដូនតាយើងលំបាកកាយ តែចិត្តស្ងប់ព្រោះជឿលើសាសនា។ យើងស្រួលកាយ តែចិត្តច្របូកច្របល់ព្រោះបាត់បង់ជំនឿ។</p>
+                `,
+                scenario: "ការចិញ្ចឹមកូនគឺលំបាកណាស់ (ប្តូរកន្ទប, អត់ងងុយ)។ ប៉ុន្តែមនុស្សជាច្រើនថាវាជាប្រភពនៃសុភមង្គល។ នេះមកពី 'អត្ថន័យ' មិនមែន 'ការសប្បាយ' (Pleasure) ទេ។",
+            },
+            {
+                title: "20. ទីបញ្ចប់នៃ Homo Sapiens (The End of Homo Sapiens)",
+                content: `
+                    <p>ប្រវត្តិសាស្ត្រជិតចប់ហើយ។ អនាគតមិនមែនជាប្រវត្តិសាស្ត្រទេ វាជាជីវវិទ្យាថ្មី។</p>
+                    <p>៤ ពាន់លានឆ្នាំមកនេះ ជីវិតស្ថិតក្រោមច្បាប់ <strong>Natural Selection (ជម្រើសធម្មជាតិ)</strong>។ ឥឡូវនេះ យើងកំពុងចូលដល់យុគសម័យ <strong>Intelligent Design (ការរចនាដោយបញ្ញា)</strong>។</p>
+                    <p>យើងមានបច្ចេកវិទ្យា ៣ យ៉ាងដើម្បីផ្លាស់ប្តូរខ្លួនឯង៖</p>
+                    <ol class="list-decimal ml-6 mb-4">
+                        <li><strong>Biological Engineering:</strong> កែហ្សែន (DNA) ដើម្បីឱ្យឆ្លាតជាងមុន អាយុវែង។</li>
+                        <li><strong>Cyborg Engineering:</strong> ផ្សំរាងកាយជាមួយម៉ាស៊ីន (ដៃយន្ត, ខួរក្បាលភ្ជាប់អ៊ីនធឺណិត)។</li>
+                        <li><strong>Inorganic Life:</strong> បញ្ញាសិប្បនិម្មិត (AI)។</li>
+                    </ol>
+                    <p>Homo Sapiens នឹងបាត់ខ្លួន មិនមែនដោយសារផុតពូជទេ តែដោយសារយើងនឹង <strong>"Upgrade"</strong> ខ្លួនឯងទៅជាអ្វីផ្សេង (Homo Deus)។ សំណួរសំខាន់គឺ៖ "តើយើងចង់ក្លាយជាអ្វី?"</p>
+                `,
+                scenario: "Dr. Frankenstein បង្កើតបិសាច។ យើងកំពុងបង្កើត AI និងកែហ្សែន។ តើយើងនឹងគ្រប់គ្រងវាបានទេ? ឬវានឹងមកគ្រប់គ្រងយើង?",
+            }
+        ];
+
+        // Logic
+        let currentLessonIndex = 0;
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#e7e5e4] transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-[#d97706]' : 'text-[#57534e]'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-[#d6d3d1] text-[#57534e] flex items-center justify-center text-[10px] mr-3 font-bold border border-[#a8a29e]">${index + 1}</span>
+                    <span class="truncate tracking-wide">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active');
+                b.querySelector('span').classList.remove('bg-[#d97706]', 'text-white');
+                b.querySelector('span').classList.add('bg-[#d6d3d1]', 'text-[#57534e]');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active');
+                activeBtn.querySelector('span').classList.remove('bg-[#d6d3d1]', 'text-[#57534e]');
+                activeBtn.querySelector('span').classList.add('bg-[#d97706]', 'text-white');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-6 hidden p-6 rounded-lg text-lg border-l-4 shadow-sm bg-[#fafaf9] transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded border border-[#d6d3d1] hover:bg-[#f5f5f4] transition flex items-center shadow-sm group bg-white text-[#44403c]";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-[#a8a29e] mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-[#a8a29e] group-hover:bg-[#d97706] group-hover:text-white transition">${String.fromCharCode(65 + i)}</span><span class="font-medium">${opt}</span>`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                quizFeedback.className = "mt-6 p-6 rounded bg-[#dcfce7] text-[#14532d] border-l-4 border-[#15803d] shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-[#15803d] text-lg block mb-2">ត្រឹមត្រូវ! 🌟</strong> ${explanation}`;
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                quizFeedback.className = "mt-6 p-6 rounded bg-[#fee2e2] text-[#7f1d1d] border-l-4 border-[#b91c1c] shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-[#b91c1c] text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("សូមអបអរសាទរ! អ្នកបានបញ្ចប់ការសិក្សា Masterclass នេះហើយ។");
+        };
+
+        initNav();
+    </script>
+</body>
+</html>
