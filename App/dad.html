@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rich Dad Poor Dad - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #1e1b4b; /* Indigo-950 (Deep Purple) */
+            color: #e0e7ff; /* Indigo-100 */
+            line-height: 1.9;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #312e81; /* Indigo-900 */
+            border-right: 4px solid #fbbf24; /* Amber-400 (Gold) */
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #064e3b !important;
+            border-color: #10b981 !important;
+            color: #d1fae5 !important;
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border-color: #ef4444 !important;
+            color: #fecaca !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1b4b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4338ca;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        .concept-card {
+            background: rgba(49, 46, 129, 0.6); /* Translucent Indigo */
+            padding: 2rem;
+            border-radius: 1rem;
+            border-left: 6px solid #fbbf24; /* Gold */
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #4338ca;
+        }
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #a855f7; /* Purple-500 */
+            padding-left: 2rem;
+            color: #e9d5ff;
+            margin: 2rem 0;
+            background-color: rgba(88, 28, 135, 0.3); 
+            padding: 2rem;
+            border-radius: 0 1rem 1rem 0;
+            font-size: 1.15rem;
+        }
+        details {
+            background: rgba(67, 56, 202, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #4f46e5;
+        }
+        details[open] {
+            background: rgba(49, 46, 129, 0.8);
+            border-color: #fbbf24;
+        }
+        summary {
+            font-weight: bold;
+            color: #fbbf24;
+            outline: none;
+            font-size: 1.1rem;
+        }
+        .money-bg {
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.05;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#1e1b4b] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-indigo-300 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-bold rounded-full hover:shadow-lg transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-indigo-400 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-yellow-400 hover:underline">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#1e1b4b] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-indigo-900/50 rounded-3xl backdrop-blur-sm border border-indigo-700">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl">💰</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 en-title">Rich Dad Poor Dad</h2>
+            <p class="text-indigo-300 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-yellow-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-bold py-3 px-6 rounded-xl hover:from-yellow-600 hover:to-amber-700 transition disabled:opacity-50">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-indigo-400 hover:text-yellow-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'dad';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#1e1b4b] p-4 shadow-md flex justify-between items-center z-20 border-b border-indigo-900">
+        <h1 class="text-lg font-bold text-yellow-400 en-title">Rich Dad Poor Dad</h1>
+        <button id="menuBtn" class="text-indigo-200 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-96 bg-[#111827] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-indigo-900">
+        <div class="p-8 border-b border-indigo-900 hidden md:block bg-gradient-to-b from-[#1e1b4b] to-[#111827]">
+            <h1 class="text-2xl font-bold text-yellow-400 en-title tracking-wider mb-2">RICH DAD<br>POOR DAD</h1>
+            <p class="text-xs text-indigo-300 font-bold uppercase tracking-widest">Financial Intelligence Masterclass</p>
+            <p class="text-xs text-indigo-500 mt-2">Robert Kiyosaki</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-indigo-900 bg-[#0f172a]">
+            <div class="flex justify-between text-xs mb-2 text-yellow-400 font-bold uppercase">
+                <span>Wealth IQ</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                <div id="progressBar" class="bg-yellow-500 h-1.5 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(251,191,36,0.6)]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#1e1b4b]" id="mainContent">
+        <div class="money-bg"></div>
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#312e81]/80 backdrop-blur-md p-14 rounded-2xl shadow-2xl max-w-3xl border border-indigo-500/30">
+                    <div class="text-7xl mb-8 animate-pulse">💸🏠🧠</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 kh-title leading-tight">អ្វីដែលអ្នកមានមិនដែលបង្រៀនកូន<br>អំពីលុយ</h2>
+                    <p class="text-lg text-indigo-200 mb-10 leading-loose font-light px-6">
+                        សាលារៀនបង្រៀនអ្នកឱ្យធ្វើការដើម្បីលុយ។<br>
+                        វគ្គសិក្សានេះនឹងបង្រៀនអ្នកឱ្យ <strong>"ប្រើលុយធ្វើការឱ្យអ្នក"</strong>។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-yellow-500 hover:bg-yellow-400 text-[#1e1b4b] font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 text-xl flex items-center mx-auto tracking-widest border-2 border-yellow-300">
+                        <span>ចាប់ផ្តើមរៀនពីឪពុកអ្នកមាន</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-yellow-400 mb-8 font-bold text-xs uppercase tracking-widest border border-indigo-700 bg-indigo-900/50 w-fit px-4 py-2 rounded-full">
+                    <span id="chapterNumber">Lesson 1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-10 leading-snug border-b border-indigo-800 pb-6 kh-title text-shadow"></h2>
+                
+                <div class="prose prose-invert prose-lg max-w-none text-indigo-100 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#312e81] border-l-8 border-purple-500 p-8 rounded-r-xl mb-12 hidden shadow-2xl mt-16 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-9xl text-purple-500/10 en-title select-none">$</div>
+                    <h3 class="text-2xl font-bold text-purple-300 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        ការសម្រេចចិត្តហិរញ្ញវត្ថុ (Financial Simulation)
+                    </h3>
+                    <div id="scenarioContent" class="text-indigo-100 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#111827] rounded-2xl shadow-xl p-10 md:p-14 border border-indigo-800 mt-20 relative overflow-hidden">
+                    <h3 class="text-2xl font-bold text-white mb-8 flex items-center relative z-10 kh-title">
+                        <span class="bg-yellow-500 text-black text-sm font-bold mr-4 px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">Quiz</span>
+                        សាកល្បង IQ ហិរញ្ញវត្ថុ
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-8 text-indigo-100 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-[#1e1b4b]"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-20 pt-8 border-t border-indigo-900">
+                    <button id="prevBtn" class="px-8 py-4 rounded-lg border border-indigo-700 text-indigo-300 hover:bg-indigo-900 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-wider">
+                        ← មេរៀនមុន
+                    </button>
+                    <button id="nextBtn" class="px-8 py-4 rounded-lg bg-yellow-500 text-black hover:bg-yellow-400 font-bold shadow-lg flex items-center transition-all text-lg uppercase tracking-wider transform hover:-translate-y-1">
+                        មេរៀនបន្ទាប់ →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR RICH DAD POOR DAD (KHMER)
+        const lessons = [
+            {
+                title: "សេចក្តីផ្តើម៖ ឪពុកពីរនាក់ (Two Dads)",
+                content: `
+                    <p class="mb-6">Robert Kiyosaki មានឪពុកពីរនាក់៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-4">
+                        <li><strong>ឪពុកបង្កើត (Poor Dad):</strong> ជាបណ្ឌិតដែលមានការអប់រំខ្ពស់ ជាមន្ត្រីរាជការ ធ្វើការខ្លាំង ប៉ុន្តែតែងតែមានបញ្ហាលុយកាក់។ គាត់និយាយថា៖ <em>"ក្តីស្រលាញ់ចំពោះលុយ គឺជាប្រភពនៃអំពើអាក្រក់"</em>។</li>
+                        <li><strong>ឪពុកធម៌ (Rich Dad):</strong> ជាឪពុករបស់មិត្តភក្តិ មិនបានរៀនចប់ថ្នាក់ទី ៨ ផង ប៉ុន្តែក្រោយមកក្លាយជាមហាសេដ្ឋីនៅហាវ៉ៃ។ គាត់និយាយថា៖ <em>"កង្វះខាតលុយ គឺជាប្រភពនៃអំពើអាក្រក់"</em>។</li>
+                    </ul>
+                    <p class="mb-6">សៀវភៅនេះមិនមែនជារឿងប្រៀបធៀបថា "អ្នកណាអាក្រក់ អ្នកណាល្អ" ទេ ប៉ុន្តែវាប្រៀបធៀប <strong>"ផ្នត់គំនិត" (Mindset)</strong>។ ឪពុកម្នាក់បង្រៀនឱ្យសរសេរប្រវត្តិរូបល្អៗដើម្បីបានការងារធ្វើ។ ឪពុកម្នាក់ទៀតបង្រៀនឱ្យសរសេរគម្រោងអាជីវកម្មល្អៗដើម្បីបង្កើតការងារឱ្យគេធ្វើ។</p>
+                    <p class="mb-6">នៅអាយុ ៩ ឆ្នាំ Robert បានសម្រេចចិត្តមិនស្តាប់ឪពុកបង្កើតរបស់គាត់រឿងលុយទេ ប៉ុន្តែស្តាប់ឪពុកអ្នកមានវិញ។ នេះគឺជាមេរៀន ៦ យ៉ាងដែលគាត់បានរៀនអស់រយៈពេល ៣០ ឆ្នាំ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការពិចារណា៖</strong> នៅពេលអ្នកចង់ទិញរបស់ថ្លៃមួយ (ដូចជាឡានទំនើប) តើអ្នកនិយាយយ៉ាងម៉េចក្នុងចិត្ត?</p>
+                    <ul class="list-disc ml-6 mt-2 text-indigo-300">
+                        <li><strong>Poor Mindset:</strong> "ខ្ញុំគ្មានលុយទិញវាទេ។" (ប្រយោគបិទបញ្ចប់ខួរក្បាល)។</li>
+                        <li><strong>Rich Mindset:</strong> "តើខ្ញុំត្រូវធ្វើដូចម្តេច ទើបអាចទិញវាបាន?" (សំណួរដែលបើកខួរក្បាលឱ្យគិតរកមធ្យោបាយ)។</li>
+                    </ul>
+                `,
+                quiz: { question: "តើអ្វីជាភាពខុសគ្នាសំខាន់បំផុតរវាងឪពុកទាំងពីរ?", options: ["ចំនួនលុយក្នុងធនាគារ", "កម្រិតវប្បធម៌", "ផ្នត់គំនិត និងរបៀបគិតអំពីលុយ (Mindset)", "ប្រភេទរថយន្តដែលជិះ"], correct: 2, explanation: "ត្រឹមត្រូវ! ភាពក្រីក្រនិងភាពមានបាន ចាប់ផ្តើមចេញពីផ្នត់គំនិត។ ឪពុកក្រ និយាយថា 'ខ្ញុំមិនអាច'។ ឪពុកមាន សួរថា 'តើខ្ញុំត្រូវធ្វើដូចម្តេច?'" }
+            },
+            {
+                title: "មេរៀនទី ១៖ អ្នកមានមិនធ្វើការដើម្បីលុយទេ (The Rich Don't Work for Money)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">វដ្តនៃសត្វកណ្តុរ (The Rat Race)</h3>
+                    <p class="mb-6">មនុស្សភាគច្រើនមានការងារធ្វើ ព្រោះពួកគេត្រូវបានដឹកមុខដោយអារម្មណ៍ពីរ៖ <strong>ភាពភ័យខ្លាច (Fear)</strong> និង <strong>ភាពលោភលន់ (Greed/Desire)</strong>។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3">
+                        <li><strong>ភាពភ័យខ្លាច៖</strong> ខ្លាចគ្មានលុយបង់ថ្លៃផ្ទះ ខ្លាចអត់បាយ។ ដូច្នេះពួកគេទៅធ្វើការ។</li>
+                        <li><strong>ភាពលោភលន់៖</strong> នៅពេលបានប្រាក់ខែ ពួកគេចង់បានរបស់ថ្មីៗ (ទូរស័ព្ទ, ឡាន, ផ្ទះធំ)។ ដូច្នេះពួកគេចាយលុយ។</li>
+                    </ul>
+                    <p class="mb-6">បន្ទាប់មកលុយអស់។ ភាពភ័យខ្លាចត្រឡប់មកវិញ។ ពួកគេទៅធ្វើការទៀត។ នេះហៅថា <strong>"Rat Race"</strong>។ ទោះបីជាពួកគេឡើងប្រាក់ខែ ក៏ពួកគេមិនអាចចេញពីវដ្តនេះដែរ ព្រោះការចំណាយរបស់ពួកគេកើនឡើងតាមប្រាក់ខែ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-2xl font-bold text-yellow-400 mb-4">💰 ដំណោះស្រាយរបស់ឪពុកអ្នកមាន</h4>
+                        <p><strong>"អ្នកក្រនិងវណ្ណៈកណ្តាល ធ្វើការដើម្បីលុយ។ អ្នកមាន ប្រើលុយឱ្យធ្វើការឱ្យពួកគេ។"</strong></p>
+                        <p class="mt-4">អ្នកត្រូវរៀនគ្រប់គ្រងអារម្មណ៍ភ័យខ្លាចនិងលោភលន់។ កុំធ្វើការគ្រាន់តែដើម្បីចង់បានប្រាក់ខែចុងខែ។ ធ្វើការដើម្បី <strong>"រៀន"</strong> ពីរបៀបដែលលុយដំណើរការ។ នៅពេលអ្នកយល់ អ្នកអាចបង្កើតអាជីវកម្ម ឬការវិនិយោគដែលរកលុយឱ្យអ្នក ទោះបីជាអ្នកកំពុងដេកក៏ដោយ។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Scenario:</strong> ប្រាក់ខែអ្នកឡើង $500។ តើអ្នកនឹងធ្វើអ្វី?</p>
+                    <p class="text-red-400 mt-2">ក. ទិញ iPhone ថ្មី និងទៅញ៉ាំអីឆ្ងាញ់ៗ (Rat Race)។</p>
+                    <p class="text-green-400 mt-2">ខ. យក $500 នោះទៅវិនិយោគលើភាគហ៊ុន ឬសន្សំដើម្បីទិញដី (Breaking the Rat Race)។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាការឡើងប្រាក់ខែ មិនអាចជួយមនុស្សភាគច្រើនឱ្យចេញពី Rat Race បាន?", options: ["ព្រោះពន្ធកើនឡើង", "ព្រោះការចំណាយរបស់ពួកគេកើនឡើងតាមចំណូល (Lifestyle Inflation) ដោយសារភាពលោភលន់", "ព្រោះពួកគេខ្ជិល", "ព្រោះពួកគេមិនចេះទុកដាក់"], correct: 1, explanation: "ត្រឹមត្រូវ! បើអ្នកមិនកែទម្លាប់ចាយវាយទេ លុយច្រើនជាងមុន គ្រាន់តែធ្វើឱ្យអ្នកមានបំណុលច្រើនជាងមុនប៉ុណ្ណោះ។" }
+            },
+            {
+                title: "មេរៀនទី ២៖ ហេតុអ្វីត្រូវរៀនអំពីហិរញ្ញវត្ថុ? (Why Teach Financial Literacy?)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">Asset vs Liability</h3>
+                    <p class="mb-6">បញ្ហាមិនមែនស្ថិតនៅលើថា "អ្នករកលុយបានប៉ុន្មាន" ទេ តែស្ថិតនៅលើថា "អ្នកសល់លុយប៉ុន្មាន" (It's not how much you make, it's how much you keep)។</p>
+                    <p class="mb-6">ដើម្បីក្លាយជាអ្នកមាន អ្នកត្រូវដឹងច្បាស់ពីភាពខុសគ្នារវាង <strong>Asset (ទ្រព្យសកម្ម)</strong> និង <strong>Liability (បំណុល/ទ្រព្យអកម្ម)</strong>។ និយមន័យរបស់ Kiyosaki គឺសាមញ្ញបំផុត៖</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-green-900/40 p-6 rounded-lg border border-green-500/50">
+                            <h4 class="text-xl font-bold text-green-400 mb-2">📈 ASSET (ទ្រព្យសកម្ម)</h4>
+                            <p><strong>"ដាក់លុយចូលក្នុងហោប៉ៅរបស់អ្នក"</strong></p>
+                            <ul class="list-disc ml-6 mt-4 text-sm space-y-2">
+                                <li>ផ្ទះជួល (ដែលចំណេញ)</li>
+                                <li>ភាគហ៊ុន (Stocks)</li>
+                                <li>អាជីវកម្មដែលមិនត្រូវការវត្តមានអ្នក</li>
+                                <li>កម្មសិទ្ធិបញ្ញា (Royalty)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-red-900/40 p-6 rounded-lg border border-red-500/50">
+                            <h4 class="text-xl font-bold text-red-400 mb-2">📉 LIABILITY (បំណុល)</h4>
+                            <p><strong>"ដកលុយចេញពីហោប៉ៅរបស់អ្នក"</strong></p>
+                            <ul class="list-disc ml-6 mt-4 text-sm space-y-2">
+                                <li>ផ្ទះដែលអ្នករស់នៅ (បង់ពន្ធ, ជួសជុល, ទឹកភ្លើង)</li>
+                                <li>ឡានផ្ទាល់ខ្លួន</li>
+                                <li>កាតឥណទាន (Credit Card)</li>
+                                <li>របស់ប្រើប្រាស់ប្រណិត</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="mb-6"><strong>ច្បាប់តែមួយគត់របស់អ្នកមាន៖</strong> ទិញ Assets។<br>អ្នកក្រនិងវណ្ណៈកណ្តាល ទិញ Liabilities ប៉ុន្តែពួកគេគិតថាវាជា Assets (ឧ. ទិញផ្ទះធំដើម្បីនៅ តែត្រូវបង់ការប្រាក់ធនាគារមួយជីវិត)។</p>
+                `,
+                scenario: `
+                    <p><strong>វិភាគ៖</strong> អ្នកទិញផ្ទះមួយក្នុងតម្លៃ $100,000 ដើម្បីរស់នៅ។ អ្នកត្រូវបង់ការប្រាក់ធនាគារ, ពន្ធដី, ថ្លៃជួសជុល។ តើផ្ទះនេះជា Asset ឬ Liability? តាម Kiyosaki វាជា <strong>Liability</strong> ព្រោះវាដកលុយពីហោប៉ៅអ្នករាល់ខែ។ បើអ្នកទិញផ្ទះនោះដើម្បីជួល ហើយចំណូលពីការជួលច្រើនជាងការចំណាយ នោះទើបវាជា <strong>Asset</strong>។</p>
+                `,
+                quiz: { question: "តាមនិយមន័យរបស់ Robert Kiyosaki តើអ្វីជា Asset?", options: ["របស់ដែលមានតម្លៃថ្លៃ", "អ្វីដែលដាក់លុយចូលក្នុងហោប៉ៅរបស់អ្នក (Generate Cashflow)", "ផ្ទះដែលអ្នករស់នៅ", "ឡានទំនើប"], correct: 1, explanation: "ត្រឹមត្រូវ! Asset ត្រូវតែបង្កើតចំណូល (Cashflow)។ បើវាមិនបង្កើតចំណូលទេ វាមិនមែនជា Asset ក្នុងន័យវិនិយោគទេ។" }
+            },
+            {
+                title: "មេរៀនទី ៣៖ គិតគូរពីមុខរបររបស់ខ្លួន (Mind Your Own Business)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">អាជីព vs មុខរបរ</h3>
+                    <p class="mb-6">មនុស្សភាគច្រើនច្រឡំរវាង <strong>អាជីព (Profession)</strong> និង <strong>មុខរបរ (Business)</strong>។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3">
+                        <li><strong>អាជីព៖</strong> អ្វីដែលអ្នកធ្វើឱ្យគេ ដើម្បីបានប្រាក់ខែ។ (ឧ. អ្នកធ្វើការនៅធនាគារ អាជីពអ្នកគឺ "Banker")។</li>
+                        <li><strong>មុខរបរ៖</strong> អ្វីដែលជាកម្មសិទ្ធិរបស់អ្នក និងរកចំណូលឱ្យអ្នក។ (ឧ. អ្នកមានផ្ទះជួល ឬមានភាគហ៊ុនក្នុងធនាគារ)។</li>
+                    </ul>
+                    <p class="mb-6">Kiyosaki និយាយថា៖ <strong>"អ្នកក្រនិងវណ្ណៈកណ្តាល ចំណាយជីវិតធ្វើការឱ្យមុខរបររបស់អ្នកដទៃ (ថៅកែ, រដ្ឋាភិបាល, ធនាគារ)។ អ្នកមាន ផ្តោតលើការកសាងមុខរបររបស់ខ្លួនឯង។"</strong></p>
+                    <p class="mb-6"><strong>Mind Your Own Business</strong> មានន័យថា កុំចំណាយពេលមួយជីវិតធ្វើតែការងារឱ្យគេ។ ចាប់ផ្តើមទិញឬបង្កើត Assets ផ្ទាល់ខ្លួន (ភាគហ៊ុន, អចលនទ្រព្យ, អាជីវកម្ម) ទោះបីជាអ្នកកំពុងធ្វើការឱ្យគេក៏ដោយ។ រក្សាការងារថ្ងៃ (Day Job) ប៉ុន្តែប្រើលុយដែលសល់ដើម្បីពង្រីកតារាង Asset (Asset Column)។</p>
+                `,
+                scenario: `
+                    <p>Ray Kroc (ស្ថាបនិក McDonald's) ធ្លាប់សួរនិស្សិតថា៖ "តើខ្ញុំរកស៊ីអ្វី?" និស្សិតឆ្លើយថា "លក់ប៊ឺហ្គឺ"។ Ray សើចហើយថា៖ "អត់ទេ! មុខរបររបស់ខ្ញុំគឺ <strong>អចលនទ្រព្យ (Real Estate)</strong>"។ ការលក់ប៊ឺហ្គឺគ្រាន់តែជាអាជីពដើម្បីបានលុយមកទិញដីដែលហាង McDonald's តាំងនៅប៉ុណ្ណោះ។ ដីនោះហើយជា Business ពិតប្រាកដរបស់គាត់។</p>
+                `,
+                quiz: { question: "តើឃ្លា 'Mind Your Own Business' មានន័យថាម៉េចក្នុងសៀវភៅនេះ?", options: ["កុំចេះរឿងគេ", "ផ្តោតលើការកសាងតារាងទ្រព្យសកម្ម (Asset Column) របស់ខ្លួនឯង ជាជាងគ្រាន់តែធ្វើការឱ្យគេ", "បើកក្រុមហ៊ុនហើយឈប់ធ្វើការ", "ធ្វើការងារឱ្យខ្លាំង"], correct: 1, explanation: "ត្រឹមត្រូវ! មុខរបររបស់អ្នកគឺការវិនិយោគ។ អាជីពរបស់អ្នកគឺជាអ្វីដែលអ្នកធ្វើដើម្បីបានលុយមកវិនិយោគ។" }
+            },
+            {
+                title: "មេរៀនទី ៤៖ ប្រវត្តិសាស្រ្តនៃពន្ធ និងអំណាចក្រុមហ៊ុន (Taxes & Corporations)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">អាថ៌កំបាំងរបស់អ្នកមាន</h3>
+                    <p class="mb-6">អ្នកក្រគិតថា "ពន្ធ" គឺដើម្បីយកលុយអ្នកមានមកជួយអ្នកក្រ (Robin Hood)។ ប៉ុន្តែតាមការពិត អ្នកដែលបង់ពន្ធច្រើនជាងគេគឺ <strong>វណ្ណៈកណ្តាល</strong>។ អ្នកមានមិនបង់ពន្ធច្រើនទេ ព្រោះពួកគេប្រើប្រាស់ <strong>ក្រុមហ៊ុន (Corporations)</strong>។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-2xl font-bold text-yellow-400 mb-4">🏢 ភាពខុសគ្នានៃចរន្តលុយ</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <strong class="text-red-400 border-b border-red-400 mb-2 block">បុគ្គលិក (Employees)</strong>
+                                <ol class="list-decimal ml-6 space-y-1 text-sm">
+                                    <li>រកលុយ (Earn)</li>
+                                    <li><strong>បង់ពន្ធ (Taxed)</strong></li>
+                                    <li>ចាយលុយដែលសល់ (Spend)</li>
+                                </ol>
+                                <p class="text-xs text-gray-400 mt-2">រដ្ឋកាត់ពន្ធមុនពេលអ្នកបានចាយ។</p>
+                            </div>
+                            <div>
+                                <strong class="text-green-400 border-b border-green-400 mb-2 block">ម្ចាស់ក្រុមហ៊ុន (Corporations)</strong>
+                                <ol class="list-decimal ml-6 space-y-1 text-sm">
+                                    <li>រកលុយ (Earn)</li>
+                                    <li><strong>ចាយលុយ (Spend)</strong></li>
+                                    <li>បង់ពន្ធលើលុយដែលសល់ (Taxed)</li>
+                                </ol>
+                                <p class="text-xs text-gray-400 mt-2">ចាយលើការរកស៊ីសិន ទើបបង់ពន្ធតាមក្រោយ។</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="mb-6"><strong>Financial IQ</strong> មាន ៤ ផ្នែក៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-2">
+                        <li><strong>គណនេយ្យ (Accounting):</strong> ចេះអានតួលេខ។</li>
+                        <li><strong>ការវិនិយោគ (Investing):</strong> យុទ្ធសាស្ត្របង្កើតលុយ។</li>
+                        <li><strong>ការយល់ដឹងពីទីផ្សារ (Understanding Markets):</strong> តម្រូវការនិងការផ្គត់ផ្គង់។</li>
+                        <li><strong>ច្បាប់ (The Law):</strong> ច្បាប់ពន្ធ និងការការពារ។</li>
+                    </ol>
+                `,
+                scenario: `
+                    <p><strong>ឧទាហរណ៍៖</strong> បើអ្នកចង់ទិញឡាន។ បុគ្គលិកត្រូវយកប្រាក់ខែ (ដែលកាត់ពន្ធរួច) ទៅទិញ។ ម្ចាស់ក្រុមហ៊ុន ទិញឡានក្នុងនាមក្រុមហ៊ុន (ការចំណាយមុនពន្ធ)។ នេះគឺជាការប្រើប្រាស់ច្បាប់ដែលអ្នកមានធ្វើ។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាអ្នកមានប្រើប្រាស់ក្រុមហ៊ុន (Corporation)?", options: ["ដើម្បីមើលទៅឡូយ", "ដើម្បីការពារទ្រព្យសម្បត្តិ និងបង់ពន្ធលើអ្វីដែលសល់ពីការចាយវាយ (Earn-Spend-Tax)", "ដើម្បីងាយស្រួលគ្រប់គ្រងបុគ្គលិក", "ដើម្បីគេចពន្ធខុសច្បាប់"], correct: 1, explanation: "ត្រឹមត្រូវ! ក្រុមហ៊ុនគឺជាផ្លូវច្បាប់ដែលអនុញ្ញាតឱ្យកាត់កងការចំណាយមុននឹងបង់ពន្ធ។" }
+            },
+            {
+                title: "មេរៀនទី ៥៖ អ្នកមានបង្កើតលុយ (The Rich Invent Money)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">ឱកាសមាននៅគ្រប់ទីកន្លែង</h3>
+                    <p class="mb-6">ក្នុងពិភពពិត មនុស្សដែលជោគជ័យមិនមែនជាមនុស្សដែល "ឆ្លាត" បំផុតទេ (Smartest) តែជាមនុស្សដែល <strong>"ក្លាហាន" បំផុត (Boldest)</strong>។</p>
+                    <p class="mb-6">មនុស្សជាច្រើនមានចំនេះដឹង តែខ្លាចបរាជ័យ។ Kiyosaki បង្រៀនថា <strong>"លុយមិនមានពិតទេ"</strong>។ លុយគឺជាអ្វីដែលយើងព្រមព្រៀងគ្នា។ បើអ្នកមាន Financial IQ អ្នកអាចបង្កើតលុយពីខ្យល់បាន (តាមរយៈការមើលឃើញឱកាសដែលអ្នកដទៃមើលមិនឃើញ)។</p>
+                    
+                    <details>
+                        <summary>ឧទាហរណ៍នៃការបង្កើតលុយ</summary>
+                        <div class="mt-4 text-indigo-200 bg-[#312e81]/50 p-4 rounded">
+                            <p>Kiyosaki រកឃើញផ្ទះមួយដែលមានតម្លៃទីផ្សារ $100,000 ប៉ុន្តែម្ចាស់ផ្ទះត្រូវការលុយបន្ទាន់ ហើយលក់ក្នុងតម្លៃ $60,000។ Kiyosaki គ្មានលុយទេ ប៉ុន្តែគាត់ខ្ចីលុយ $60,000 ពីមិត្តភក្តិ (ឬធនាគារ) ទិញផ្ទះនោះ ហើយលក់ភ្លាមៗក្នុងតម្លៃ $90,000។</p>
+                            <p>គាត់សងលុយដើមវិញ ហើយចំណេញ $30,000 ដោយមិនបានប្រើលុយខ្លួនឯងសូម្បីមួយសេន។ នេះគឺ <strong>"The Rich Invent Money"</strong>។</p>
+                        </div>
+                    </details>
+
+                    <p class="mb-6">ជំនាញសំខាន់របស់អ្នកវិនិយោគ៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-2">
+                        <li>ចេះរកឱកាសដែលអ្នកផ្សេងមើលរំលង។</li>
+                        <li>ចេះរកលុយ (Raising Capital) ដោយមិនពឹងធនាគារតែមួយមុខ។</li>
+                        <li>ចេះរៀបចំមនុស្សឆ្លាតឱ្យធ្វើការជាមួយគ្នា។</li>
+                    </ol>
+                `,
+                scenario: `
+                    <p><strong>Scenario:</strong> សេដ្ឋកិច្ចធ្លាក់ចុះ។ មនុស្សគ្រប់គ្នាភ័យខ្លាចហើយលក់ទ្រព្យចោល។ តើអ្នកធ្វើអ្វី? អ្នកមានមើលឃើញថា "នេះជាឱកាសទិញរបស់ថោក (Sale)"។ អ្នកក្រមើលឃើញថា "នេះជាហានិភ័យ"។ ខួរក្បាលរបស់អ្នកគឺជា Asset ធំបំផុត។</p>
+                `,
+                quiz: { question: "តើឃ្លា 'អ្នកមានបង្កើតលុយ' មានន័យថាម៉េច?", options: ["ពួកគេបោះពុម្ពលុយ", "ពួកគេធ្វើការងារបន្ថែមម៉ោង", "ពួកគេប្រើប្រាស់ចំណេះដឹងហិរញ្ញវត្ថុដើម្បីបង្កើតឱកាសនិងទ្រព្យសម្បត្តិ ដោយមិនចាំបាច់ប្រើលុយផ្ទាល់ខ្លួន", "ពួកគេលេងល្បែង"], correct: 2, explanation: "ត្រឹមត្រូវ! ពួកគេប្រើប្រាស់គំនិត ច្បាប់ និងលុយរបស់អ្នកដទៃ (OPM - Other People's Money) ដើម្បីបង្កើតទ្រព្យ។" }
+            },
+            {
+                title: "មេរៀនទី ៦៖ ធ្វើការដើម្បីរៀន កុំធ្វើការដើម្បីលុយ (Work to Learn, Don't Work for Money)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">ជំនាញសំខាន់ជាងប្រាក់ខែ</h3>
+                    <p class="mb-6">អ្នកក្រស្វែងរកការងារដែលមាន "ប្រាក់ខែខ្ពស់ និងស្ថេរភាព"។ អ្នកមានស្វែងរកការងារដែលពួកគេអាច <strong>"រៀនជំនាញថ្មី"</strong>។</p>
+                    <p class="mb-6">Kiyosaki ណែនាំយុវជនថា៖ "ចូរស្វែងរកការងារដើម្បីរៀន មិនមែនដើម្បីប្រាក់ខែទេ"។</p>
+                    <p class="mb-6">ជំនាញគ្រប់គ្រងសំខាន់ៗដែលត្រូវការ៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2">
+                        <li>ការគ្រប់គ្រង Cashflow (លំហូរសាច់ប្រាក់)។</li>
+                        <li>ការគ្រប់គ្រងប្រព័ន្ធ (Systems)។</li>
+                        <li>ការគ្រប់គ្រងមនុស្ស (People)។</li>
+                        <li><strong>សំខាន់បំផុត៖ ការលក់ និង ទីផ្សារ (Sales and Marketing)។</strong></li>
+                    </ul>
+                    
+                    <div class="quote-box border-pink-500 bg-pink-900/20 text-pink-200">
+                        "ពិភពលោកពោរពេញទៅដោយមនុស្សដែលមានទេពកោសល្យ ប៉ុន្តែក្រីក្រ។"
+                    </div>
+                    <p class="mt-4">ហេតុអ្វី? ព្រោះពួកគេពូកែតែជំនាញបច្ចេកទេស (ធ្វើនំឆ្ងាញ់, សរសេរកូដពូកែ) ប៉ុន្តែពួកគេមិនចេះ <strong>លក់</strong> ជំនាញនោះទេ។ អ្នកនិពន្ធសៀវភៅម្នាក់សួរ Kiyosaki ថាធ្វើម៉េចទើបសៀវភៅលក់ដាច់។ Kiyosaki ប្រាប់ឱ្យនាងទៅរៀន "ការលក់"។ នាងខឹង ព្រោះនាងជា "អ្នកនិពន្ធ" មិនមែន "អ្នកលក់"។ Kiyosaki ចង្អុលទៅសៀវភៅគាត់៖ "ឃើញទេ? គេសរសេរថា Best-Selling Author (អ្នកលក់ដាច់បំផុត) មិនមែន Best-Writing Author (អ្នកសរសេរល្អបំផុត) ទេ"។</p>
+                `,
+                scenario: `
+                    <p><strong>ការសម្រេចចិត្ត៖</strong> អ្នកជាអ្នកជំនាញ IT។ អ្នកចង់បើកក្រុមហ៊ុន។ តើអ្នកគួរទៅរៀនជំនាញ IT បន្ថែម ឬទៅធ្វើការជាអ្នកលក់នៅក្រុមហ៊ុនមួយរយៈ? ចម្លើយរបស់ Rich Dad គឺ៖ ទៅរៀនលក់។ ព្រោះបើអ្នកមិនចេះលក់ អ្នកមិនអាចរកស៊ីបានទេ។</p>
+                `,
+                quiz: { question: "តើជំនាញមួយណាដែល Kiyosaki ចាត់ទុកថាសំខាន់បំផុតសម្រាប់ជោគជ័យ?", options: ["សរសេរកូដ", "ការលក់ និងទីផ្សារ (Sales and Marketing)", "គណនេយ្យ", "ច្បាប់"], correct: 1, explanation: "ត្រឹមត្រូវ! សមត្ថភាពក្នុងការលក់ (ទំនាក់ទំនងជាមួយអតិថិជន, និយោជិក, និងខ្លួនឯង) គឺជាមូលដ្ឋានគ្រឹះនៃជោគជ័យផ្ទាល់ខ្លួន។" }
+            },
+            {
+                title: "ឧបសគ្គទាំង ៥ និងការចាប់ផ្តើម (Overcoming Obstacles)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6">ហេតុអ្វីមនុស្សចេះដឹងនៅតែមិនមាន?</h3>
+                    <p class="mb-6">ទោះបីជាមាន Financial Literacy ក៏ដោយ ក៏មនុស្សនៅតែជួបឧបសគ្គ ៥ យ៉ាង៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-3">
+                        <li><strong>ភាពភ័យខ្លាច (Fear):</strong> ខ្លាចបាត់បង់លុយ។ អ្នកមានមិនមែនមិនខ្លាចទេ តែពួកគេចេះគ្រប់គ្រងការភ័យខ្លាច។ "សម្រាប់អ្នកឈ្នះ ការបរាជ័យគឺជាការជំរុញទឹកចិត្ត។ សម្រាប់អ្នកចាញ់ ការបរាជ័យគឺជាការបំបាក់ទឹកចិត្ត"។</li>
+                        <li><strong>ភាពសង្ស័យ (Cynicism):</strong> "ចុះបើ...?" "ខ្ញុំមិនពូកែទេ"។ មនុស្សដែលរិះគន់តែងតែនៅក្រ។ មនុស្សដែលវិភាគតែងតែរកឱកាសឃើញ។</li>
+                        <li><strong>ភាពខ្ជិល (Laziness):</strong> ភាពខ្ជិលដែលគ្រោះថ្នាក់បំផុតគឺ "ខ្ជិលដោយសាររវល់" (Busy laziness)។ រវល់ធ្វើការ រវល់មើលកូន រហូតដល់គ្មានពេលគិតពីអនាគតហិរញ្ញវត្ថុ។</li>
+                        <li><strong>ទម្លាប់អាក្រក់ (Bad Habits):</strong> បង់លុយឱ្យគេមុនខ្លួនឯង។ អ្នកមានបង់ឱ្យខ្លួនឯងសិន (សន្សំ/វិនិយោគ) ទើបបង់ឱ្យម្ចាស់បំណុលតាមក្រោយ (នេះបង្កើតសម្ពាធឱ្យរកលុយថែម)។</li>
+                        <li><strong>ភាពក្រអឺតក្រទម (Arrogance):</strong> គិតថាអ្វីដែលខ្លួនមិនដឹង មិនសំខាន់។ "អ្វីដែលខ្ញុំដឹងធ្វើឱ្យខ្ញុំមានលុយ។ អ្វីដែលខ្ញុំមិនដឹង ធ្វើឱ្យខ្ញុំបាត់បង់លុយ"។</li>
+                    </ol>
+
+                    <h4 class="text-xl font-bold text-white mt-8 mb-4">ជំហានចាប់ផ្តើម (Getting Started)</h4>
+                    <p>Kiyosaki ផ្តល់ដំបូន្មាន ១០ យ៉ាងដើម្បីចាប់ផ្តើម ដូចជា៖ រកហេតុផលដែលធំជាងការពិត (ក្តីសុបិន), ជ្រើសរើសមិត្តភក្តិដោយប្រុងប្រយ័ត្ន, វាយយករូបមន្តមួយឱ្យស្ទាត់សិនចាំរៀនថ្មី, និង <strong>បង់ឱ្យខ្លួនឯងជាមុន (Pay yourself first)</strong>។</p>
+                `,
+                scenario: `
+                    <p><strong>Action Step:</strong> ឈប់ធ្វើអ្វីដែលមិនដំណើរការ។ រកមើលអ្វីដែលថ្មី។ ទៅរៀនវគ្គសិក្សា។ ស្វែងរកគ្រូ។ ធ្វើការផ្តល់ជូន (Make offers)។ សកម្មភាពតែងតែឈ្នះភាពអសកម្ម។</p>
+                `,
+                quiz: { question: "តើអ្វីជា 'ភាពខ្ជិល' ដែលគ្រោះថ្នាក់បំផុត?", options: ["ដេកយូរ", "ការធ្វើខ្លួនឱ្យរវល់ ដើម្បីគេចវេះពីបញ្ហាសំខាន់ៗ (Staying busy to avoid facing important problems)", "មិនទៅធ្វើការ", "លេងហ្គេម"], correct: 1, explanation: "ត្រឹមត្រូវ! មនុស្សជាច្រើនរវល់ធ្វើការខ្លាំងណាស់ ប៉ុន្តែខ្ជិលគិតពីរបៀបគ្រប់គ្រងលុយ។" }
+            }
+        ];
+
+        // Logic
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#312e81] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-yellow-400' : 'text-indigo-300'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-[#1e1b4b] text-indigo-300 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-indigo-700">${index + 1}</span>
+                    <span class="truncate tracking-wide">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#312e81]');
+                b.classList.add('border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-yellow-500', 'text-black', 'border-yellow-500');
+                b.querySelector('.lesson-indicator').classList.add('bg-[#1e1b4b]', 'text-indigo-300', 'border-indigo-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#312e81]');
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-[#1e1b4b]', 'text-indigo-300', 'border-indigo-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-yellow-500', 'text-black', 'border-yellow-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Lesson ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `បញ្ចប់` : 
+                `មេរៀនបន្ទាប់`;
+            
+            updateProgress();
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-[#1e1b4b] transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-indigo-700 hover:bg-[#312e81] transition flex items-center shadow-md group bg-[#1e1b4b] text-indigo-100";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-indigo-500 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-indigo-400 group-hover:bg-yellow-500 group-hover:text-black group-hover:border-yellow-500 transition">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="font-medium group-hover:text-white">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2">ត្រឹមត្រូវ! 🤑</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+            
+            // Save progress to Supabase
+            saveProgressToDb(currentLessonIndex);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("អបអរសាទរ! អ្នកមានចំណេះដឹងហិរញ្ញវត្ថុហើយ។ ដល់ពេលអនុវត្ត!");
+        };
+
+        function launchConfetti() {
+            const colors = ['#fbbf24', '#f59e0b', '#d97706', '#ffffff'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 10 + 5 + 'px';
+                conf.style.height = Math.random() * 5 + 3 + 'px'; // Rectangle shape like money
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 4 + Math.random() * 6;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.1); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/150);
+                    conf.style.transform = `rotate(${frame * 10}deg)`;
+                    frame++;
+                    if(frame < 150) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>

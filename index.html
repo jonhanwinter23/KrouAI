@@ -253,6 +253,9 @@
                                         + Top Up Credits
                                     </button>
                                 </div>
+                                <a href="App/progress.html" class="flex items-center w-full text-left px-4 py-2 text-blue-400 hover:bg-white/5 transition">
+                                    📊 ការរីកចម្រើនរបស់ខ្ញុំ
+                                </a>
                                 <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-400 hover:bg-white/5 transition">
                                     🚪 Logout
                                 </button>
@@ -265,52 +268,95 @@
     </nav>
     
     <!-- Payment Modal -->
-    <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center">
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 max-w-md w-full mx-4 border border-white/10 shadow-2xl">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
-                    <span class="text-3xl">👑</span>
+    <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center overflow-y-auto py-8">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 max-w-md w-full mx-4 border border-white/10 shadow-2xl">
+            <div class="text-center mb-4">
+                <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">💰</span>
                 </div>
-                <h2 class="text-2xl font-bold text-white kh-text-title">បើកសោមេរៀនទាំងអស់</h2>
-                <p class="text-gray-400 text-sm mt-1">Unlock All Premium Courses</p>
+                <h2 class="text-xl font-bold text-white kh-text-title">ទិញ Credits</h2>
+                <p class="text-gray-400 text-xs mt-1">បង់ប្រាក់ដោយ Bakong KHQR</p>
             </div>
             
-            <div class="bg-white/5 rounded-xl p-4 mb-6">
+            <!-- Current Credits -->
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 mb-4 text-center">
+                <p class="text-amber-300 text-xs">Credits របស់អ្នក</p>
+                <p class="text-2xl font-bold text-amber-400"><span id="modalCredits">0</span> 💰</p>
+            </div>
+            
+            <!-- Step 1: Select Package -->
+            <div id="paymentStep1">
+                <p class="text-gray-400 text-sm mb-3 text-center">ជ្រើសរើសកញ្ចប់:</p>
+                <div class="space-y-2">
+                    <button onclick="selectPackage('20')" class="w-full flex items-center justify-between bg-slate-800 hover:bg-slate-700 border border-white/10 hover:border-amber-500/50 rounded-xl p-3 transition group">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">🪙</span>
+                            <div class="text-left">
+                                <p class="text-white font-bold">20 Credits</p>
+                                <p class="text-gray-500 text-xs">បើកសោ 1 សៀវភៅ</p>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 font-bold">2,000៛</span>
+                    </button>
+                    <button onclick="selectPackage('60')" class="w-full flex items-center justify-between bg-slate-800 hover:bg-slate-700 border border-white/10 hover:border-amber-500/50 rounded-xl p-3 transition group">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">💎</span>
+                            <div class="text-left">
+                                <p class="text-white font-bold">60 Credits</p>
+                                <p class="text-gray-500 text-xs">បើកសោ 3 សៀវភៅ</p>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 font-bold">5,500៛</span>
+                    </button>
+                    <button onclick="selectPackage('100')" class="w-full flex items-center justify-between bg-gradient-to-r from-amber-600/20 to-orange-600/20 hover:from-amber-600/30 hover:to-orange-600/30 border border-amber-500/30 hover:border-amber-500/50 rounded-xl p-3 transition group">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">👑</span>
+                            <div class="text-left">
+                                <p class="text-white font-bold">100 Credits</p>
+                                <p class="text-amber-400 text-xs">💥 បើកសោ 5 សៀវភៅ</p>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 font-bold">9,000៛</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: QR Code -->
+            <div id="paymentStep2" class="hidden">
                 <div class="text-center mb-4">
-                    <p class="text-gray-400 text-sm">គណនីរបស់អ្នកមាន</p>
-                    <p class="text-3xl font-bold text-amber-400"><span id="modalCredits">0</span> 💰</p>
-                    <p class="text-gray-500 text-xs">credits</p>
+                    <p class="text-gray-400 text-sm">ស្កេន QR ដើម្បីបង់ប្រាក់</p>
+                    <p class="text-amber-400 font-bold text-lg" id="selectedPackageText">20 Credits - 2,000៛</p>
                 </div>
-                <div class="bg-slate-800 rounded-lg p-3 mb-3">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-400">1 Credit</span>
-                        <span class="text-white">= 100៛</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-400">20 Credits</span>
-                        <span class="text-white">= 2000៛ ($0.5)</span>
-                    </div>
-                    <div class="flex justify-between text-sm mt-2 pt-2 border-t border-white/10">
-                        <span class="text-amber-400">1 សៀវភៅ</span>
-                        <span class="text-amber-400 font-bold">= 20 Credits</span>
-                    </div>
+                
+                <!-- QR Code Display -->
+                <div class="bg-white rounded-2xl p-4 mx-auto w-fit mb-4">
+                    <img id="qrImg" src="QR/QR1.jpg" alt="KHQR" class="w-48 h-48 object-contain">
                 </div>
+                
+                <!-- Instructions -->
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center mb-3">
+                    <p class="text-blue-300 text-sm mb-2">📱 ស្កេន QR នេះដោយប្រើ Bakong App</p>
+                    <p class="text-gray-400 text-xs">បន្ទាប់ពីបង់ប្រាក់រួច សូមផ្ញើរូបថតបង្កាន់ដៃមក:</p>
+                    <a href="https://t.me/KrouAI" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium mt-2">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
+                        @KrouAI
+                    </a>
+                </div>
+                
+                <!-- What to send -->
+                <div class="bg-slate-800 rounded-xl p-3 text-center text-sm">
+                    <p class="text-gray-300 mb-1">សូមផ្ញើ:</p>
+                    <p class="text-amber-400">📸 រូបថតបង្កាន់ដៃ + Email គណនី</p>
+                    <p class="text-gray-500 text-xs mt-1">យើងនឹងបន្ថែម Credits ក្នុងរយៈពេល 5 នាទី</p>
+                </div>
+                
+                <!-- Back Button -->
+                <button onclick="backToPackages()" class="w-full mt-3 text-gray-400 hover:text-white text-sm py-2 transition">
+                    ← ត្រឡប់ក្រោយ
+                </button>
             </div>
             
-            <a href="https://link-sandbox.payway.com.kh/SA66349h" target="_blank" class="block w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-amber-500/30 transition text-center mb-4">
-                💳 ទិញ 20 Credits - 2000៛
-            </a>
-            
-            <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center">
-                <p class="text-blue-300 text-sm mb-2">បន្ទាប់ពីបង់ប្រាក់រួច សូមទាក់ទង Telegram:</p>
-                <a href="https://t.me/KrouAI" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
-                    @KrouAI
-                </a>
-                <p class="text-gray-500 text-xs mt-2">ផ្ញើរូបថតបង្កាន់ដៃ → ទទួលកូដបើកសោ</p>
-            </div>
-            
-            <div class="mt-6 text-center">
+            <div class="mt-4 text-center">
                 <button onclick="hidePaymentModal()" class="text-gray-500 hover:text-gray-300 text-sm">
                     ✕ បិទ
                 </button>
@@ -643,7 +689,145 @@
                     </div>
                 </a>
                 
-                <!-- Course 6: Sophie's World (FREE) -->
+                <!-- Course 6: Rich Dad Poor Dad -->
+                <a href="App/dad.html" class="course-card relative block bg-gradient-to-br from-indigo-900/80 to-purple-900/50 backdrop-blur-xl rounded-3xl p-8 border border-yellow-500/30 cursor-pointer group">
+                    <div class="card-glow bg-yellow-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-3xl">💰</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-sm font-medium border border-yellow-500/30">
+                            ថ្មី ✨
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-3 kh-text-title text-yellow-100 group-hover:text-white transition-colors">
+                        ឪពុកមានឪពុកក្រ
+                    </h3>
+                    <p class="text-sm text-yellow-300/80 uppercase tracking-wider mb-4 font-medium">
+                        Rich Dad Poor Dad
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        រៀនពីអ្វីដែលអ្នកមានបង្រៀនកូនៗអំពីប្រាក់។
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ~90 នាទី
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Quiz រួមបញ្ចូល
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center group-hover:bg-yellow-500 transition-colors">
+                            <svg class="w-5 h-5 text-yellow-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Course 7: The Alchemist -->
+                <a href="App/alchem.html" class="course-card relative block bg-gradient-to-br from-slate-900/80 to-amber-950/30 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/20 cursor-pointer group">
+                    <div class="card-glow bg-amber-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-3xl">✨</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-sm font-medium border border-amber-500/30">
+                            ថ្មី ✨
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-3 kh-text-title text-amber-100 group-hover:text-white transition-colors">
+                        អ្នកប្រើគីមី
+                    </h3>
+                    <p class="text-sm text-amber-300/80 uppercase tracking-wider mb-4 font-medium">
+                        The Alchemist
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        ដំណើរស្វែងរកសុបិន្តរបស់ខ្លួនឯង និងទ្រព្យសម្បត្តិពិតប្រាកដ។
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ~75 នាទី
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Quiz រួមបញ្ចូល
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
+                            <svg class="w-5 h-5 text-amber-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Course 8: Steal Like an Artist -->
+                <a href="App/steal.html" class="course-card relative block bg-gradient-to-br from-neutral-900/80 to-neutral-800/50 backdrop-blur-xl rounded-3xl p-8 border border-yellow-500/30 cursor-pointer group">
+                    <div class="card-glow bg-yellow-400"></div>
+                    
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-3xl">🎨</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-sm font-medium border border-yellow-500/30">
+                            ថ្មី ✨
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold mb-3 kh-text-title text-yellow-100 group-hover:text-white transition-colors">
+                        លួចគំនិតឱ្យដូចសិល្បករ
+                    </h3>
+                    <p class="text-sm text-yellow-300/80 uppercase tracking-wider mb-4 font-medium">
+                        Steal Like an Artist
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        រៀនពីគំនិត ១០ យ៉ាងដែលមិនមាននរណាប្រាប់អ្នកពីភាពច្នៃប្រឌិត។
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ~60 នាទី
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Quiz រួមបញ្ចូល
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center group-hover:bg-yellow-400 transition-colors">
+                            <svg class="w-5 h-5 text-yellow-400 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Course 7: Sophie's World (FREE) -->
                 <a href="App/sophie.html" class="course-card relative block bg-gradient-to-br from-slate-900/80 to-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/20 cursor-pointer group">
                     <div class="card-glow bg-amber-500"></div>
                     
@@ -1055,14 +1239,43 @@
         }
         
         // Payment modal functions
+        // ========== STATIC KHQR PAYMENT ==========
+        const PACKAGES = {
+            '20': { credits: 20, amount: 2000, label: '20 Credits - 2,000៛', qr: 'QR/QR1.jpg' },
+            '60': { credits: 60, amount: 5500, label: '60 Credits - 5,500៛', qr: 'QR/QR2.jpg' },
+            '100': { credits: 100, amount: 9000, label: '100 Credits - 9,000៛', qr: 'QR/QR3.jpg' }
+        };
+        
         function showPaymentModal() {
             document.getElementById('paymentModal').classList.remove('hidden');
             document.getElementById('paymentModal').classList.add('flex');
+            resetPaymentModal();
         }
         
         function hidePaymentModal() {
             document.getElementById('paymentModal').classList.add('hidden');
             document.getElementById('paymentModal').classList.remove('flex');
+        }
+        
+        function resetPaymentModal() {
+            document.getElementById('paymentStep1').classList.remove('hidden');
+            document.getElementById('paymentStep2').classList.add('hidden');
+        }
+        
+        function selectPackage(packageId) {
+            const pkg = PACKAGES[packageId];
+            if (!pkg) return;
+            
+            // Show step 2 with the correct QR code
+            document.getElementById('paymentStep1').classList.add('hidden');
+            document.getElementById('paymentStep2').classList.remove('hidden');
+            document.getElementById('selectedPackageText').textContent = pkg.label;
+            document.getElementById('qrImg').src = pkg.qr;
+        }
+        
+        function backToPackages() {
+            document.getElementById('paymentStep1').classList.remove('hidden');
+            document.getElementById('paymentStep2').classList.add('hidden');
         }
         
         // ========== PARTICLES & UI ==========

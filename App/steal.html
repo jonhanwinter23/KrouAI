@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steal Like an Artist - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #1a1a1a; /* Dark Gray Background */
+            color: #e5e5e5; /* Off-white text */
+            line-height: 1.8;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .hand-font {
+            font-family: 'Permanent Marker', cursive;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sidebar-active {
+            background-color: #000000;
+            border-right: 6px solid #facc15; /* Yellow-400 */
+            color: #facc15;
+            font-weight: 700;
+        }
+        .correct-answer {
+            background-color: #064e3b !important;
+            border-color: #10b981 !important;
+            color: #d1fae5 !important;
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border-color: #ef4444 !important;
+            color: #fecaca !important;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #525252;
+        }
+        .concept-card {
+            background: #262626; /* Neutral-800 */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            border-left: 5px solid #facc15; /* Marker Yellow */
+            margin: 2rem 0;
+            box-shadow: 5px 5px 0px 0px #000000; /* Brutalist Shadow */
+            border: 2px solid #404040;
+        }
+        .quote-box {
+            font-style: italic;
+            border-left: 6px solid #ffffff;
+            padding-left: 2rem;
+            color: #d4d4d4;
+            margin: 2.5rem 0;
+            background-color: #000000; 
+            padding: 2rem;
+            font-size: 1.2rem;
+            font-family: 'Battambang', serif;
+            border-radius: 0 1rem 1rem 0;
+        }
+        /* Scribble Effect Background */
+        .scribble-bg {
+            background-image: url('https://www.transparenttextures.com/patterns/black-paper.png');
+            opacity: 0.8;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+        /* Rough Paper Texture for White Areas */
+        .paper-texture {
+            background-color: #f5f5f4;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d6d3d1' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#1a1a1a] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-yellow-400 flex items-center justify-center shadow-[5px_5px_0px_0px_#ffffff]">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-gray-400 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition shadow-[4px_4px_0px_0px_#ffffff]">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-gray-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-yellow-400 hover:underline">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#1a1a1a] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-[#262626] border-4 border-white shadow-[8px_8px_0px_0px_#facc15]">
+            <div class="w-20 h-20 mx-auto mb-6 bg-yellow-400 flex items-center justify-center">
+                <span class="text-4xl">🎨</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 hand-font">STEAL LIKE AN ARTIST</h2>
+            <p class="text-gray-400 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-yellow-400/10 border-2 border-yellow-400 p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-yellow-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full bg-yellow-400 text-black font-bold py-3 px-6 hover:bg-yellow-300 transition disabled:opacity-50 shadow-[4px_4px_0px_0px_#ffffff]">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-gray-400 hover:text-yellow-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'steal';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-black p-4 shadow-md flex justify-between items-center z-20 border-b border-gray-800">
+        <h1 class="text-xl font-bold text-yellow-400 hand-font tracking-wider">STEAL LIKE AN ARTIST</h1>
+        <button id="menuBtn" class="text-white focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-[#121212] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-gray-800">
+        <div class="p-8 border-b border-gray-800 hidden md:block bg-black">
+            <h1 class="text-2xl font-bold text-yellow-400 hand-font tracking-widest mb-2 leading-none">STEAL LIKE<br>AN ARTIST</h1>
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mt-3">10 Things Nobody Told You<br>About Being Creative</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-gray-800 bg-black">
+            <div class="flex justify-between text-xs mb-2 text-yellow-400 font-bold uppercase tracking-wider">
+                <span>Creativity Level</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="bg-yellow-400 h-2 rounded-full transition-all duration-500 box-shadow-none" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#1a1a1a]" id="mainContent">
+        <div class="scribble-bg"></div>
+        <div class="max-w-5xl mx-auto p-6 md:p-12 pb-32 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-black p-12 rounded-lg shadow-2xl max-w-3xl border-4 border-white transform rotate-1">
+                    <div class="text-7xl mb-6 animate-bounce">🎨💀✏️</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 kh-title leading-tight">លួចគំនិតឱ្យដូចសិល្បករ</h2>
+                    <p class="text-xl text-gray-300 mb-10 leading-loose font-medium">
+                        "គ្មានអ្វីដែលហៅថា Original ទេ។"<br>
+                        ឈប់ព្យាយាមធ្វើជាមនុស្សឆ្លាត។ ចាប់ផ្តើមធ្វើជាមនុស្សដែលចេះ "លួច" (រៀនសូត្រពីគេ)។
+                    </p>
+                    <button onclick="loadLesson(0)" class="bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold py-4 px-10 rounded-none shadow-[5px_5px_0px_0px_#ffffff] transition transform hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_#ffffff] text-xl flex items-center mx-auto tracking-widest border-2 border-black">
+                        <span>UNLOCK CREATIVITY</span>
+                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-yellow-400 mb-8 font-bold text-sm uppercase tracking-widest border border-gray-700 bg-gray-900 w-fit px-4 py-2 rounded-full">
+                    <span id="chapterNumber">Tip #1</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-4xl md:text-5xl font-bold text-white mb-10 leading-snug kh-title border-b-4 border-white pb-6 inline-block"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-gray-300 leading-loose font-light" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-white border-4 border-black p-8 rounded-sm mb-12 hidden shadow-[8px_8px_0px_0px_#facc15] mt-16 relative paper-texture text-black transform -rotate-1">
+                    <div class="absolute -top-6 -right-6 text-6xl rotate-12">💡</div>
+                    <h3 class="text-2xl font-bold text-black mb-4 flex items-center kh-title uppercase border-b-2 border-black pb-2 w-full">
+                        លំហាត់អនុវត្ត (Creative Assignment)
+                    </h3>
+                    <div id="scenarioContent" class="text-gray-900 text-lg font-medium leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-gray-900 rounded-lg shadow-xl p-8 md:p-12 border-2 border-gray-700 mt-20 relative overflow-hidden">
+                    <h3 class="text-2xl font-bold text-white mb-8 flex items-center relative z-10 kh-title">
+                        <span class="bg-white text-black text-sm font-extrabold mr-4 px-4 py-1 rounded-none uppercase tracking-widest shadow-sm">Quiz</span>
+                        Check Your Mindset
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-6 text-gray-200 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-8 hidden p-6 rounded-none text-lg border-l-8 font-bold bg-black"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-20 pt-10 border-t border-gray-800">
+                    <button id="prevBtn" class="px-8 py-4 rounded-none border-2 border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest">
+                        ← PREV
+                    </button>
+                    <button id="nextBtn" class="px-8 py-4 rounded-none bg-yellow-400 text-black hover:bg-yellow-300 font-extrabold shadow-[4px_4px_0px_0px_#ffffff] flex items-center transition-all text-lg uppercase tracking-widest transform hover:-translate-y-1">
+                        NEXT →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL CONTENT FOR STEAL LIKE AN ARTIST
+        const lessons = [
+            {
+                title: "1. លួចឱ្យដូចសិល្បករ (Steal Like an Artist)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">NOTHING IS ORIGINAL</h3>
+                    <p class="mb-6">Austin Kleon ចាប់ផ្តើមដោយការពិតដ៏ឈឺចាប់មួយ៖ <strong>"គ្មានអ្វីដែលហៅថា Original (ថ្មីសុទ្ធសាធ) ទេ"</strong>។ រាល់ស្នាដៃសិល្បៈ រាល់គំនិតអាជីវកម្ម គឺសុទ្ធតែជាការយករបស់ចាស់ៗមកផ្គុំចូលគ្នា (Remix)។</p>
+                    <p class="mb-6">នៅពេលសិល្បករម្នាក់ត្រូវបានគេសួរថា "តើអ្នកបានគំនិតមកពីណា?" សិល្បករដែលស្មោះត្រង់នឹងឆ្លើយថា៖ <strong>"ខ្ញុំលួចគេ"</strong>។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">GOOD THEFT VS BAD THEFT</h4>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <span class="text-green-400 font-bold mr-2">✓ លួចល្អ៖</span> 
+                                លួចពីមនុស្សច្រើននាក់, សិក្សាឱ្យស៊ីជម្រៅ, យកមកកែច្នៃឱ្យក្លាយជាបែបរបស់ខ្លួនឯង (Transform), ផ្តល់ Credit ដល់ម្ចាស់ដើម។
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 font-bold mr-2">✕ លួចអាក្រក់៖</span> 
+                                លួចពីមនុស្សម្នាក់ (Copy), មិនយល់ពីខ្លឹមសារ, យកមកទាំងដុល (Imitate), ធ្វើពុតជាស្នាដៃខ្លួនឯង (Plagiarize)។
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p class="mb-6 mt-8"><strong>ពង្សាវតារនៃគំនិត (Genealogy of Ideas):</strong> អ្នកគឺជាផលបូកនៃអ្វីដែលអ្នកជ្រើសរើសយកមកដាក់ក្នុងខួរក្បាល។ បើអ្នកមើលតែរបស់អន់ៗ អ្នកនឹងផលិតបានតែរបស់អន់ៗ (Garbage in, garbage out)។ ជ្រើសរើស "លួច" តែពីគ្រូដែលពូកែៗ។</p>
+                `,
+                scenario: `
+                    <p><strong>បេសកកម្ម៖</strong> ជ្រើសរើស Idol របស់អ្នកម្នាក់។ បន្ទាប់មក ស្វែងរកថា តើ Idol របស់អ្នកមាន Idol ណាខ្លះ? (ជីតានៃគំនិត)។ ទៅសិក្សាពី "ជីតា" នោះ។ អ្នកនឹងឃើញថា គំនិតមិនមែនកើតឡើងពីភាពទទេទេ។</p>
+                `,
+                quiz: { question: "តើអ្វីជាភាពខុសគ្នារវាងការលួច (Stealing) និងការចម្លង (Plagiarism)?", options: ["គ្មានទេ ដូចតែគ្នា", "ការចម្លងគឺយកមកទាំងដុល ឯការលួចគឺយកគំនិតមកកែច្នៃនិងបន្ថែមធាតុថ្មី (Transform)", "ការលួចគឺខុសច្បាប់", "ការចម្លងគឺល្អជាង"], correct: 1, explanation: "ត្រឹមត្រូវ! 'Good artists copy, great artists steal.' (Picasso). ការលួចគឺការយកវត្ថុធាតុដើមមកបង្កើតអ្វីដែលថ្មី។" }
+            },
+            {
+                title: "2. កុំរង់ចាំទាល់តែដឹងថាខ្លួនជានរណា (Don't Wait Until You Know Who You Are)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">FAKE IT 'TIL YOU MAKE IT</h3>
+                    <p class="mb-6">មនុស្សជាច្រើនមិនហ៊ានចាប់ផ្តើមបង្កើតស្នាដៃទេ ព្រោះគេគិតថា "ខ្ញុំមិនទាន់ស្គាល់ខ្លួនឯងច្បាស់" ឬ "ខ្ញុំមិនទាន់មានស្ទីលផ្ទាល់ខ្លួន"។</p>
+                    <p class="mb-6">Austin Kleon និយាយថា៖ <strong>"អ្នកត្រូវតែចាប់ផ្តើមធ្វើ ទើបអ្នកដឹងថាអ្នកជានរណា។"</strong></p>
+                    
+                    <div class="quote-box">
+                        "Fake it 'til you make it." (ធ្វើពុតសិន ទម្រាំតែអ្នកធ្វើបានពិតប្រាកដ)
+                    </div>
+
+                    <p class="mb-6"><strong>១. ធ្វើពុត (Pretend):</strong> ធ្វើពុតថាអ្នកជាសិល្បករ ជាអ្នកនិពន្ធ ជាសហគ្រិន។ ធ្វើសកម្មភាពដូចពួកគេ។<br>
+                    <strong>២. ចម្លង (Copy):</strong> គ្មាននរណាកើតមកមានស្ទីលទេ។ យើងរៀនដោយការចម្លង។ ក្មេងរៀនសរសេរដោយការចម្លងតាមអក្សរ។ តន្ត្រីកររៀនលេងបទរបស់គេ មុននឹងតែងបទខ្លួនឯង។</p>
+                    <p class="mb-6">ប៉ុន្តែគន្លឹះគឺ៖ កុំចម្លងតែ "រូបរាង" (Style) ត្រូវចម្លង "ការគិត" (Thinking)។ សួរខ្លួនឯងថា "ហេតុអ្វីគាត់គូរបែបនេះ?" មិនមែនគ្រាន់តែគូរតាមទេ។</p>
+                `,
+                scenario: `
+                    <p><strong>លំហាត់៖</strong> ចាប់ផ្តើមគម្រោងមួយនៅថ្ងៃនេះ ទោះបីអ្នកមិនទាន់មានអារម្មណ៍ថាត្រៀមខ្លួនរួចរាល់ក៏ដោយ។ ភាពភ័យខ្លាចថាខ្លួនឯងជា "ជនបោកប្រាស់" (Imposter Syndrome) គឺជារឿងធម្មតា។ សូម្បីតែអ្នកជំនាញក៏មានអារម្មណ៍បែបនេះដែរ។</p>
+                `,
+                quiz: { question: "តើយើងអាចរកឃើញ 'ស្ទីល' ផ្ទាល់ខ្លួនដោយរបៀបណា?", options: ["អង្គុយសមាធិ", "រង់ចាំទាល់តែមានអារម្មណ៍", "ចាប់ផ្តើមធ្វើការងារនិងចម្លងតាមគ្រូដែលយើងចូលចិត្ត រហូតដល់យើងរកឃើញចំណុចខុសប្លែករបស់យើង", "ទិញសៀវភៅ"], correct: 2, explanation: "ត្រឹមត្រូវ! ស្ទីលកើតចេញពីការដែលយើងព្យាយាមចម្លងគេ តែចម្លងមិនដូច ១០០% (កំហុសរបស់យើង ក្លាយជាស្ទីលរបស់យើង)។" }
+            },
+            {
+                title: "3. សរសេរសៀវភៅដែលអ្នកចង់អាន (Write the Book You Want to Read)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">DON'T WRITE WHAT YOU KNOW</h3>
+                    <p class="mb-6">ដំបូន្មានចាស់កម្រិលមួយដែលគេតែងប្រាប់គឺ៖ "សរសេរពីអ្វីដែលអ្នកដឹង" (Write what you know)។ Kleon ថា៖ <strong>ខុសហើយ!</strong> បើធ្វើបែបនេះ ជីវិតនឹងគួរឱ្យធុញណាស់។</p>
+                    <p class="mb-6">ដំបូន្មានថ្មីគឺ៖ <strong>"សរសេរពីអ្វីដែលអ្នកចូលចិត្ត" (Write what you like)</strong>។ សរសេររឿងដែលអ្នកចង់អាន។ គូររូបដែលអ្នកចង់មើល។ បង្កើតផលិតផលដែលអ្នកចង់ប្រើ។</p>
+                    
+                    <div class="concept-card bg-gray-800 border-white">
+                        <h4 class="text-xl font-bold text-white mb-2 uppercase">គោលការណ៍ FAN FICTION</h4>
+                        <p class="text-gray-300">ស្រមៃថាអ្នកជាអ្នកគាំទ្រ (Fan) ដ៏ធំម្នាក់នៃភាពយន្តមួយ។ ប៉ុន្តែអ្នកមិនពេញចិត្តនឹងភាគបញ្ចប់របស់វា។ អ្នកក៏សម្រេចចិត្តសរសេរភាគបញ្ចប់ថ្មីដោយខ្លួនឯង។ នោះហើយជាការចាប់ផ្តើមនៃការបង្កើត។ ធ្វើវាដើម្បីបំពេញចិត្តខ្លួនឯងជាមុនសិន។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>សំណួរ៖</strong> តើមានសៀវភៅ/ចម្រៀង/ភាពយន្តបែបណា ដែលអ្នកចង់មើលខ្លាំងបំផុត ប៉ុន្តែរកមិនទាន់ឃើញក្នុងលោកនេះ? ចូរទៅបង្កើតវាដោយខ្លួនឯង។</p>
+                `,
+                quiz: { question: "តើគោលការណ៍ល្អបំផុតសម្រាប់ការបង្កើតស្នាដៃគឺអ្វី?", options: ["ធ្វើអ្វីដែលទីផ្សារត្រូវការ", "ធ្វើអ្វីដែលអ្នកចេះច្បាស់", "ធ្វើអ្វីដែលអ្នកខ្លួនឯងចង់ប្រើប្រាស់ ឬចង់ឃើញ (Scratch your own itch)", "ធ្វើអ្វីដែលគ្រូប្រាប់"], correct: 2, explanation: "ត្រឹមត្រូវ! បើអ្នកមិនចូលចិត្តស្នាដៃខ្លួនឯងផង តើអ្នករំពឹងឱ្យអ្នកដទៃចូលចិត្តវាបានយ៉ាងម៉េច?" }
+            },
+            {
+                title: "4. ប្រើដៃរបស់អ្នក (Use Your Hands)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">STEP AWAY FROM THE SCREEN</h3>
+                    <p class="mb-6">កុំព្យូទ័រល្អសម្រាប់ "កែសម្រួល" (Edit) ប៉ុន្តែវាមិនល្អសម្រាប់ "បង្កើត" (Generate) គំនិតទេ។</p>
+                    <p class="mb-6">នៅពេលអ្នកអង្គុយមុខកុំព្យូទ័រ រាងកាយអ្នកនៅស្ងៀម។ ដៃអ្នកគ្រាន់តែចុច Mouse។ ការច្នៃប្រឌិតត្រូវការចលនារាងកាយ។ ត្រូវការការប៉ះ ការធុំក្លិន ការប្រឡាក់។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-400 mb-4 uppercase">🔧 តុពីរប្រភេទ (Two Desks)</h4>
+                        <p class="mb-2 text-white font-bold">1. តុឌីជីថល (Digital Desk):</p>
+                        <p class="text-gray-400 mb-4">មានកុំព្យូទ័រ, iPad, Mouse។ ប្រើសម្រាប់តែពេលចុងក្រោយ (Publishing/Editing)។</p>
+                        <p class="mb-2 text-white font-bold">2. តុអាណាឡូក (Analog Desk):</p>
+                        <p class="text-gray-400">មានក្រដាស, ប៊ិច, ខ្មៅដៃ, ជ័រលុប, កន្ត្រៃ, ស្កុត។ ហាមមានគ្រឿងអេឡិចត្រូនិច។ នេះជាកន្លែងសម្រាប់បង្កើតគំនិតដំបូង។</p>
+                    </div>
+                    <p class="mb-6">នៅពេលអ្នកប្រើដៃ (គូរ, កាត់, បិទ) ខួរក្បាលរបស់អ្នកដំណើរការក្នុងរបៀបផ្សេង។ អ្នកមានសេរីភាពជាង។</p>
+                `,
+                scenario: `
+                    <p><strong>សាកល្បង៖</strong> បិទកុំព្យូទ័រ។ យកក្រដាសមួយសន្លឹក និងប៊ិចមក។ សរសេរ ឬគូរគំនិតរបស់អ្នកដោយដៃ។ មានអារម្មណ៍ខុសគ្នាទេ?</p>
+                `,
+                quiz: { question: "ហេតុអ្វីយើងគួរប្រើតុ Analog (មិនប្រើអេឡិចត្រូនិច) ក្នុងដំណាក់កាលដំបូង?", options: ["ព្រោះវាចំណេញភ្លើង", "ព្រោះការប្រើរាងកាយនិងដៃ ជួយជំរុញគំនិតច្នៃប្រឌិតបានល្អជាងការអង្គុយស្ងៀមមុខអេក្រង់", "ព្រោះកុំព្យូទ័រគាំង", "ព្រោះវាស្អាត"], correct: 1, explanation: "ត្រឹមត្រូវ! 'The computer brings out the uptight perfectionist in us.' ដៃធ្វើឱ្យយើងមានសេរីភាព។" }
+            },
+            {
+                title: "5. គម្រោងក្រៅម៉ោង និងចំណង់ចំណូលចិត្ត (Side Projects & Hobbies)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">PRACTICE PRODUCTIVE PROCRASTINATION</h3>
+                    <p class="mb-6">គម្រោងដែលអ្នកគិតថា "លេងៗ" (Side Projects) តាមពិតគឺជាគម្រោងដែលសំខាន់បំផុត។ ព្រោះវាជាកន្លែងដែលអ្នកធ្វើដោយក្តីស្រលាញ់សុទ្ធសាធ ដោយគ្មានសម្ពាធ។</p>
+                    <p class="mb-6"><strong>កុំបោះបង់ផ្នែកណាមួយនៃខ្លួនអ្នក៖</strong> បើអ្នកចូលចិត្តគណិតវិទ្យាផង និងចូលចិត្តគូររូបផង កុំគិតថាត្រូវជ្រើសរើសយកមួយ។ ធ្វើទាំងពីរ។ ថ្ងៃណាមួយ ចំណុចទាំងពីរនេះនឹងជួបគ្នា ហើយបង្កើតបានជាអ្វីដែលថ្មី និងពិសេស (ដូចជា Data Visualization)។</p>
+                    
+                    <div class="quote-box bg-white text-black border-black">
+                        "Let them talk to each other. Something will begin to happen."
+                    </div>
+
+                    <p class="mb-6"><strong>Hobbies (ចំណង់ចំណូលចិត្ត)៖</strong> គឺជាអ្វីដែលអ្នកធ្វើគ្រាន់តែដើម្បីសប្បាយចិត្ត មិនមែនដើម្បីលុយ ឬកេរ្តិ៍ឈ្មោះ។ Hobbies ជួយឱ្យខួរក្បាលបានសម្រាក និងបំពេញថាមពលឡើងវិញ។</p>
+                `,
+                scenario: `
+                    <p><strong>ភ្លេចការងារសិន៖</strong> ទៅលេងហ្គីតា ធ្វើម្ហូប ឬដាំដើមឈើ។ ពេលអ្នកកំពុងលាងចាន គំនិតល្អៗតែងតែលេចឡើង។ នេះហៅថា Productive Procrastination។</p>
+                `,
+                quiz: { question: "តើយើងគួរធ្វើដូចម្តេចចំពោះចំណាប់អារម្មណ៍ផ្សេងៗគ្នារបស់យើង?", options: ["ជ្រើសរើសយកតែមួយគត់", "រក្សាវាទាំងអស់ ហើយឱ្យវាជះឥទ្ធិពលលើគ្នាទៅវិញទៅមក", "ឈប់ធ្វើទាំងអស់", "ធ្វើតាមគេ"], correct: 1, explanation: "ត្រឹមត្រូវ! មនុស្សដែលមានគំនិតច្នៃប្រឌិត គឺជាមនុស្សដែលពូកែភ្ជាប់ចំណុចផ្សេងៗគ្នា (Connecting dots)។" }
+            },
+            {
+                title: "6. អាថ៌កំបាំង៖ ធ្វើឱ្យល្អ ហើយចែករំលែកវា (Do Good Work & Share It)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">SHARE YOUR DOTS</h3>
+                    <p class="mb-6">មនុស្សជាច្រើនសួរថា៖ "ធ្វើម៉េចទើបល្បី?"</p>
+                    <p class="mb-6">ចម្លើយមាន ២ ជំហាន៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-2 text-white font-bold">
+                        <li>ធ្វើការងារឱ្យល្អ (Do good work)។ (រឿងនេះពិបាក ហើយត្រូវការពេល)។</li>
+                        <li>ចែករំលែកវាជាមួយអ្នកដទៃ (Share it with people)។</li>
+                    </ol>
+                    <p class="mb-6">ក្នុងសម័យអ៊ីនធឺណិត អ្នកមិនចាំបាច់រង់ចាំក្រុមហ៊ុនបោះពុម្ព ឬទូរទស្សន៍មកសម្ភាសន៍អ្នកទេ។ អ្នកមានប្រព័ន្ធផ្សព្វផ្សាយផ្ទាល់ខ្លួន (Facebook, Blog, YouTube)។</p>
+                    <p class="mb-6"><strong>Show Your Work:</strong> កុំចែករំលែកតែ "លទ្ធផលចុងក្រោយ"។ ចែករំលែក "ដំណើរការ" (Process)។ បង្ហាញរូបព្រាង (Sketch), បង្ហាញកន្លែងធ្វើការ, បង្ហាញសៀវភៅដែលអ្នកអាន។ មនុស្សចូលចិត្តមើលពីរបៀបដែលអ្នកបង្កើតស្នាដៃ។</p>
+                `,
+                scenario: `
+                    <p><strong>The Secret:</strong> កុំខ្លាចគេលួចគំនិត។ បើគំនិតអ្នកល្អពិតមែន អ្នកត្រូវតែព្យាយាមញាត់វាចូលបំពង់កគេទើបគេព្រមទទួល។ ការចែករំលែកធ្វើឱ្យអ្នករកឃើញមនុស្សដែលចូលចិត្តរឿងដូចអ្នក។</p>
+                `,
+                quiz: { question: "តើអ្នកគួរចែករំលែកអ្វីខ្លះនៅលើអ៊ីនធឺណិត?", options: ["តែស្នាដៃដែលល្អឥតខ្ចោះ", "ដំណើរការ (Process), គំនិតព្រាង, និងអ្វីដែលអ្នកកំពុងរៀន", "រូបថតអាហារ", "រឿងសម្ងាត់"], correct: 1, explanation: "ត្រឹមត្រូវ! ការចែករំលែកដំណើរការ ធ្វើឱ្យទស្សនិកជនមានអារម្មណ៍ថាបានចូលរួម និងរៀនសូត្រជាមួយអ្នក។" }
+            },
+            {
+                title: "7. ភូមិសាស្ត្រលែងជាចៅហ្វាយនាយទៀតហើយ (Geography is No Longer Our Master)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">BUILD YOUR OWN WORLD</h3>
+                    <p class="mb-6">អ្នកមិនចាំបាច់ទៅរស់នៅ Paris ឬ New York ដើម្បីក្លាយជាសិល្បករទេ។ អ្នកអាចរស់នៅកន្លែងណាក៏បាន ដរាបណាអ្នកមានអ៊ីនធឺណិត។</p>
+                    <p class="mb-6">ប៉ុន្តែ... បរិស្ថានពិតជាមានឥទ្ធិពល។ បើអ្នកនៅកន្លែងដែលធ្វើឱ្យអ្នកស្ងៀមស្ងាត់ អ្នកនឹងមិនរីកចម្រើនទេ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-white mb-2 uppercase">Captivity (ការឃុំខ្លួន)</h4>
+                        <p class="text-gray-300">ជួនកាល ការជាប់នៅក្នុងកន្លែងចង្អៀត ធ្វើឱ្យខួរក្បាលយើងមានសេរីភាព។ ប៉ុន្តែអ្នកត្រូវតែចេញទៅក្រៅខ្លះ។</p>
+                        <p class="mt-4 text-yellow-400 font-bold">ចាកចេញពីផ្ទះ (Leave Home):</p>
+                        <p class="text-gray-300">ខួរក្បាលរបស់យើងចូលចិត្តទម្លាប់។ នៅពេលអ្នកទៅកន្លែងថ្មី ខួរក្បាលត្រូវធ្វើការខ្លាំងជាងមុន។ នោះហើយជាពេលដែលគំនិតថ្មីៗកើតឡើង។</p>
+                    </div>
+                    <p class="mb-6">បង្កើត "ពិភពលោកផ្ទាល់ខ្លួន" របស់អ្នក៖ ពាក់កាស, បិទទូរស័ព្ទ, ចូលក្នុងតំបន់ (Zone) របស់អ្នក ទោះបីអ្នកនៅកណ្តាលផ្សារក៏ដោយ។</p>
+                `,
+                scenario: `
+                    <p><strong>Travel:</strong> មិនចាំបាច់ទៅឆ្ងាយទេ។ គ្រាន់តែជិះឡានក្រុងទៅខេត្តដែលមិនធ្លាប់ទៅ ឬទៅអង្គុយហាងកាហ្វេថ្មី។ ផ្លាស់ប្តូរបរិយាកាស = ផ្លាស់ប្តូរគំនិត។</p>
+                `,
+                quiz: { question: "តើហេតុអ្វីការផ្លាស់ប្តូរទីកន្លែងសំខាន់?", options: ["ដើម្បីថតរូប", "ដើម្បីឱ្យខួរក្បាលភ្ញាក់ពីទម្លាប់ដដែលៗ និងមើលឃើញពិភពលោកក្នុងទស្សនៈថ្មី", "ដើម្បីចាយលុយ", "ដើម្បីគេចពីការងារ"], correct: 1, explanation: "ត្រឹមត្រូវ! 'Distance and difference are the secret tonic of creativity.'" }
+            },
+            {
+                title: "8. ធ្វើជាមនុស្សល្អ (Be Nice. The World is a Small Town.)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">MAKE FRIENDS, IGNORE ENEMIES</h3>
+                    <p class="mb-6">ពិភពលោកនេះតូចណាស់។ ពិសេសពិភពអ្នកបង្កើតស្នាដៃ។ កុំបង្កើតសត្រូវ។</p>
+                    <p class="mb-6"><strong>ច្បាប់មាស៖</strong> បើអ្នកឃើញស្នាដៃនរណាម្នាក់ល្អ សរសើរគេ។ ផ្ញើសារប្រាប់គេ។ បើអ្នកឃើញស្នាដៃមិនល្អ មិនបាច់និយាយអីទេ។ យកពេលទៅធ្វើការងារខ្លួនឯងវិញ។</p>
+                    <p class="mb-6"><strong>Vampires (បិសាចជញ្ជក់ឈាម)៖</strong> មានមនុស្សខ្លះដែលនៅក្បែរហើយ អ្នកមានអារម្មណ៍ថាអស់កម្លាំង។ គេហៅថា "Energy Vampires"។ ត្រូវនៅឱ្យឆ្ងាយពីពួកគេ។</p>
+                    <div class="quote-box bg-gray-900 border-yellow-400">
+                        "You are the average of the five people you hang around most."
+                    </div>
+                    <p class="mb-6">នៅក្បែរមនុស្សដែលមានទេពកោសល្យ ឆ្លាតជាងអ្នក និងចិត្តល្អ។</p>
+                `,
+                scenario: `
+                    <p><strong>សរសេរសំបុត្រសរសើរ (Fan Letter):</strong> សរសេរសំបុត្រទៅកាន់មនុស្សដែលអ្នកកោតសរសើរ។ មិនមែនដើម្បីសុំអ្វីពីគេទេ តែដើម្បីអរគុណដែលគេបង្កើតស្នាដៃល្អៗ។ នេះបង្កើតថាមពលវិជ្ជមាន។</p>
+                `,
+                quiz: { question: "តើអ្នកគួរធ្វើដូចម្តេចចំពោះ 'Energy Vampires' (មនុស្សដែលធ្វើឱ្យយើងអស់កម្លាំងចិត្ត)?", options: ["ឈ្លោះជាមួយគេ", "ព្យាយាមកែប្រែគេ", "នៅឱ្យឆ្ងាយពីពួកគេ", "ធ្វើជាមិត្ត"], correct: 2, explanation: "ត្រឹមត្រូវ! ការពារថាមពលរបស់អ្នក។ ជីវិតខ្លីណាស់សម្រាប់នៅជាមួយមនុស្សអវិជ្ជមាន។" }
+            },
+            {
+                title: "9. ធ្វើជាមនុស្សគួរឱ្យធុញ (Be Boring)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">IT'S THE ONLY WAY TO GET WORK DONE</h3>
+                    <p class="mb-6">យើងតែងគិតថា សិល្បករត្រូវតែរស់នៅបែបឆ្កួតៗ ជក់ថ្នាំ ផឹកស្រា ដេកមិនទៀងពេល។ ខុសហើយ!</p>
+                    <p class="mb-6">ដើម្បីបង្កើតស្នាដៃដ៏អស្ចារ្យ អ្នកត្រូវការ <strong>ថាមពល</strong>។ បើអ្នកយកថាមពលទៅផឹកស្រា ឬដើរលេងអស់ អ្នកនឹងគ្មានកម្លាំងមកបង្កើតស្នាដៃទេ។</p>
+                    <ul class="list-disc ml-6 space-y-3 mb-6 text-gray-300">
+                        <li><strong>ថែរក្សាសុខភាព៖</strong> ញ៉ាំអាហារល្អ, ហាត់ប្រាណ, ដេកឱ្យគ្រប់។</li>
+                        <li><strong>រក្សាការងារប្រចាំថ្ងៃ (Day Job)៖</strong> កុំប្រញាប់ឈប់ធ្វើការដើម្បីមកធ្វើសិល្បៈពេញម៉ោង។ ការងារផ្តល់លុយ (ស្ថេរភាព) និងផ្តល់រចនាសម្ព័ន្ធ (Routine)។ សេរីភាពច្រើនពេកអាចធ្វើឱ្យអ្នកខ្ជិល។</li>
+                        <li><strong>តារាងពេលវេលា (Calendar)៖</strong> កំណត់គោលដៅ ហើយធីករាល់ថ្ងៃដែលបានធ្វើ។ សន្សំជ័យជម្នះតូចៗ។</li>
+                    </ul>
+                    <p class="mb-6 font-bold text-white">"Be regular and orderly in your life, so that you may be violent and original in your work." - Gustave Flaubert</p>
+                `,
+                scenario: `
+                    <p><strong>Logbook:</strong> សាកល្បងកត់ត្រាអ្វីដែលអ្នកបានធ្វើនៅថ្ងៃនេះ (មិនមែនអ្វីដែលនឹងធ្វើទេ)។ វានឹងជួយឱ្យអ្នកឃើញពីភាពរីកចម្រើន។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជា Austin Kleon ណែនាំឱ្យ 'Be Boring' (រស់នៅបែបសាមញ្ញ/គួរឱ្យធុញ)?", options: ["ព្រោះគាត់ចាស់ហើយ", "ដើម្បីសន្សំថាមពល និងពេលវេលាសម្រាប់យកទៅបញ្ចេញភាពឆ្កួតលីលាក្នុងការងារសិល្បៈវិញ", "ដើម្បីកុំឱ្យគេចាប់អារម្មណ៍", "ព្រោះវាស្រួល"], correct: 1, explanation: "ត្រឹមត្រូវ! ជីវិតរញ៉េរញ៉ៃ = ការងាររញ៉េរញ៉ៃ។ ជីវិតមានវិន័យ = ការងារមានសេរីភាព។" }
+            },
+            {
+                title: "10. ភាពច្នៃប្រឌិតគឺជាការដកចេញ (Creativity is Subtraction)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 hand-font">CHOOSE WHAT TO LEAVE OUT</h3>
+                    <p class="mb-6">នៅក្នុងយុគសម័យដែលមានព័ត៌មានហូរហៀរ (Information Overload) ភាពឆ្លាតវៃមិនមែនជាការស្វែងរកបន្ថែមទេ តែជា <strong>ការដឹងថាត្រូវចោលអ្វី</strong>។</p>
+                    <p class="mb-6">សិល្បៈគឺជាការសម្រេចចិត្តថា "តើខ្ញុំមិនដាក់អ្វីចូល?"</p>
+                    <div class="concept-card bg-black border-white">
+                        <h4 class="text-xl font-bold text-white mb-2 uppercase">LIMITATIONS MEAN FREEDOM</h4>
+                        <p class="text-gray-300">ការមានជម្រើសច្រើនពេក ធ្វើឱ្យយើងគាំង (Paralysis)។ ការមានដែនកំណត់ ធ្វើឱ្យយើងមានគំនិតច្នៃប្រឌិត។</p>
+                        <p class="mt-4 text-green-400 font-bold">ឧទាហរណ៍៖</p>
+                        <ul class="list-disc ml-6 mt-2 text-gray-400">
+                            <li>Dr. Seuss សរសេរសៀវភៅ "Green Eggs and Ham" ដោយប្រើពាក្យតែ ៥០ ពាក្យប៉ុណ្ណោះ។</li>
+                            <li>ថតកុនដោយប្រើតែទូរស័ព្ទដៃមួយគ្រឿង។</li>
+                            <li>គូររូបដោយប្រើតែពណ៌ខ្មៅមួយ។</li>
+                        </ul>
+                    </div>
+                    <p class="mb-6 mt-6">កុំយកលេសថា "ខ្ញុំគ្មានឧបករណ៍ទំនើប"។ ប្រើអ្វីដែលអ្នកមាន។ ដែនកំណត់គឺជាមិត្តរបស់អ្នក។</p>
+                `,
+                scenario: `
+                    <p><strong>លំហាត់ចុងក្រោយ៖</strong> បង្កើតស្នាដៃមួយ (សរសេរ, គូរ, ឬថត) នៅថ្ងៃនេះ ដោយប្រើពេលតែ ៣០ នាទី និងប្រើឧបករណ៍ដែលមាននៅនឹងមុខស្រាប់។ ហាមរកជំនួយបន្ថែម។ មើលថាអ្នកអាចធ្វើអ្វីបាន!</p>
+                `,
+                quiz: { question: "តើដែនកំណត់ (Limitations) ជួយអ្វីដល់ភាពច្នៃប្រឌិត?", options: ["វាធ្វើឱ្យយើងពិបាក", "វាបង្ខំឱ្យយើងប្រើគំនិតដោះស្រាយបញ្ហា និងបង្កើតអ្វីដែលប្លែក (Creativity thrives in constraints)", "វារារាំងយើង", "វាមិនជួយអ្វីទេ"], correct: 1, explanation: "ត្រឹមត្រូវ! សេរីភាពពេញលេញគឺគួរឱ្យខ្លាច។ ដែនកំណត់ផ្តល់ឱ្យយើងនូវក្របខ័ណ្ឌដើម្បីលេង។" }
+            }
+        ];
+
+        // LOGIC (Reused from previous robust implementation)
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-gray-900 transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-yellow-400' : 'text-gray-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-none bg-black text-white flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-extrabold border border-gray-700 font-mono">${index + 1}</span>
+                    <span class="truncate tracking-wide">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-black');
+                b.classList.add('text-gray-500', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-yellow-400', 'text-black', 'border-yellow-400');
+                b.querySelector('.lesson-indicator').classList.add('bg-black', 'text-white', 'border-gray-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-black');
+                activeBtn.classList.remove('text-gray-500', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-black', 'text-white', 'border-gray-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-yellow-400', 'text-black', 'border-yellow-400');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Secret #${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? 
+                `FINISH` : 
+                `NEXT SECRET →`;
+            
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    // Show continue button
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-4 bg-white text-black font-bold py-2 px-6 hover:bg-gray-200 transition shadow-[3px_3px_0px_0px_#facc15] text-sm';
+                    continueBtn.innerHTML = `បន្តអាន Chapter ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-black')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-6 rounded-none text-lg border-l-8 font-bold bg-black transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-none border-2 border-gray-700 hover:bg-gray-800 transition flex items-center shadow-none group bg-black text-gray-300 font-medium";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border-2 border-gray-600 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-gray-500 group-hover:bg-yellow-400 group-hover:text-black group-hover:border-yellow-400 transition font-mono">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="group-hover:text-white">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'border-green-500');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-none bg-green-900 text-green-100 border-green-500 border-l-8 shadow-[5px_5px_0px_0px_#10b981] fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-300 text-2xl block mb-2 hand-font">BOOM! CORRECT!</strong> ${explanation}`;
+                
+                if(currentLessonIndex === lessons.length - 1) {
+                    launchConfetti();
+                }
+            } else {
+                btnElement.classList.add('wrong-answer', 'border-red-500');
+                
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                
+                quizFeedback.className = "mt-8 p-6 rounded-none bg-red-900 text-red-100 border-red-500 border-l-8 shadow-[5px_5px_0px_0px_#ef4444] fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-300 text-2xl block mb-2 hand-font">NOPE.</strong> The right answer is: <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("Go make something now! (ទៅបង្កើតស្នាដៃឥឡូវនេះ!)");
+        };
+
+        function launchConfetti() {
+            const colors = ['#facc15', '#ffffff', '#000000'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 12 + 6 + 'px';
+                conf.style.height = Math.random() * 12 + 6 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 5 + Math.random() * 8;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.1); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/150);
+                    conf.style.transform = `rotate(${frame * 20}deg)`;
+                    frame++;
+                    if(frame < 150) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>

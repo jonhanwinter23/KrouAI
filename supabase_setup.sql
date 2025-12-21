@@ -78,9 +78,90 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ============================================
+-- PROGRESS TRACKING TABLE
+-- ============================================
+
+-- 9. Create reading_progress table
+CREATE TABLE IF NOT EXISTS reading_progress (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    book_id TEXT NOT NULL,
+    current_chapter INTEGER DEFAULT 0,
+    total_chapters INTEGER DEFAULT 1,
+    completed BOOLEAN DEFAULT FALSE,
+    last_read_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(user_id, book_id)
+);
+
+-- 10. Enable Row Level Security for progress
+ALTER TABLE reading_progress ENABLE ROW LEVEL SECURITY;
+
+-- 11. Policy: Users can read their own progress
+CREATE POLICY "Users can view own progress" ON reading_progress
+    FOR SELECT USING (auth.uid() = user_id);
+
+-- 12. Policy: Users can insert their own progress
+CREATE POLICY "Users can insert own progress" ON reading_progress
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 13. Policy: Users can update their own progress
+CREATE POLICY "Users can update own progress" ON reading_progress
+    FOR UPDATE USING (auth.uid() = user_id);
+
+-- 14. Function to save reading progress
+CREATE OR REPLACE FUNCTION save_progress(
+    p_book_id TEXT, 
+    p_current_chapter INTEGER, 
+    p_total_chapters INTEGER
+)
+RETURNS JSONB AS $$
+DECLARE
+    is_completed BOOLEAN;
+BEGIN
+    is_completed := (p_current_chapter >= p_total_chapters - 1);
+    
+    INSERT INTO reading_progress (user_id, book_id, current_chapter, total_chapters, completed, last_read_at)
+    VALUES (auth.uid(), p_book_id, p_current_chapter, p_total_chapters, is_completed, NOW())
+    ON CONFLICT (user_id, book_id) 
+    DO UPDATE SET 
+        current_chapter = GREATEST(reading_progress.current_chapter, p_current_chapter),
+        total_chapters = p_total_chapters,
+        completed = is_completed OR reading_progress.completed,
+        last_read_at = NOW();
+    
+    RETURN jsonb_build_object(
+        'success', true, 
+        'chapter', p_current_chapter, 
+        'completed', is_completed
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 15. Function to get all progress for a user
+CREATE OR REPLACE FUNCTION get_all_progress()
+RETURNS JSONB AS $$
+DECLARE
+    result JSONB;
+BEGIN
+    SELECT jsonb_object_agg(book_id, jsonb_build_object(
+        'current_chapter', current_chapter,
+        'total_chapters', total_chapters,
+        'completed', completed,
+        'percentage', ROUND((current_chapter + 1)::DECIMAL / total_chapters * 100)
+    ))
+    INTO result
+    FROM reading_progress
+    WHERE user_id = auth.uid();
+    
+    RETURN COALESCE(result, '{}'::jsonb);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================
 -- DONE! Now you can:
 -- 1. Add credits to users via Table Editor
 -- 2. Users can spend credits to unlock books
+-- 3. Track reading progress for each book
 -- ============================================
-
 

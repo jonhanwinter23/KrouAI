@@ -677,6 +677,23 @@
                 `បន្តទៅមុខ <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
             
             updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
         }
 
         function setupQuiz(quizData) {

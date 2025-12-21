@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ការរីកចម្រើនរបស់ខ្ញុំ - KrouAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Login Required -->
+    <div id="loginRequired" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="text-center p-8">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-2xl">
+                <span class="text-5xl">📊</span>
+            </div>
+            <h1 class="text-3xl font-bold mb-4 kh-title">ការរីកចម្រើនរបស់ខ្ញុំ</h1>
+            <p class="text-gray-400 mb-8">សូមចូលគណនីដើម្បីមើលការរីកចម្រើនរបស់អ្នក</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-full hover:shadow-lg transition">
+                ចូលគណនី / Login
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <header class="p-6 border-b border-white/10">
+            <div class="max-w-6xl mx-auto flex items-center justify-between">
+                <a href="../index.html" class="flex items-center space-x-3 text-gray-400 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span>ត្រឡប់ទៅទំព័រដើម</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <span id="userEmail" class="text-gray-400 text-sm"></span>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                        <span id="userInitial" class="text-white font-bold">?</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <section class="max-w-6xl mx-auto px-6 py-12">
+            <h1 class="text-4xl font-bold mb-2 kh-title">📊 ការរីកចម្រើនរបស់ខ្ញុំ</h1>
+            <p class="text-gray-400 mb-8">តាមដានការអានសៀវភៅរបស់អ្នក</p>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="glass-card rounded-2xl p-6 text-center fade-in-up" style="animation-delay: 0.1s">
+                    <div class="text-4xl mb-2">📚</div>
+                    <p id="totalBooks" class="text-3xl font-bold text-amber-400">0</p>
+                    <p class="text-gray-400 text-sm">សៀវភៅដែលបានចាប់ផ្តើម</p>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center fade-in-up" style="animation-delay: 0.2s">
+                    <div class="text-4xl mb-2">✅</div>
+                    <p id="completedBooks" class="text-3xl font-bold text-green-400">0</p>
+                    <p class="text-gray-400 text-sm">សៀវភៅដែលបានបញ្ចប់</p>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center fade-in-up" style="animation-delay: 0.3s">
+                    <div class="text-4xl mb-2">📖</div>
+                    <p id="totalChapters" class="text-3xl font-bold text-blue-400">0</p>
+                    <p class="text-gray-400 text-sm">ជំពូកដែលបានអាន</p>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center fade-in-up" style="animation-delay: 0.4s">
+                    <div class="text-4xl mb-2">🔥</div>
+                    <p id="avgProgress" class="text-3xl font-bold text-orange-400">0%</p>
+                    <p class="text-gray-400 text-sm">វឌ្ឍនភាពជាមធ្យម</p>
+                </div>
+            </div>
+
+            <!-- Books Grid -->
+            <h2 class="text-2xl font-bold mb-6 kh-title">📚 សៀវភៅរបស់ខ្ញុំ</h2>
+            <div id="booksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Books will be injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16">
+                <div class="text-6xl mb-4">📖</div>
+                <h3 class="text-xl font-bold mb-2">មិនទាន់មានការរីកចម្រើនទេ</h3>
+                <p class="text-gray-400 mb-6">ចាប់ផ្តើមអានសៀវភៅដើម្បីតាមដានការរីកចម្រើន!</p>
+                <a href="../index.html" class="inline-block px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-full hover:shadow-lg transition">
+                    រកមើលសៀវភៅ
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Book metadata
+        const BOOKS = {
+            'sophie': { name: 'ពិភពលោករបស់សូភី', emoji: '🦉', color: 'amber', link: 'sophie.html' },
+            'little': { name: 'ព្រះអង្គម្ចាស់តូច', emoji: '🌹', color: 'rose', link: 'little.html' },
+            'sapien': { name: 'សេបៀន៖ ប្រវត្តិមនុស្សជាតិ', emoji: '🧬', color: 'orange', link: 'sapien.html' },
+            'atomic': { name: 'ទម្លាប់អាតូមិក', emoji: '⚛️', color: 'pink', link: 'atomic.html' },
+            'four': { name: 'កិច្ចព្រមព្រៀង ៤ យ៉ាង', emoji: '🤝', color: 'yellow', link: 'four.html' },
+            'psy': { name: 'ចិត្តសាស្ត្រនៃលុយ', emoji: '💰', color: 'emerald', link: 'psy.html' },
+            'steal': { name: 'លួចគំនិតឱ្យដូចសិល្បករ', emoji: '🎨', color: 'yellow', link: 'steal.html' },
+            'dad': { name: 'ឪពុកមានឪពុកក្រ', emoji: '💰', color: 'indigo', link: 'dad.html' },
+            'alchem': { name: 'អ្នកប្រើគីមី', emoji: '✨', color: 'amber', link: 'alchem.html' },
+            'lean': { name: 'Lean Startup', emoji: '🚀', color: 'blue', link: 'lean.html' }
+        };
+
+        let supabaseClient;
+
+        async function init() {
+            supabaseClient = window.supabase.createClient(
+                'https://dzpriubbvgnraiuvxwgu.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84'
+            );
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+
+            if (user) {
+                document.getElementById('loginRequired').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userInitial').textContent = user.email.charAt(0).toUpperCase();
+                
+                await loadProgress();
+            }
+        }
+
+        async function loadProgress() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('reading_progress')
+                    .select('*')
+                    .order('last_read_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    document.getElementById('emptyState').classList.remove('hidden');
+                    return;
+                }
+
+                // Calculate stats
+                const totalBooks = data.length;
+                const completedBooks = data.filter(b => b.completed).length;
+                const totalChapters = data.reduce((sum, b) => sum + (b.current_chapter + 1), 0);
+                const avgProgress = Math.round(data.reduce((sum, b) => {
+                    return sum + ((b.current_chapter + 1) / b.total_chapters * 100);
+                }, 0) / totalBooks);
+
+                document.getElementById('totalBooks').textContent = totalBooks;
+                document.getElementById('completedBooks').textContent = completedBooks;
+                document.getElementById('totalChapters').textContent = totalChapters;
+                document.getElementById('avgProgress').textContent = avgProgress + '%';
+
+                // Render books
+                const grid = document.getElementById('booksGrid');
+                grid.innerHTML = data.map((book, index) => {
+                    const meta = BOOKS[book.book_id] || { 
+                        name: book.book_id, 
+                        emoji: '📚', 
+                        color: 'gray',
+                        link: '#'
+                    };
+                    const percentage = Math.round((book.current_chapter + 1) / book.total_chapters * 100);
+                    const circumference = 2 * Math.PI * 36;
+                    const offset = circumference - (percentage / 100) * circumference;
+
+                    return `
+                        <a href="${meta.link}" class="book-card glass-card rounded-2xl p-6 transition-all duration-300 fade-in-up block" style="animation-delay: ${0.1 * (index + 1)}s">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-${meta.color}-400 to-${meta.color}-600 flex items-center justify-center text-2xl shadow-lg">
+                                    ${meta.emoji}
+                                </div>
+                                <div class="relative">
+                                    <svg class="progress-ring w-16 h-16">
+                                        <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+                                        <circle cx="32" cy="32" r="28" fill="none" stroke="url(#gradient-${book.book_id})" stroke-width="4" 
+                                            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+                                        <defs>
+                                            <linearGradient id="gradient-${book.book_id}" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" style="stop-color:#f59e0b"/>
+                                                <stop offset="100%" style="stop-color:#ea580c"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-sm font-bold text-${meta.color}-400">${percentage}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold mb-1 kh-title">${meta.name}</h3>
+                            <p class="text-gray-400 text-sm mb-4">
+                                ជំពូក ${book.current_chapter + 1} / ${book.total_chapters}
+                                ${book.completed ? '<span class="ml-2 text-green-400">✓ បានបញ្ចប់</span>' : ''}
+                            </p>
+                            <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-${meta.color}-400 to-${meta.color}-600 rounded-full transition-all duration-500" 
+                                    style="width: ${percentage}%"></div>
+                            </div>
+                            <p class="text-gray-500 text-xs mt-3">
+                                អានចុងក្រោយ: ${new Date(book.last_read_at).toLocaleDateString('km-KH')}
+                            </p>
+                        </a>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Error loading progress:', err);
+                document.getElementById('emptyState').classList.remove('hidden');
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
+

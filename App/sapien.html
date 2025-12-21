@@ -102,6 +102,23 @@
         .prose p {
             margin-bottom: 1.5em;
             text-align: justify;
+            color: #e7e5e4;
+        }
+        
+        .prose h4 {
+            color: #fb923c !important;
+        }
+        
+        .prose ul, .prose ol {
+            color: #d6d3d1;
+        }
+        
+        .prose li {
+            color: #d6d3d1;
+        }
+        
+        .prose strong {
+            color: #fcd34d;
         }
         
         details {
@@ -354,18 +371,18 @@
             </div>
 
             <div id="lessonContainer" class="hidden">
-                <div class="flex items-center space-x-3 text-[#78716c] mb-6 font-bold text-xs uppercase tracking-widest border-b border-[#e7e5e4] pb-3">
-                    <span id="chapterNumber" class="bg-[#f5f5f4] px-2 py-1 rounded">Chapter 1</span>
+                <div class="flex items-center space-x-3 text-orange-400 mb-6 font-bold text-xs uppercase tracking-widest border-b border-orange-900/50 pb-3">
+                    <span id="chapterNumber" class="bg-orange-900/50 text-orange-300 px-2 py-1 rounded">Chapter 1</span>
                 </div>
-                <h2 id="lessonTitle" class="text-2xl md:text-3xl font-bold text-[#292524] mb-6 leading-snug kh-title"></h2>
-                <div class="prose prose-lg max-w-none text-[#44403c] font-light" id="lessonBody"></div>
-                <div id="scenarioBox" class="bg-[#fafaf9] border-l-4 border-[#78716c] p-6 rounded-r-lg mb-10 hidden shadow-sm mt-8">
-                    <h3 class="text-lg font-bold text-[#44403c] mb-2 kh-title">ការត្រិះរិះ (Critical Reflection)</h3>
-                    <div id="scenarioContent" class="text-[#57534e]"></div>
+                <h2 id="lessonTitle" class="text-2xl md:text-3xl font-bold text-amber-100 mb-6 leading-snug kh-title"></h2>
+                <div class="prose prose-lg max-w-none text-stone-200 font-light" id="lessonBody"></div>
+                <div id="scenarioBox" class="bg-orange-950/50 border-l-4 border-orange-500 p-6 rounded-r-lg mb-10 hidden shadow-sm mt-8">
+                    <h3 class="text-lg font-bold text-orange-300 mb-2 kh-title">ការត្រិះរិះ (Critical Reflection)</h3>
+                    <div id="scenarioContent" class="text-stone-300"></div>
                 </div>
-                <div class="mt-12 pt-8 border-t border-[#e7e5e4] flex justify-between">
-                    <button id="prevBtn" class="px-6 py-2 rounded border border-[#d6d3d1] text-[#57534e] hover:bg-[#f5f5f4]">← មុន</button>
-                    <button id="nextBtn" class="px-6 py-2 rounded bg-[#d97706] text-white hover:bg-[#b45309] font-bold shadow">បន្ទាប់ →</button>
+                <div class="mt-12 pt-8 border-t border-orange-900/50 flex justify-between">
+                    <button id="prevBtn" class="px-6 py-2 rounded border border-orange-700 text-orange-300 hover:bg-orange-900/30">← មុន</button>
+                    <button id="nextBtn" class="px-6 py-2 rounded bg-orange-600 text-white hover:bg-orange-500 font-bold shadow">បន្ទាប់ →</button>
                 </div>
             </div>
         </div>
@@ -379,7 +396,7 @@
                 title: "1. សត្វដែលគ្មានសារៈសំខាន់ (An Animal of No Significance)",
                 content: `
                     <p>ប្រហែល ១៣.៥ ពាន់លានឆ្នាំមុន Big Bang បានកើតឡើង បង្កើតជារូបធាតុ និងថាមពល។ ប៉ុន្តែរឿងរ៉ាវរបស់ "មនុស្ស" ទើបតែចាប់ផ្តើមថ្មីៗនេះទេ។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">១.១ គ្រួសារមនុស្សដែលយើងភ្លេច (The Human Family)</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">១.១ គ្រួសារមនុស្សដែលយើងភ្លេច (The Human Family)</h4>
                     <p>រឿងសំខាន់បំផុតដែលយើងត្រូវដឹងគឺ៖ <strong>"មនុស្ស" (Humans) មិនមែនមានន័យថា "Homo Sapiens" តែមួយមុខទេ។</strong> កាលពី ១០០,០០០ ឆ្នាំមុន ផែនដីមានមនុស្សយ៉ាងហោចណាស់ ៦ ប្រភេទរស់នៅព្រមគ្នា៖</p>
                     <ul class="list-disc ml-6 mb-4">
                         <li><strong>Homo Neanderthalensis:</strong> នៅអឺរ៉ុប។ រឹងមាំជាង ខួរក្បាលធំជាង។</li>
@@ -388,7 +405,7 @@
                     </ul>
                     <p>យើង (Sapiens) គ្រាន់តែជាប្រភេទមួយក្នុងចំណោមនោះ។ យើងមិនមែនជាអ្នកខ្លាំងជាងគេទេ នៅពេលនោះយើងនៅកណ្តាលខ្សែសង្វាក់អាហារ (Food Chain)។ យើងខ្លាចតោ យើងស៊ីតែសាកសពដែលសល់ពីសត្វធំៗ។</p>
                     
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">១.២ តម្លៃនៃខួរក្បាលធំ (Cost of Thinking)</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">១.២ តម្លៃនៃខួរក្បាលធំ (Cost of Thinking)</h4>
                     <p>ខួរក្បាលមនុស្សមានទំហំធំខុសពីធម្មតា (២-៣% នៃទម្ងន់ខ្លួន តែស៊ីថាមពល ២៥%)។ នេះជាបន្ទុកធ្ងន់។ ដើម្បីចិញ្ចឹមខួរក្បាលនេះ មនុស្សត្រូវបោះបង់ "សាច់ដុំ"។ យើងខ្សោយជាងស្វា តែយើងឆ្លាតជាង។</p>
                     <p><strong>ការរកឃើញភ្លើង (Fire):</strong> ភ្លើងគឺជាអាវុធដំបូងដែលធ្វើឱ្យមនុស្សឡើងមកលើកំពូល។ ភ្លើងជួយចំអិនអាហារ។ អាហារឆ្អិនងាយរំលាយ ធ្វើឱ្យពោះវៀនខ្លី។ ថាមពលដែលសន្សំបានពីពោះវៀន ត្រូវបានបញ្ជូនទៅចិញ្ចឹមខួរក្បាល Jumbo Brain របស់យើង។</p>
                 `,
@@ -398,7 +415,7 @@
                 title: "2. ដើមឈើនៃចំណេះដឹង (The Tree of Knowledge)",
                 content: `
                     <p>ប្រហែល ៧០,០០០ ឆ្នាំមុន <strong>"បដិវត្តន៍នៃការយល់ដឹង" (Cognitive Revolution)</strong> បានកើតឡើង។ ការផ្លាស់ប្តូរហ្សែនចៃដន្យបានធ្វើឱ្យខួរក្បាល Sapiens អាចគិត និងប្រើភាសាតាមរបៀបថ្មី។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ភាសាពិសេសរបស់ Sapiens</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">ភាសាពិសេសរបស់ Sapiens</h4>
                     <p>សត្វដទៃអាចប្រាស្រ័យទាក់ទងគ្នាបាន ("ប្រយ័ត្នតោ!")។ ប៉ុន្តែភាសា Sapiens មានលក្ខណៈពិសេស ២៖</p>
                     <ol class="list-decimal ml-6 mb-4">
                         <li><strong>Gossip (ការនិយាយដើម):</strong> យើងអាចនិយាយពីមនុស្សផ្សេងទៀតក្នុងក្រុម ("A ស្អប់ B")។ នេះជួយឱ្យយើងរស់នៅជាក្រុមបានរហូតដល់ ១៥០ នាក់។</li>
@@ -413,7 +430,7 @@
                 title: "3. មួយថ្ងៃក្នុងជីវិតរបស់អ័ដាម និងអេវ៉ា",
                 content: `
                     <p>Harari ហៅសង្គមអ្នកបរបាញ់ (Hunter-Gatherers) ថា <strong>"The Original Affluent Society" (សង្គមដែលសម្បូរបែបដំបូងគេ)</strong>។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ជីវិតដ៏ល្អប្រសើរ?</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">ជីវិតដ៏ល្អប្រសើរ?</h4>
                     <ul class="list-disc ml-6 mb-4">
                         <li><strong>ម៉ោងធ្វើការ៖</strong> ពួកគេធ្វើការតែ ៣-៤ ម៉ោង/ថ្ងៃ ដើម្បីរកអាហារ។ ពេលសល់ពួកគេលេង និងសម្រាក។ (យើងធ្វើការ ៨-១០ ម៉ោង)។</li>
                         <li><strong>អាហារ៖</strong> ពួកគេស៊ីអាហារចម្រុះ (សាច់, ផ្លែឈើ, បន្លែ) ធ្វើឱ្យមានសុខភាពល្អ និងមិនខ្វះសារធាតុ។</li>
@@ -428,7 +445,7 @@
                 title: "4. ទឹកជំនន់ (The Flood)",
                 content: `
                     <p>មុនបដិវត្តន៍កសិកម្ម Sapiens គឺជា <strong>"ឃាតករអេកូឡូស៊ី" (Ecological Serial Killer)</strong>។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">សោកនាដកម្មនៅអូស្ត្រាលី និងអាមេរិក</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">សោកនាដកម្មនៅអូស្ត្រាលី និងអាមេរិក</h4>
                     <p>នៅពេល Sapiens ទៅដល់អូស្ត្រាលី (៤៥,០០០ ឆ្នាំមុន) និងអាមេរិក (១៦,០០០ ឆ្នាំមុន) សត្វយក្ស (Megafauna) ស្ទើរតែទាំងអស់បានផុតពូជ។</p>
                     <ul class="list-disc ml-6 mb-4">
                         <li><strong>Diprotodon:</strong> Wombat យក្ស ទម្ងន់ ២ តោន។</li>
@@ -444,7 +461,7 @@
                 title: "5. ការបោកប្រាស់ដ៏ធំបំផុត (History's Biggest Fraud)",
                 content: `
                     <p>១០,០០០ ឆ្នាំមុន យើងចាប់ផ្តើមធ្វើកសិកម្ម។ យើងហៅវាថា "ការវិវត្ត" តែ Harari ហៅវាថា <strong>"ការបោកប្រាស់"</strong>។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ស្រូវសាលីជាចៅហ្វាយ (Wheat is Master)</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">ស្រូវសាលីជាចៅហ្វាយ (Wheat is Master)</h4>
                     <p>យើងមិនបានផ្សាំងស្រូវទេ <strong>ស្រូវទេដែលផ្សាំងយើង</strong>។ ស្រូវជាស្មៅព្រៃ។ វាបង្ខំឱ្យយើងកាប់ព្រៃ ជីកដី ដកស្មៅ និងយាមវាពីព្រលឹមទល់ព្រលប់។ រាងកាយយើងមិនត្រូវបានបង្កើតមកសម្រាប់ធ្វើស្រែទេ (ឈឺខ្នង, ឈឺសន្លាក់)។</p>
                     <p>ជាថ្នូរមកវិញ យើងទទួលបានអ្វី? អាហារច្រើនជាងមុន ប៉ុន្តែអន់ជាងមុន (ខ្វះវីតាមីន)។ យើងមានកូនច្រើនជាងមុន ប៉ុន្តែកូនស្លាប់ច្រើនជាងមុន។ យើងមានសុវត្ថិភាពពីសត្វសាហាវ តែប្រឈមនឹងជំងឺឆ្លង និងសង្គ្រាម។</p>
                     <div class="concept-card"><strong>អន្ទាក់នៃភាពងាយស្រួល (Luxury Trap):</strong> មនុស្សគិតថាធ្វើស្រែនឹងស្រួល។ តែអាហារសល់ ធ្វើឱ្យប្រជាជនកើនឡើង។ មនុស្សកាន់តែច្រើន ត្រូវធ្វើការកាន់តែធ្ងន់។ យើងមិនអាចត្រឡប់ទៅបរបាញ់វិញបានទេ ព្រោះមនុស្សច្រើនពេកហើយ។ យើងជាប់អន្ទាក់។</div>
@@ -455,7 +472,7 @@
                 title: "6. ការកសាងពីរ៉ាមីត (Building Pyramids)",
                 content: `
                     <p>កសិកម្មធ្វើឱ្យមនុស្សរស់នៅកកកុញ។ ដើម្បីកុំឱ្យពួកគេសម្លាប់គ្នា យើងបង្កើត <strong>"សណ្តាប់ធ្នាប់ដែលស្រមើស្រមៃ" (Imagined Orders)</strong>។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">កូដនៃហាំមូរ៉ាប៊ី vs សិទ្ធិមនុស្ស</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">កូដនៃហាំមូរ៉ាប៊ី vs សិទ្ធិមនុស្ស</h4>
                     <p>ច្បាប់ Hammurabi (១៧៧៦ មុនគ.ស) ចែងថា "មនុស្សមាន ៣ ថ្នាក់៖ អភិជន, រាស្ត្រ, ទាសករ"។ សហរដ្ឋអាមេរិក (១៧៧៦) ចែងថា "មនុស្សទាំងអស់កើតមកស្មើគ្នា"។</p>
                     <p>តើមួយណាពិត? <strong>គ្មានមួយណាពិតទេក្នុងជីវសាស្ត្រ។</strong> មនុស្សកើតមកមិនស្មើគ្នាទេ (ហ្សែនខុសគ្នា) ហើយធម្មជាតិមិនស្គាល់ "សិទ្ធិ" ទេ។ "សិទ្ធិមនុស្ស" គឺជាជំនឿដែលយើងបង្កើតឡើងដើម្បីឱ្យសង្គមមានយុត្តិធម៌។</p>
                     <p>ពីរ៉ាមីតអេហ្ស៊ីប មិនមែនសាងសង់ដោយកម្លាំងទេ តែសាងសង់ដោយ <strong>ជំនឿ</strong>។ កម្មករជឿថា ផារ៉ោនជាព្រះ។ បើគ្មានជំនឿនេះទេ គ្មាននរណាសាងសង់វាទេ។ សង្គមយើងសព្វថ្ងៃក៏ដូចគ្នា យើងសាងសង់ក្រុមហ៊ុន និងរដ្ឋ ដោយសារយើងជឿលើច្បាប់និងលុយ។</p>
@@ -466,7 +483,7 @@
                 title: "7. ការផ្ទុកលើសចំណុះនៃការចងចាំ (Memory Overload)",
                 content: `
                     <p>សង្គមធំត្រូវការទិន្នន័យ (Data)។ ខួរក្បាលមនុស្សមិនអាចចាំថា "អ្នកណាជំពាក់ពន្ធប៉ុន្មាន" បានទេ។ ដូច្នេះ ជនជាតិ Sumerians បានបង្កើត <strong>"ការសរសេរ" (Writing)</strong>។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">ពីការចងចាំ មកជាឯកសារ</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">ពីការចងចាំ មកជាឯកសារ</h4>
                     <p>អក្សរដំបូងមិនមែនសម្រាប់សរសេរកំណាព្យទេ តែសម្រាប់ <strong>គណនេយ្យ (Accounting)</strong>។ "Kushim ទទួលបានស្រូវ ២៩,០៨៦ បាវ"។ ការសរសេរបានផ្លាស់ប្តូររបៀបដែលមនុស្សគិត។</p>
                     <ul class="list-disc ml-6 mb-4">
                         <li><strong>ការគិតបែបធម្មជាតិ (Association):</strong> ប្រើការចងចាំក្នុងខួរក្បាល។</li>
@@ -480,7 +497,7 @@
                 title: "8. មិនមានយុត្តិធម៌ក្នុងប្រវត្តិសាស្ត្រ (No Justice in History)",
                 content: `
                     <p>រាល់សង្គមតែងតែមាន <strong>ឋានានុក្រម (Hierarchies)</strong>៖ អ្នកមាន/អ្នកក្រ, បុរស/ស្ត្រី, ស្បែកស/ស្បែកខ្មៅ។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">រង្វង់នៃភាពអាក្រក់ (Vicious Circle)</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">រង្វង់នៃភាពអាក្រក់ (Vicious Circle)</h4>
                     <p>ឋានានុក្រមភាគច្រើនមិនមែនកើតពីធម្មជាតិទេ តែកើតពី <strong>"រឿងចៃដន្យក្នុងប្រវត្តិសាស្ត្រ"</strong>។</p>
                     <ol class="list-decimal ml-6 mb-4">
                         <li>ជនជាតិអឺរ៉ុបនាំទាសករអាហ្រ្វិកមកអាមេរិក (ហេតុផលសេដ្ឋកិច្ច)។</li>
@@ -511,7 +528,7 @@
                 title: "10. ក្លិននៃលុយ (The Scent of Money)",
                 content: `
                     <p>លុយគឺជាកម្លាំងបង្រួបបង្រួមខ្លាំងបំផុត។ <strong>"លុយមិនធុំក្លិនទេ"</strong> (វាមិនរើសអើង)។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">លុយ = ទំនុកចិត្ត (Money is Trust)</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">លុយ = ទំនុកចិត្ត (Money is Trust)</h4>
                     <p>លុយមិនមែនជាកាក់ ឬក្រដាសទេ។ លុយគឺជា <strong>ប្រព័ន្ធនៃការជឿទុកចិត្ត (Mutual Trust)</strong>។</p>
                     <p>Osama Bin Laden ស្អប់អាមេរិក ស្អប់វប្បធម៌អាមេរិក ប៉ុន្តែគាត់ស្រលាញ់លុយដុល្លារអាមេរិក។ លុយគឺជាភាសាតែមួយគត់ដែលមនុស្សគ្រប់គ្នា (សូម្បីតែសត្រូវ) និយាយស្តាប់គ្នាបាន។ វាអនុញ្ញាតឱ្យយើងសហការជាមួយមនុស្សចម្លែកដែលយើងមិនទុកចិត្ត។ (ខ្ញុំមិនទុកចិត្តអ្នក តែខ្ញុំទុកចិត្តលុយដែលអ្នកកាន់)។</p>
                 `,
@@ -607,7 +624,7 @@
                 title: "19. ហើយពួកគេរស់នៅយ៉ាងមានក្តីសុខ (Happily Ever After)",
                 content: `
                     <p>តើយើងសប្បាយចិត្តជាងដូនតារបស់យើងទេ? Harari សង្ស័យ។</p>
-                    <h4 class="text-xl font-bold text-[#d97706] mt-6 mb-2">សមីការនៃសុភមង្គល</h4>
+                    <h4 class="text-xl font-bold text-orange-400 mt-6 mb-2">សមីការនៃសុភមង្គល</h4>
                     <p><strong>សុភមង្គល = ការពិត - ការរំពឹងទុក</strong></p>
                     <p>ជីវិតយើងល្អជាងមុន (ម៉ាស៊ីនត្រជាក់, ថ្នាំពេទ្យ) ប៉ុន្តែការរំពឹងទុករបស់យើងហោះឡើងខ្ពស់កប់ពពក (តាមរយៈការមើល Facebook/Instagram)។ ដូច្នេះយើងនៅតែមិនពេញចិត្ត។</p>
                     <p>ម្យ៉ាងទៀត សុភមង្គលអាស្រ័យលើ <strong>ជីវសាស្ត្រ</strong> (អរម៉ូន Serotonin/Dopamine)។ ធម្មជាតិកំណត់កម្រិតសុភមង្គលរបស់យើងឱ្យនៅថេរ (Hedonic Treadmill)។ ឈ្នះឆ្នោត ឬពិការជើង យូរៗទៅយើងនឹងត្រឡប់មកមានអារម្មណ៍ធម្មតាវិញ។</p>
@@ -657,12 +674,12 @@
             lessonList.innerHTML = '';
             lessons.forEach((lesson, index) => {
                 const btn = document.createElement('button');
-                btn.className = `w-full text-left px-6 py-4 hover:bg-[#e7e5e4] transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-[#d97706]' : 'text-[#57534e]'}`;
+                btn.className = `w-full text-left px-6 py-4 hover:bg-orange-900/30 transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-orange-400' : 'text-stone-400'}`;
                 
                 const simpleTitle = lesson.title.split('(')[0];
                 
                 btn.innerHTML = `
-                    <span class="w-6 h-6 rounded-full bg-[#d6d3d1] text-[#57534e] flex items-center justify-center text-[10px] mr-3 font-bold border border-[#a8a29e]">${index + 1}</span>
+                    <span class="w-6 h-6 rounded-full bg-orange-900/50 text-orange-300 flex items-center justify-center text-[10px] mr-3 font-bold border border-orange-700">${index + 1}</span>
                     <span class="truncate tracking-wide">${simpleTitle}</span>
                 `;
                 btn.onclick = () => loadLesson(index);
@@ -685,14 +702,14 @@
 
             document.querySelectorAll('#lessonList button').forEach(b => {
                 b.classList.remove('sidebar-active');
-                b.querySelector('span').classList.remove('bg-[#d97706]', 'text-white');
-                b.querySelector('span').classList.add('bg-[#d6d3d1]', 'text-[#57534e]');
+                b.querySelector('span').classList.remove('bg-orange-600', 'text-white');
+                b.querySelector('span').classList.add('bg-orange-900/50', 'text-orange-300');
             });
             const activeBtn = document.getElementById(`nav-item-${index}`);
             if(activeBtn) {
                 activeBtn.classList.add('sidebar-active');
-                activeBtn.querySelector('span').classList.remove('bg-[#d6d3d1]', 'text-[#57534e]');
-                activeBtn.querySelector('span').classList.add('bg-[#d97706]', 'text-white');
+                activeBtn.querySelector('span').classList.remove('bg-orange-900/50', 'text-orange-300');
+                activeBtn.querySelector('span').classList.add('bg-orange-600', 'text-white');
                 activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
@@ -714,6 +731,23 @@
 
             setupQuiz(lesson.quiz);
             updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
         }
 
         function setupQuiz(quizData) {
@@ -724,8 +758,8 @@
 
             quizData.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 rounded border border-[#d6d3d1] hover:bg-[#f5f5f4] transition flex items-center shadow-sm group bg-white text-[#44403c]";
-                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-[#a8a29e] mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-[#a8a29e] group-hover:bg-[#d97706] group-hover:text-white transition">${String.fromCharCode(65 + i)}</span><span class="font-medium">${opt}</span>`;
+                btn.className = "w-full text-left p-4 rounded border border-orange-800 hover:bg-orange-900/30 transition flex items-center shadow-sm group bg-orange-950/50 text-stone-200";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-orange-700 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition">${String.fromCharCode(65 + i)}</span><span class="font-medium">${opt}</span>`;
                 btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
                 quizOptions.appendChild(btn);
             });
@@ -738,12 +772,12 @@
             
             if (selected === correct) {
                 btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
-                quizFeedback.className = "mt-6 p-6 rounded bg-[#dcfce7] text-[#14532d] border-l-4 border-[#15803d] shadow-sm fade-in";
-                quizFeedback.innerHTML = `<strong class="text-[#15803d] text-lg block mb-2">ត្រឹមត្រូវ! 🌟</strong> ${explanation}`;
+                quizFeedback.className = "mt-6 p-6 rounded bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2">ត្រឹមត្រូវ! 🌟</strong> ${explanation}`;
             } else {
                 btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
-                quizFeedback.className = "mt-6 p-6 rounded bg-[#fee2e2] text-[#7f1d1d] border-l-4 border-[#b91c1c] shadow-sm fade-in";
-                quizFeedback.innerHTML = `<strong class="text-[#b91c1c] text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+                quizFeedback.className = "mt-6 p-6 rounded bg-red-900/50 text-red-200 border-l-4 border-red-500 shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
             }
         }
 

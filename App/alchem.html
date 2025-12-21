@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Alchemist - Fantasy Adventure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #050b14; 
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: #e2e8f0;
+            line-height: 2;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); scale: 0.98; }
+            to { opacity: 1; transform: translateY(0); scale: 1; }
+        }
+        /* Fantasy Sidebar Style */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0) 100%);
+            border-left: 4px solid #f59e0b; /* Amber-500 */
+            color: #fbbf24;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+        }
+        /* Glowing Quiz Feedback */
+        .correct-answer {
+            background-color: rgba(6, 78, 59, 0.8) !important;
+            border: 1px solid #10b981 !important;
+            color: #d1fae5 !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .wrong-answer {
+            background-color: rgba(69, 10, 10, 0.8) !important;
+            border: 1px solid #ef4444 !important;
+            color: #fecaca !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        /* Custom Scrollbar - Gold */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #b45309, #f59e0b, #b45309);
+            border-radius: 4px;
+            border: 2px solid #0f172a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fbbf24;
+        }
+        /* Magical Card Style */
+        .concept-card {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            margin: 2rem 0;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, transparent, #f59e0b, transparent);
+        }
+        .quote-box {
+            font-style: italic;
+            border: 1px solid #fbbf24;
+            padding: 2rem;
+            color: #fcd34d;
+            margin: 2rem 0;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, rgba(0,0,0,0) 70%); 
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            text-align: center;
+            font-family: 'Battambang', serif;
+            position: relative;
+        }
+        .quote-box::after {
+            content: '❝';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            color: #fbbf24;
+            background: #020617;
+            padding: 0 10px;
+            height: 40px;
+            line-height: 0.5;
+        }
+        details {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #334155;
+        }
+        details[open] {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #fbbf24;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
+        }
+        summary {
+            font-weight: bold;
+            color: #fbbf24;
+            outline: none;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stars-bg {
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.5;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 10s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+        /* Fantasy Button */
+        .btn-fantasy {
+            background: linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #b45309 100%);
+            color: #0f172a;
+            border: 2px solid #fcd34d;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+            text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .btn-fantasy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+            filter: brightness(1.1);
+        }
+        .btn-fantasy:disabled {
+            background: #334155;
+            border-color: #475569;
+            color: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#050b14] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center shadow-2xl shadow-amber-500/30">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-slate-400 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-amber-500/30 transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-slate-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-amber-400 hover:underline">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#050b14] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-slate-900/80 rounded-3xl backdrop-blur-sm border border-amber-500/20">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center shadow-2xl shadow-amber-500/30">
+                <span class="text-4xl">✨</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2 en-title">The Alchemist</h2>
+            <p class="text-slate-400 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-amber-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-amber-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-yellow-700 transition disabled:opacity-50">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-slate-400 hover:text-amber-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'alchem';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-900 p-4 shadow-md flex justify-between items-center z-20 border-b border-amber-900/50">
+        <h1 class="text-lg font-bold text-amber-400 en-title">The Alchemist</h1>
+        <button id="menuBtn" class="text-amber-200 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-[#020617] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-amber-900/30">
+        <div class="p-8 border-b border-amber-900/30 hidden md:block bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]">
+            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 en-title tracking-widest mb-2 drop-shadow-sm">THE ALCHEMIST</h1>
+            <p class="text-xs text-amber-700 font-bold uppercase tracking-[0.2em]">Quest for Destiny</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-amber-900/30 bg-[#020617]">
+            <div class="flex justify-between text-xs mb-2 text-amber-500 font-bold uppercase font-cinzel">
+                <span>Quest Progress</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden border border-slate-700">
+                <div id="progressBar" class="bg-gradient-to-r from-amber-600 to-yellow-400 h-1.5 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(251,191,36,0.8)]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#020617]" id="mainContent">
+        <div class="stars-bg"></div>
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#0f172a]/70 backdrop-blur-xl p-14 rounded-2xl shadow-2xl max-w-3xl border border-amber-500/30 relative overflow-hidden group">
+                    <div class="absolute -top-32 -left-32 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div class="absolute -bottom-32 -right-32 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    
+                    <div class="text-8xl mb-8 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">🏜️⭐🔮</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 mb-6 kh-title leading-tight drop-shadow-sm">អាល់គីមីស៖ ដំណើរស្វែងរកកំណប់</h2>
+                    <p class="text-lg text-slate-300 mb-12 leading-loose font-light px-6 font-kantumruy border-l-2 border-r-2 border-amber-500/20 py-4 bg-black/20">
+                        "នៅពេលអ្នកប្រាថ្នាចង់បានអ្វីមួយយ៉ាងពិតប្រាកដ<br>
+                        ចក្រវាឡទាំងមូលនឹងឃុបឃិតគ្នា ដើម្បីជួយឱ្យអ្នកសម្រេចបំណងនោះ។"
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-fantasy py-4 px-12 rounded-lg text-xl flex items-center mx-auto">
+                        <span>ចាប់ផ្តើមដំណើរផ្សងព្រេង</span>
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-amber-400 mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-amber-900/30 w-full pb-4 font-cinzel">
+                    <span id="chapterNumber" class="bg-amber-950/30 px-4 py-1 rounded border border-amber-900/50">Lesson 1</span>
+                    <span class="flex-1 text-right text-slate-500">Paulo Coelho</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-12 leading-snug kh-title text-shadow-lg decoration-amber-500/30 underline decoration-2 underline-offset-8"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-slate-300 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#0f172a] border border-amber-500/30 p-8 rounded-xl mb-12 hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] mt-16 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20"></div>
+                    <div class="absolute -right-6 -top-6 text-9xl text-amber-500/5 en-title select-none group-hover:text-amber-500/10 transition-colors duration-500">?</div>
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4 flex items-center kh-title relative z-10 drop-shadow-md">
+                        <svg class="w-8 h-8 mr-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        ការឆ្លុះបញ្ចាំង (Reflection)
+                    </h3>
+                    <div id="scenarioContent" class="text-slate-300 text-lg relative z-10 leading-relaxed font-kantumruy"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#0f172a]/80 rounded-2xl shadow-2xl p-10 md:p-14 border border-slate-700 mt-24 relative overflow-hidden backdrop-blur-md">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-bl-full border-l border-b border-amber-500/10"></div>
+                    <h3 class="text-2xl font-bold text-white mb-10 flex items-center relative z-10 kh-title border-b border-slate-700 pb-6">
+                        <span class="bg-gradient-to-r from-amber-600 to-yellow-500 text-black text-sm font-extrabold mr-5 px-5 py-2 rounded shadow-lg tracking-widest font-cinzel">QUIZ</span>
+                        តើអ្នកយល់ពីសញ្ញាទេ?
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-8 text-slate-200 leading-relaxed font-kantumruy"></p>
+                        <div id="quizOptions" class="space-y-5"></div>
+                        <div id="quizFeedback" class="mt-8 hidden p-8 rounded-xl text-lg border-l-4 shadow-xl bg-black/40 backdrop-blur-sm"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-24 pt-10 border-t border-slate-800/50">
+                    <button id="prevBtn" class="px-8 py-4 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest font-cinzel">
+                        ← Prev
+                    </button>
+                    <button id="nextBtn" class="btn-fantasy py-4 px-10 rounded-lg flex items-center">
+                        Next Chapter →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR THE ALCHEMIST (KHMER)
+        const lessons = [
+            {
+                title: "បុព្វកថា៖ រឿងនិទានរបស់ណាស្ស៊ីស (Prologue: Narcissus)",
+                content: `
+                    <p class="mb-6">មុននឹងរឿងរបស់ Santiago ចាប់ផ្តើម Paulo Coelho បានបើកឆាកដោយរឿងនិទានខ្លីមួយអំពី <strong>Narcissus</strong> (បុរសសង្ហាដែលលង់ស្នេហ៍នឹងរូបភាពខ្លួនឯងក្នុងទឹក រហូតដល់ធ្លាក់ទឹកស្លាប់)។</p>
+                    <p class="mb-6">ជាធម្មតា យើងដឹងថាព្រះនៃព្រៃឈើបានមកយំអាណិត Narcissus។ ប៉ុន្តែនៅក្នុងសៀវភៅនេះ <strong>បឹង (The Lake)</strong> ក៏យំដែរ។ ព្រះបានសួរបឹងថា៖ "តើអ្នកយំអាណិត Narcissus មែនទេ?"</p>
+                    <p class="mb-6">បឹងឆ្លើយថា៖ "ទេ... ខ្ញុំយំព្រោះរាល់ពេលដែល Narcissus ឱនមកមើលទឹក ខ្ញុំអាចមើលឃើញភាពស្រស់ស្អាតរបស់ខ្ញុំ ឆ្លុះនៅក្នុងភ្នែករបស់គាត់។"</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-amber-400 mb-4 font-cinzel">✨ The Interconnectedness</h4>
+                        <p>នេះគឺជាសារដំបូងអំពី <strong>"ការតភ្ជាប់គ្នា"</strong>។ ធម្មជាតិមិនមែនគ្រាន់តែជាកញ្ចក់សម្រាប់ឆ្លុះមើលយើងទេ។ យើងក៏ជាកញ្ចក់សម្រាប់ឆ្លុះមើលធម្មជាតិដែរ។ អ្វីៗទាំងអស់ក្នុងលោកគឺតែមួយ (All is One)។ ការធ្វើដំណើរស្វែងរកកំណប់ មិនមែនគ្រាន់តែដើម្បីខ្លួនឯងទេ តែដើម្បីឱ្យចក្រវាឡបានស្គាល់ខ្លួនឯងតាមរយៈយើង។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការត្រិះរិះ៖</strong> តើអ្នកធ្លាប់គិតទេថា ពិភពលោកជុំវិញខ្លួនអ្នក កំពុងរៀនពីអ្នក ដូចដែលអ្នកកំពុងរៀនពីវា? ពេលអ្នកមើលផ្កាយ ផ្កាយកំពុងប្រើភ្នែករបស់អ្នកដើម្បីមើលខ្លួនឯង។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាបឹងយំនៅពេល Narcissus ស្លាប់?", options: ["ព្រោះវាស្រលាញ់ Narcissus", "ព្រោះវាបាត់បង់កញ្ចក់ (ភ្នែករបស់ Narcissus) ដែលឆ្លុះភាពស្រស់ស្អាតរបស់វា", "ព្រោះទឹកឡើងខ្ពស់", "ព្រោះវាឯកា"], correct: 1, explanation: "ត្រឹមត្រូវ! នេះបង្ហាញថាទំនាក់ទំនងទាំងអស់ (សូម្បីតែរឿងអាត្មានិយម) គឺមានភាពផ្សារភ្ជាប់គ្នាទៅវិញទៅមក។" }
+            },
+            {
+                title: "ផ្នែកទី ១៖ សុបិន និងក្មេងឃ្វាលចៀម (Part 1: The Boy's Dream)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">ការជ្រើសរើសផ្លូវដើរ</h3>
+                    <p class="mb-6"><strong>Santiago</strong> គឺជាក្មេងឃ្វាលចៀមនៅតំបន់ Andalusia (អេស្ប៉ាញ)។ ឪពុកម្តាយគាត់ចង់ឱ្យគាត់ធ្វើជាសង្ឃ (Priest) ដើម្បីមានមុខមាត់។ ប៉ុន្តែ Santiago ចង់ <strong>ធ្វើដំណើរ (Travel)</strong>។ គាត់សុខចិត្តរស់នៅជាមួយចៀម ដេកក្រោមផ្កាយ ដើម្បីបានឃើញពិភពលោក។</p>
+                    <p class="mb-6">គាត់មានសុបិនដដែលៗពីរដង៖ ក្មេងម្នាក់នាំគាត់ទៅកាន់ <strong>ពីរ៉ាមីតអេហ្ស៊ីប</strong> ហើយប្រាប់ថាមានកំណប់នៅទីនោះ។</p>
+                    <p class="mb-6">គាត់ទៅជួបស្ត្រីហ្គីបស៊ី (Gypsy woman) ដើម្បីកាត់សុបិន។ នាងប្រាប់គាត់ឱ្យទៅរកកំណប់នោះ ហើយសុំចំណែក ១០%។ Santiago ខកចិត្តព្រោះគិតថានាងបោក។</p>
+                    <p class="mb-6">នៅពេលនោះ គាត់កំពុងអានសៀវភៅ។ បុរសចំណាស់ម្នាក់បានមកអង្គុយក្បែរគាត់។ បុរសនោះឈ្មោះ <strong>Melchizedek</strong> (ស្តេចនៃ Salem)។ គាត់បានបង្រៀនមេរៀនដ៏សំខាន់បំផុត។</p>
+                `,
+                scenario: `
+                    <p><strong>ការសម្រេចចិត្ត៖</strong> តើអ្នកសុខចិត្តធ្វើជាសង្ឃដែលមានកិត្តិយស (តាមបំណងគ្រួសារ) ឬធ្វើជាអ្នកឃ្វាលចៀមដែលក្រីក្រ តែមានសេរីភាព (តាមបំណងខ្លួនឯង)? Santiago បានជ្រើសរើសសេរីភាពតាំងពីដើមរឿង។</p>
+                `,
+                quiz: { question: "តើអ្វីជាហេតុផលចម្បងដែល Santiago ជ្រើសរើសធ្វើជាអ្នកឃ្វាលចៀម?", options: ["គាត់ចូលចិត្តសត្វ", "គាត់ចង់ធ្វើដំណើរមើលពិភពលោក", "គាត់ចង់បានរោមចៀម", "គាត់មិនចង់រៀន"], correct: 1, explanation: "ត្រឹមត្រូវ! ភាពចង់ដឹងចង់ឃើញនិងសេរីភាព គឺជាតម្លៃស្នូលរបស់គាត់។" }
+            },
+            {
+                title: "ផ្នែកទី ១៖ រឿងព្រេងផ្ទាល់ខ្លួន (Personal Legend)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">ពាក្យកុហកដ៏ធំបំផុតក្នុងលោក</h3>
+                    <p class="mb-6">ស្តេច Melchizedek ប្រាប់ Santiago ថា៖ <strong>"ពាក្យកុហកដ៏ធំបំផុតក្នុងលោកគឺ៖ នៅពេលណាមួយ យើងបាត់បង់សមត្ថភាពគ្រប់គ្រងជីវិតខ្លួនឯង ហើយជីវិតរបស់យើងត្រូវបានកំណត់ដោយព្រហ្មលិខិត។"</strong></p>
+                    <p class="mb-6">គាត់ណែនាំគំនិតនៃ <strong>"Personal Legend" (រឿងព្រេងផ្ទាល់ខ្លួន)</strong>។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-2xl font-bold text-amber-400 mb-4 font-cinzel">🌟 Personal Legend</h4>
+                        <p class="mb-3">វាគឺជា "អ្វីដែលអ្នកតែងតែចង់ធ្វើ" (Your destiny)។</p>
+                        <ul class="list-disc ml-6 space-y-2 text-slate-300">
+                            <li>នៅពេលយើងនៅក្មេង យើងដឹងច្បាស់ថាវាជាអ្វី។</li>
+                            <li>នៅពេលយើងធំឡើង យើងចាប់ផ្តើមជឿថាវាមិនអាចទៅរួចទេ។</li>
+                            <li><strong>"នៅពេលអ្នកប្រាថ្នាចង់បានអ្វីមួយយ៉ាងពិតប្រាកដ ចក្រវាឡទាំងមូលនឹងឃុបឃិតគ្នា ដើម្បីជួយឱ្យអ្នកសម្រេចបំណងនោះ។"</strong></li>
+                        </ul>
+                    </div>
+
+                    <p class="mb-6">ស្តេចបានឱ្យត្បូងពីរគ្រាប់ទៅ Santiago៖ <strong>Urim និង Thummim</strong> (ពណ៌ស និងខ្មៅ) ដើម្បីជួយក្នុងការសម្រេចចិត្ត។ គាត់ប្រាប់ឱ្យ Santiago លក់ចៀម ហើយទៅអេហ្ស៊ីប។</p>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong> តើអ្វីជា Personal Legend របស់អ្នក? តើមានក្តីសុបិនអ្វីដែលអ្នកបានបោះបង់ចោល ព្រោះគិតថា "វាមិនអាចទៅរួច"? Melchizedek កំពុងប្រាប់អ្នកឱ្យចាប់ផ្តើមឡើងវិញ។</p>
+                `,
+                quiz: { question: "តើឃ្លា 'ចក្រវាឡទាំងមូលនឹងឃុបឃិតគ្នាដើម្បីជួយអ្នក' មានន័យថាម៉េច?", options: ["អ្នកមិនបាច់ធ្វើអ្វីទេ", "នៅពេលអ្នកតាំងចិត្តស្មោះត្រង់នឹងគោលដៅ ឧបសគ្គនឹងក្លាយជាឱកាស ហើយអ្នកនឹងទទួលបានជំនួយដែលនឹកស្មានមិនដល់", "ចក្រវាឡមានជីវិត", "អ្នកនឹងឈ្នះឆ្នោត"], correct: 1, explanation: "ត្រឹមត្រូវ! វាគឺជាច្បាប់នៃការទាក់ទាញ (Law of Attraction) បូកនឹងសកម្មភាព។" }
+            },
+            {
+                title: "ផ្នែកទី ១៖ ចោរ និងការបាត់បង់ (The Thief in Tangier)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">មេរៀននៃការទុកចិត្ត</h3>
+                    <p class="mb-6">Santiago លក់ចៀម ហើយជិះទូកទៅទ្វីបអាហ្រ្វិក (ទីក្រុង Tangier ប្រទេសម៉ារ៉ុក)។ គាត់មានលុយច្រើន។ ប៉ុន្តែគាត់មិនចេះភាសាអារ៉ាប់ទេ។</p>
+                    <p class="mb-6">នៅក្នុងហាងតែ គាត់បានជួបបុរសវ័យក្មេងម្នាក់ដែលនិយាយភាសាអេស្ប៉ាញ។ Santiago ទុកចិត្តគាត់ភ្លាម ហើយឱ្យលុយទាំងអស់ទៅគាត់ដើម្បីទៅទិញអូដ្ឋ។ បុរសនោះរត់បាត់ជាមួយលុយទាំងអស់។</p>
+                    <p class="mb-6">Santiago យំ។ គាត់គិតថា៖ <strong>"ខ្ញុំជាជនរងគ្រោះនៃចោរ"</strong>។ ប៉ុន្តែបន្ទាប់មក គាត់មើលទៅត្បូង Urim និង Thummim ហើយប្តូរចិត្ត៖ <strong>"ខ្ញុំគឺជាអ្នកផ្សងព្រេងដែលកំពុងស្វែងរកកំណប់"</strong>។</p>
+                    <p class="mb-6">នេះគឺជាការផ្លាស់ប្តូរទស្សនៈដ៏សំខាន់។ គាត់អាចជ្រើសរើសមើលពិភពលោកដោយភ្នែករបស់ "ជនរងគ្រោះ" (Victim) ឬភ្នែករបស់ "អ្នកផ្សងព្រេង" (Adventurer)។</p>
+                `,
+                scenario: `
+                    <p><strong>Situation:</strong> អ្នកបាត់បង់ការងារ។<br><strong>Victim Mindset:</strong> "ហេតុអ្វីរឿងនេះកើតឡើងចំពោះខ្ញុំ? ខ្ញុំស៊យណាស់។"<br><strong>Adventurer Mindset:</strong> "នេះជាឱកាសដើម្បីចាប់ផ្តើមអ្វីដែលថ្មី។ ខ្ញុំមានសេរីភាពហើយ។"</p>
+                `,
+                quiz: { question: "តើ Santiago រៀនអ្វីពីការចាញ់បោកចោរ?", options: ["លែងទុកចិត្តមនុស្ស", "ថាគាត់អាចជ្រើសរើសមើលខ្លួនឯងជា 'ជនរងគ្រោះ' ឬជា 'អ្នកផ្សងព្រេង' (Perspective Shift)", "ថាគាត់គួរតែនៅផ្ទះ", "ថាប្រាក់សំខាន់បំផុត"], correct: 1, explanation: "ត្រឹមត្រូវ! ព្រឹត្តិការណ៍គឺជារឿងមួយ របៀបដែលយើងបកស្រាយវា គឺជាជម្រើសរបស់យើង។" }
+            },
+            {
+                title: "ផ្នែកទី ២៖ ហាងគ្រីស្តាល់ (The Crystal Merchant)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">ការខ្លាចការផ្លាស់ប្តូរ</h3>
+                    <p class="mb-6">ដើម្បីរស់ Santiago ធ្វើការឱ្យហាងលក់កែវគ្រីស្តាល់មួយ។ ថៅកែហាងគឺជាមនុស្សល្អ ប៉ុន្តែគាត់ខ្លាចការផ្លាស់ប្តូរ។</p>
+                    <p class="mb-6">Santiago ផ្តល់យោបល់ឱ្យសាងសង់ទូកញ្ចក់ដាក់តាំង និងលក់តែដាក់ក្នុងកែវ។ ថៅកែរារេក។ គាត់ប្រាប់ថា គាត់មានសុបិនចង់ទៅធ្វើធម្មយាត្រានៅ <strong>Mecca</strong>។ ប៉ុន្តែគាត់មិនដែលទៅទេ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-2xl font-bold text-amber-400 mb-4 font-cinzel">💭 Dream vs Reality</h4>
+                        <p>ថៅកែនិយាយថា៖ <strong>"ខ្ញុំខ្លាចថា បើខ្ញុំសម្រេចក្តីសុបិនរបស់ខ្ញុំ (ទៅ Mecca) ខ្ញុំនឹងលែងមានមូលហេតុដើម្បីរស់នៅតទៅទៀត។"</strong></p>
+                        <p class="mt-4">គាត់សុខចិត្តរស់នៅជាមួយ "សុបិន" ជាជាងធ្វើឱ្យវាក្លាយជា "ការពិត"។ គាត់តំណាងឱ្យមនុស្សដែលប្រើក្តីសុបិនគ្រាន់តែជាកន្លែងគេចពីភាពធុញទ្រាន់ ប៉ុន្តែមិនហ៊ានប្រឈមមុខនឹងវា។</p>
+                    </div>
+
+                    <p class="mb-6">Santiago ធ្វើការនៅទីនោះ ១ ឆ្នាំ ហើយធ្វើឱ្យហាងរីកចម្រើនខ្លាំង។ គាត់មានលុយគ្រប់គ្រាន់ដើម្បីទិញចៀមវិញ ១២០ ក្បាល និងត្រឡប់ទៅផ្ទះ។ ប៉ុន្តែនៅវិនាទីចុងក្រោយ គាត់សម្រេចចិត្តបន្តដំណើរទៅរកកំណប់។</p>
+                `,
+                scenario: `
+                    <p><strong>Comfort Zone:</strong> ថៅកែគ្រីស្តាល់គឺជាឧទាហរណ៍នៃមនុស្សដែលជាប់ក្នុង Comfort Zone។ គាត់មិនសប្បាយចិត្តនឹងជីវិតបច្ចុប្បន្ន តែគាត់ខ្លាចជីវិតថ្មី។ កុំធ្វើដូចគាត់។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាថៅកែគ្រីស្តាល់មិនទៅ Mecca?", options: ["គាត់ក្រ", "គាត់ខ្លាចថាការសម្រេចសុបិននឹងធ្វើឱ្យជីវិតគាត់លែងមានន័យ (Fear of realizing the dream)", "គាត់ឈឺ", "គាត់មិនចេះផ្លូវ"], correct: 1, explanation: "ត្រឹមត្រូវ! សម្រាប់មនុស្សខ្លះ ការស្រមើស្រមៃអំពីសុបិន មានសុវត្ថិភាពជាងការរស់នៅក្នុងសុបិននោះ។" }
+            },
+            {
+                title: "ផ្នែកទី ២៖ ជនជាតិអង់គ្លេស និងវាលខ្សាច់ (The Englishman)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">ទ្រឹស្តី vs ការអនុវត្ត</h3>
+                    <p class="mb-6">Santiago ចូលរួមជាមួយក្បួនអូដ្ឋ (Caravan) ដើម្បីឆ្លងកាត់វាលខ្សាច់។ នៅទីនោះ គាត់ជួប <strong>ជនជាតិអង់គ្លេស (The Englishman)</strong> ដែលកំពុងស្វែងរក <strong>Alchemist (អ្នកលេងសីល/អាល់គីមីស)</strong>។</p>
+                    <p class="mb-6">ជនជាតិអង់គ្លេសមានសៀវភៅរាប់រយក្បាល។ គាត់អានសៀវភៅពេញផ្លូវ ដោយមិនមើលវាលខ្សាច់ទេ។ Santiago មិនអានទេ គាត់មើលខ្សាច់ ស្តាប់ខ្យល់ និងរៀនពីអ្នកបកអូដ្ឋ។</p>
+                    <p class="mb-6"><strong>The Soul of the World (ព្រលឹងនៃពិភពលោក)៖</strong> នេះគឺជាគំនិតដែលថា ធម្មជាតិទាំងអស់មានវិញ្ញាណតែមួយ។ Santiago រៀនរឿងនេះតាមរយៈការសង្កេត។ ជនជាតិអង់គ្លេសរៀនតាមរយៈសៀវភៅ។</p>
+                    <p class="mb-6">នៅពេលទៅដល់ Oasis ជនជាតិអង់គ្លេសព្យាយាមរក Alchemist តែរកមិនឃើញ។ Santiago រកឃើញដោយងាយ ព្រោះគាត់ចេះអាន "សញ្ញា" (Omens) នៃធម្មជាតិ។</p>
+                `,
+                scenario: `
+                    <p><strong>Book Smart vs Street Smart:</strong> ជនជាតិអង់គ្លេសតំណាងឱ្យចំណេះដឹងតាមសាលា (Intellectual)។ Santiago តំណាងឱ្យចំណេះដឹងតាមបទពិសោធន៍ (Experiential)។ ដើម្បីសម្រេច Personal Legend អ្នកត្រូវការបទពិសោធន៍ មិនមែនគ្រាន់តែទ្រឹស្តីទេ។</p>
+                `,
+                quiz: { question: "តើអ្វីជាកំហុសរបស់ជនជាតិអង់គ្លេស?", options: ["គាត់មិនចេះអាន", "គាត់ពឹងផ្អែកលើសៀវភៅពេក រហូតភ្លេចសង្កេតមើលពិភពលោកពិត និងសញ្ញានៃធម្មជាតិ", "គាត់មិនមានលុយ", "គាត់ដើរយឺត"], correct: 1, explanation: "ត្រឹមត្រូវ! 'សៀវភៅគ្រាន់តែជាផែនទី មិនមែនជាទឹកដីទេ'។" }
+            },
+            {
+                title: "ផ្នែកទី ២៖ អូអាស៊ីស និងហ្វាទីម៉ា (The Oasis & Fatima)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">សេចក្តីស្រលាញ់ពិតមិនឃាត់ដំណើរទេ</h3>
+                    <p class="mb-6">នៅ Oasis, Santiago បានជួបនារីវាលខ្សាច់ម្នាក់ឈ្មោះ <strong>Fatima</strong>។ ពួកគេស្រលាញ់គ្នាភ្លាមៗ។</p>
+                    <p class="mb-6">Santiago ចង់ឈប់នៅទីនោះ។ គាត់មានលុយ (ពីគ្រីស្តាល់) និងមានស្នេហា។ គាត់គិតថា "នេះគឺជាកំណប់របស់ខ្ញុំហើយ"។</p>
+                    <p class="mb-6">ប៉ុន្តែ The Alchemist (ដែលគាត់បានជួបនៅទីនោះ) ប្រាប់គាត់ថា៖ <strong>"បើអ្នកនៅទីនេះ អ្នកនឹងស្តាយក្រោយ។ សេចក្តីស្រលាញ់ពិត មិនដែលឃាត់ឃាំងនរណាម្នាក់ពីការស្វែងរក Personal Legend របស់គេទេ។ បើនាងឃាត់អ្នក នាងមិនមែនជាគូព្រេងរបស់អ្នកទេ។"</strong></p>
+                    <p class="mb-6">Fatima ក៏ប្រាប់គាត់ឱ្យទៅដែរ។ នាងនិយាយថា៖ "ខ្ញុំជានារីវាលខ្សាច់។ ខ្ញុំនឹងរង់ចាំអ្នក ដូចវាលខ្សាច់រង់ចាំទឹកភ្លៀង។"</p>
+                `,
+                scenario: `
+                    <p><strong>Love vs Possession:</strong> សេចក្តីស្រលាញ់របស់ Fatima គឺបរិសុទ្ធ។ នាងមិនចង់ "កាន់កាប់" Santiago ទេ។ នាងចង់ឱ្យគាត់បំពេញវាសនារបស់គាត់។ នេះខុសពីស្នេហាដែលអាត្មានិយម។</p>
+                `,
+                quiz: { question: "តើ The Alchemist បង្រៀនអ្វីអំពីសេចក្តីស្រលាញ់?", options: ["ស្នេហាធ្វើឱ្យយើងភ្លេចគោលដៅ", "ស្នេហានាំឱ្យមានទុក្ខ", "សេចក្តីស្រលាញ់ពិតមិនមែនជាឧបសគ្គដល់ Personal Legend ទេ (True love never holds you back)", "យើងគួរជ្រើសរើសស្នេហាជាជាងក្តីសុបិន"], correct: 2, explanation: "ត្រឹមត្រូវ! បើអ្នកត្រូវបោះបង់ក្តីសុបិនដើម្បីស្នេហា នោះមិនមែនជាស្នេហាពិតទេ។" }
+            },
+            {
+                title: "ផ្នែកទី ២៖ ចូលទៅក្នុងវាលខ្សាច់ (The Desert & The Alchemist)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">ស្តាប់បេះដូងរបស់អ្នក</h3>
+                    <p class="mb-6">Santiago ចាកចេញពី Fatima ហើយធ្វើដំណើរជាមួយ The Alchemist ទៅកាន់ពីរ៉ាមីត។ ក្នុងដំណើរនេះ The Alchemist បង្រៀនគាត់ឱ្យ <strong>"ស្តាប់បេះដូង"</strong>។</p>
+                    <p class="mb-6">Santiago និយាយថា៖ "បេះដូងខ្ញុំក្បត់ខ្ញុំ។ វាប្រាប់ខ្ញុំឱ្យត្រឡប់ទៅរក Fatima វិញ។ វាមិនចង់ឱ្យខ្ញុំបន្តទេ។"</p>
+                    <p class="mb-6">The Alchemist ឆ្លើយថា៖ <strong>"អ្នកត្រូវតែស្តាប់វា ទោះបីវាខ្លាចក៏ដោយ។ ព្រោះកន្លែងណាដែលបេះដូងអ្នកនៅ កន្លែងនោះហើយដែលកំណប់របស់អ្នកនៅ។... ការភ័យខ្លាចនៃការរងទុក្ខ (Fear of suffering) គឺអាក្រក់ជាងការរងទុក្ខផ្ទាល់ទៅទៀត។"</strong></p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-2xl font-bold text-amber-400 mb-4 font-cinzel">🦅 Becoming the Wind</h4>
+                        <p>នៅពេលពួកគេត្រូវកុលសម្ព័ន្ធមួយចាប់ខ្លួន The Alchemist ប្រាប់មេកុលសម្ព័ន្ធថា "ក្មេងនេះអាចក្លាយជាខ្យល់បាន"។ មេកុលសម្ព័ន្ធទុកពេល ៣ ថ្ងៃឱ្យ Santiago បង្ហាញឫទ្ធិ បើមិនចឹងទេ នឹងត្រូវសម្លាប់។</p>
+                        <p class="mt-4">Santiago ភ័យខ្លាំង។ នៅថ្ងៃទី ៣ គាត់បាននិយាយជាមួយវាលខ្សាច់ និយាយជាមួយខ្យល់ និងនិយាយជាមួយព្រះអាទិត្យ (ប្រើ Language of the World)។ គាត់បានយល់ថា ព្រលឹងរបស់គាត់ និងព្រលឹងរបស់ព្រះ គឺជាតែមួយ។ គាត់បានក្លាយជាខ្យល់ (និមិត្តរូបនៃការត្រាស់ដឹង/ការយល់ដឹងកំពូល)។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>អព្ភូតហេតុ៖</strong> ការក្លាយជាខ្យល់ មិនមែនជាវេទមន្តទេ តែជាការយល់ឃើញថា យើងមិនដាច់ដោយឡែកពីធម្មជាតិទេ។ យើងអាចធ្វើអ្វីៗបាននៅពេលយើងភ្ជាប់ខ្លួនជាមួយ Soul of the World។</p>
+                `,
+                quiz: { question: "តើ Santiago ធ្វើដូចម្តេចទើបអាចក្លាយជាខ្យល់?", options: ["រៀនមន្តអាគម", "និយាយជាមួយធាតុធម្មជាតិ និងទទួលស្គាល់ថាខ្លួនឯងគឺជាផ្នែកមួយនៃព្រលឹងពិភពលោក (Soul of the World)", "ហាត់ដកដង្ហើម", "រត់លឿន"], correct: 1, explanation: "ត្រឹមត្រូវ! នេះគឺជាចំណុចកំពូលនៃ Alchemy: ការបំប្លែងខ្លួនឯង។" }
+            },
+            {
+                title: "បច្ឆិមកថា៖ កំណប់ពិតប្រាកដ (Epilogue: The Treasure)",
+                content: `
+                    <h3 class="text-3xl font-bold text-amber-400 mb-6 kh-title">អ្វីដែលយើងស្វែងរក នៅក្បែរយើងតាំងពីដើម</h3>
+                    <p class="mb-6">Santiago ទៅដល់ពីរ៉ាមីត។ គាត់យំដោយក្តីរំភើប។ គាត់ចាប់ផ្តើមជីកដីនៅកន្លែងដែលគាត់យល់សប្តិ។</p>
+                    <p class="mb-6">ស្រាប់តែមានចោរមួយក្រុមមកវាយគាត់ និងយកមាសដែល The Alchemist ឱ្យ។ មុនពេលចាកចេញ មេចោរនិយាយចំអកឱ្យគាត់ថា៖</p>
+                    <div class="quote-box">
+                        "ឯងឆ្កួតណាស់ដែលជឿសុបិន។ ខ្ញុំក៏ធ្លាប់យល់សប្តិដែរថា នៅប្រទេសអេស្ប៉ាញ ក្នុងព្រះវិហារចាស់មួយដែលមានដើមឧទុម្ពរដុះកណ្តាល មានកំណប់កប់នៅទីនោះ។ តែខ្ញុំមិនឆ្កួតដើររកវាដូចឯងទេ។"
+                    </div>
+                    <p class="mb-6">Santiago សើច។ <strong>ព្រះវិហារនោះគឺជាកន្លែងដែលគាត់ឃ្វាលចៀមតាំងពីដើមរឿង!</strong> កំណប់ស្ថិតនៅកន្លែងដែលគាត់ចាប់ផ្តើម។</p>
+                    
+                    <p class="mb-6"><strong>សំណួរ៖</strong> បើកំណប់នៅផ្ទះ តើចាំបាច់ធ្វើដំណើរឆ្ងាយដល់អេហ្ស៊ីបធ្វើអ្វី?</p>
+                    <p class="mb-6"><strong>ចម្លើយ៖</strong> បើគាត់មិនបានធ្វើដំណើរ គាត់នឹងមិនបានជួប Melchizedek, មិនបានជួប Fatima, មិនបានរៀនពី The Alchemist, និងមិនមានប្រាជ្ញាដើម្បីយល់ពីតម្លៃនៃកំណប់នោះទេ។ <strong>"ដំណើរ" (The Journey) គឺជាអ្វីដែលធ្វើឱ្យ "កំណប់" (The Treasure) មានតម្លៃ។</strong></p>
+                    <p class="mb-6">សៀវភៅបញ្ចប់ដោយ Santiago រកឃើញហឹបមាសនៅក្រោមដើមឧទុម្ពរ ហើយនិយាយថា៖ "Fatima, ខ្ញុំនឹងទៅរកអូនឥឡូវនេះ!"</p>
+                `,
+                scenario: `
+                    <p><strong>Maktub:</strong> "វាត្រូវបានសរសេរទុកហើយ"។ ព្រះបានសរសេរកំណប់ទុកឱ្យ Santiago នៅផ្ទះ ប៉ុន្តែព្រះក៏សរសេរដំណើរផ្សងព្រេងឱ្យគាត់ដែរ។ យើងត្រូវដើរផ្លូវឆ្ងាយ ដើម្បីស្គាល់ផ្ទះខ្លួនឯង។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជា Santiago ត្រូវធ្វើដំណើរទៅអេហ្ស៊ីប បើកំណប់នៅអេស្ប៉ាញតាំងពីដើម?", options: ["ព្រោះគាត់ល្ងង់", "ព្រោះព្រះចង់លេងសើច", "ព្រោះដំណើរនោះបានបង្រៀនគាត់ឱ្យក្លាយជាមនុស្សថ្មី (Transformation) និងឱ្យគាត់បានជួបស្នេហា", "ព្រោះគាត់គ្មានផែនទី"], correct: 2, explanation: "ត្រឹមត្រូវ! 'It's about the journey, not the destination.' កំណប់ពិតប្រាកដគឺប្រាជ្ញាដែលគាត់ទទួលបាន។" }
+            }
+        ];
+
+        // LOGIC
+        let currentLessonIndex = 0;
+        // ... (Same robust JS logic as previous examples)
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#0f172a] transition flex items-center text-sm font-medium border-l-4 border-transparent ${index === 0 ? 'text-amber-400' : 'text-slate-500'}`;
+                const simpleTitle = lesson.title.split('(')[0];
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full bg-slate-900 text-slate-500 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-slate-700">${index + 1}</span><span class="truncate tracking-wide font-sans">${simpleTitle}</span>`;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#0f172a]');
+                b.classList.add('text-slate-500', 'border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-amber-500', 'text-slate-900', 'border-amber-500');
+                b.querySelector('.lesson-indicator').classList.add('bg-slate-900', 'text-slate-500', 'border-slate-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#0f172a]');
+                activeBtn.classList.remove('text-slate-500', 'border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-slate-900', 'text-slate-500', 'border-slate-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-amber-500', 'text-slate-900', 'border-amber-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Stage ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+            
+            // Button Logic
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `បញ្ចប់` : `បន្តដំណើរ`;
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-slate-900/80 transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 hover:bg-slate-800 transition flex items-center shadow-md group bg-slate-800/50 text-slate-300";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-slate-600 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-slate-500 group-hover:bg-amber-500 group-hover:text-slate-900 group-hover:border-amber-500 transition">${String.fromCharCode(65 + i)}</span><span class="font-medium group-hover:text-white">${opt}</span>`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2">ត្រឹមត្រូវ! ✨</strong> ${explanation}`;
+                if(currentLessonIndex === lessons.length - 1) launchConfetti();
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+            
+            // Save progress to Supabase
+            saveProgressToDb(currentLessonIndex);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("សូមកុំភ្លេចស្តាប់បេះដូងរបស់អ្នក!");
+        };
+
+        function launchConfetti() {
+            const colors = ['#fbbf24', '#f59e0b', '#d97706', '#fcd34d'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 6 + 3 + 'px';
+                conf.style.height = Math.random() * 6 + 3 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(251,191,36,0.8)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
