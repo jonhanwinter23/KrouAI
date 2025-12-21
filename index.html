@@ -220,10 +220,12 @@
                     <a href="#features" class="text-gray-300 hover:text-white transition font-medium">អត្ថប្រយោជន៍</a>
                     <a href="#about" class="text-gray-300 hover:text-white transition font-medium">អំពីយើង</a>
                     
-                    <!-- Premium Button -->
-                    <button onclick="showPaymentModal()" class="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:shadow-lg hover:shadow-amber-500/30 transition flex items-center">
-                        <span class="mr-1">👑</span> Premium
-                    </button>
+                    <!-- Credit Display (visible when logged in) -->
+                    <div id="navCredits" class="hidden items-center space-x-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/30 cursor-pointer hover:bg-amber-500/30 transition" onclick="showPaymentModal()">
+                        <span class="text-amber-400 text-lg">💰</span>
+                        <span id="navCreditsAmount" class="text-amber-300 font-bold">0</span>
+                        <span class="text-amber-400/60 text-xs">Credits</span>
+                    </div>
                     
                     <!-- Auth Button -->
                     <div id="authSection">
@@ -976,6 +978,8 @@
         function showUserLoggedIn(user) {
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('userMenu').classList.remove('hidden');
+            document.getElementById('navCredits').classList.remove('hidden');
+            document.getElementById('navCredits').classList.add('flex');
             document.getElementById('userEmail').textContent = user.email;
             document.getElementById('dropdownEmail').textContent = user.email;
             document.getElementById('userInitial').textContent = user.email.charAt(0).toUpperCase();
@@ -1015,12 +1019,15 @@
         function updateCreditsDisplay(credits) {
             document.getElementById('userCredits').textContent = credits;
             document.getElementById('modalCredits').textContent = credits;
+            document.getElementById('navCreditsAmount').textContent = credits;
         }
         
         // Update UI when logged out
         function showUserLoggedOut() {
             document.getElementById('loginBtn').classList.remove('hidden');
             document.getElementById('userMenu').classList.add('hidden');
+            document.getElementById('navCredits').classList.add('hidden');
+            document.getElementById('navCredits').classList.remove('flex');
         }
         
         // Toggle user dropdown
