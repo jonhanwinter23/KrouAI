@@ -114,6 +114,130 @@
 </head>
 <body class="h-screen flex flex-col md:flex-row overflow-hidden">
 
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4" style="font-family: 'Battambang', cursive;">ត្រូវការចូលគណនី</h2>
+            <p class="text-gray-400 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold rounded-full hover:shadow-lg transition mb-3">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-2 text-gray-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-amber-400 hover:underline">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-slate-800/50 rounded-3xl backdrop-blur-sm border border-white/10">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-2xl">
+                <span class="text-4xl">🤴</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2" style="font-family: 'Battambang', cursive;">The Little Prince</h2>
+            <p class="text-gray-400 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-amber-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-amber-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-orange-600 transition disabled:opacity-50">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-xs mt-2 hidden text-center"></p>
+            </div>
+            
+            <div class="border-t border-white/10 pt-4">
+                <p class="text-gray-500 text-sm mb-2">មិនទាន់មាន Credits?</p>
+                <a href="https://link-sandbox.payway.com.kh/SA66349h" target="_blank" class="inline-block px-6 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-bold rounded-full hover:shadow-lg transition text-sm">
+                    💳 ទិញ 20 Credits = 2000៛
+                </a>
+                <p class="text-gray-500 text-xs mt-2">រួចទាក់ទង <a href="https://t.me/KrouAI" class="text-blue-400 hover:underline">@KrouAI</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const BOOK_ID = 'little';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                // Check if book is unlocked
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        // Book is unlocked
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        // Show unlock gate
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
     <!-- Mobile Header -->
     <div class="md:hidden bg-slate-900 p-4 shadow-md flex justify-between items-center z-20 border-b border-slate-800">
         <h1 class="text-lg font-bold text-amber-400 en-title">The Little Prince</h1>

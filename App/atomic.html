@@ -164,17 +164,17 @@
                 if (error) throw error;
                 if (data.success) {
                     document.getElementById('unlockGate').style.display = 'none';
-                    alert('🎉 សូមអបអរសorg org org org org org org org org org org org org org org org org org org org org org org org org org org !');
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
                 } else {
                     document.getElementById('creditsError').textContent = data.message;
                     document.getElementById('creditsError').classList.remove('hidden');
                 }
             } catch (err) {
-                document.getElementById('creditsError').textContent = 'មorg org org org org org org org org org org org org org org org org org org org org org ';
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
                 document.getElementById('creditsError').classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'org org org org org org org 20 Credits 🔓';
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
                 updateCreditsDisplay();
             }
         }
