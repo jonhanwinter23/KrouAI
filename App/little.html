@@ -249,7 +249,8 @@
 
     <!-- Fantasy Background Audio -->
     <audio id="bgMusic" loop preload="auto">
-        <source src="https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_0cc8660d58.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/audio/2024/11/04/audio_81b97e8cfe.mp3" type="audio/mpeg">
     </audio>
     
     <!-- Sound Toggle Button -->
@@ -259,6 +260,11 @@
             <path id="soundWaves" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" class=""></path>
         </svg>
     </button>
+    
+    <!-- Sound hint tooltip -->
+    <div id="soundHint" class="fixed bottom-20 right-4 z-100 bg-slate-800/95 text-amber-400 px-4 py-2 rounded-full text-sm border border-amber-500/50 backdrop-blur-sm animate-bounce shadow-lg">
+        🎵 ចុចដើម្បីបើកសំឡេង
+    </div>
     
     <!-- Floating Stars Background -->
     <div id="starsContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
@@ -598,7 +604,7 @@
                             <p class="text-slate-300">គាត់ពាក់មួកមួយ។ រាល់ពេលមាននរណាទះដៃ គាត់ដោះមួកគំនាប់។ គាត់ចង់ឱ្យគេកោតសរសើរ ថាគាត់សង្ហាបំផុត ឆ្លាតបំផុត (ទាំងដែលនៅលើភពនោះមានតែគាត់ម្នាក់ឯង)។</p>
                             <p class="mt-2 text-sm text-slate-400"><strong>អត្ថន័យ៖</strong> តំណាងឱ្យមនុស្សដែលត្រូវការ <strong>ការទទួលស្គាល់ (Validation)</strong> ពីអ្នកដទៃទើបមានអារម្មណ៍ថាខ្លួនមានតម្លៃ។</p>
                         </div>
-                    </div>
+                   </div>
                     <p class="mb-6">ព្រះអង្គម្ចាស់តូចពោលថា៖ <strong>"មនុស្សធំ ពិតជាចម្លែកខ្លាំងណាស់។"</strong></p>
                 `,
                 scenario: `
@@ -904,8 +910,15 @@
         bgMusic.volume = 0.3;
         
         function toggleSound() {
+            // Hide the sound hint
+            const hint = document.getElementById('soundHint');
+            if (hint) hint.style.display = 'none';
+            
             if (isMuted) {
-                bgMusic.play().catch(e => console.log('Audio play failed:', e));
+                bgMusic.play().catch(e => {
+                    console.log('Audio play failed:', e);
+                    alert('⚠️ សំឡេងមិនអាចចាក់បានទេ។ សូមសាកល្បងម្តងទៀត។');
+                });
                 isMuted = false;
                 soundBtn.classList.remove('muted');
                 soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
@@ -919,14 +932,25 @@
         
         // Auto-play music on first interaction (with user gesture)
         function tryPlayMusic() {
+            const hint = document.getElementById('soundHint');
             if (isMuted) {
                 bgMusic.play().then(() => {
                     isMuted = false;
                     soundBtn.classList.remove('muted');
                     soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                    if (hint) hint.style.display = 'none';
                 }).catch(e => console.log('Auto-play blocked:', e));
             }
         }
+        
+        // Auto-hide hint after 10 seconds
+        setTimeout(() => {
+            const hint = document.getElementById('soundHint');
+            if (hint) hint.style.opacity = '0';
+            setTimeout(() => {
+                if (hint) hint.style.display = 'none';
+            }, 500);
+        }, 10000);
         
         // Create twinkling stars
         function createStars() {
