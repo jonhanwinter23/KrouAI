@@ -110,9 +110,161 @@
             position: relative;
             z-index: 1;
         }
+        
+        /* Fantasy Animations */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+        
+        @keyframes shooting-star {
+            0% { transform: translateX(0) translateY(0); opacity: 1; }
+            100% { transform: translateX(300px) translateY(300px); opacity: 0; }
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3); }
+        }
+        
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+            box-shadow: 0 0 10px #fbbf24, 0 0 20px #fbbf24;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .sparkle-effect {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
+            animation: sparkle 3s ease-in-out infinite;
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(45deg, #fbbf24, transparent);
+            border-radius: 50%;
+            animation: shooting-star 3s ease-out infinite;
+        }
+        
+        .magic-glow {
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        .aurora-bg {
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.1) 0%, 
+                rgba(147, 51, 234, 0.1) 25%, 
+                rgba(236, 72, 153, 0.05) 50%, 
+                rgba(59, 130, 246, 0.1) 75%,
+                rgba(147, 51, 234, 0.1) 100%);
+            background-size: 400% 400%;
+            animation: aurora 15s ease infinite;
+        }
+        
+        /* Sound Button */
+        .sound-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid #fbbf24;
+            color: #fbbf24;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .sound-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+        }
+        
+        .sound-btn.muted {
+            border-color: #64748b;
+            color: #64748b;
+        }
+        
+        /* Magical cursor trail */
+        .cursor-sparkle {
+            position: fixed;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s;
+        }
+        
+        /* Enhanced card hover */
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .quote-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 30px rgba(251, 191, 36, 0.3);
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Fantasy Background Audio -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Sound Toggle Button -->
+    <button id="soundBtn" class="sound-btn muted" onclick="toggleSound()" title="បើក/បិទសំឡេង">
+        <svg id="soundIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+            <path id="soundWaves" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" class=""></path>
+        </svg>
+    </button>
+    
+    <!-- Floating Stars Background -->
+    <div id="starsContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+    
+    <!-- Aurora Effect -->
+    <div class="fixed inset-0 aurora-bg pointer-events-none z-0"></div>
 
     <!-- Login Required Gate -->
     <div id="loginGate" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 z-[200] flex items-center justify-center">
@@ -276,15 +428,24 @@
             
             <!-- Welcome Screen -->
             <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
-                <div class="bg-slate-800/60 backdrop-blur-md p-16 rounded-3xl shadow-2xl max-w-3xl border border-slate-700 relative overflow-hidden">
+                <div class="bg-slate-800/60 backdrop-blur-md p-16 rounded-3xl shadow-2xl max-w-3xl border border-slate-700 relative overflow-hidden magic-glow">
+                    <!-- Magical orbs -->
                     <div class="absolute -top-20 -right-20 w-40 h-40 bg-amber-400/20 rounded-full blur-3xl animate-pulse"></div>
-                    <div class="text-8xl mb-8">🤴🦊🌹</div>
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+                    <div class="absolute top-1/2 right-0 w-24 h-24 bg-blue-400/10 rounded-full blur-2xl animate-pulse" style="animation-delay: 2s;"></div>
+                    
+                    <!-- Floating emojis -->
+                    <div class="text-8xl mb-8 floating-element">
+                        <span class="inline-block" style="animation: float 4s ease-in-out infinite;">🤴</span>
+                        <span class="inline-block" style="animation: float 5s ease-in-out infinite; animation-delay: 0.5s;">🦊</span>
+                        <span class="inline-block" style="animation: float 4.5s ease-in-out infinite; animation-delay: 1s;">🌹</span>
+                    </div>
                     <h2 class="text-4xl md:text-5xl font-bold text-white mb-8 kh-title leading-tight">ព្រះអង្គម្ចាស់តូច</h2>
                     <p class="text-xl text-slate-300 mb-12 leading-loose font-medium text-justify px-4">
                         "មនុស្សធំមិនដែលយល់អ្វីដោយខ្លួនឯងទេ ហើយវាពិតជាគួរឱ្យធុញសម្រាប់កុមារដែលត្រូវពន្យល់ពួកគេជារៀងរហូត។"<br><br>
                         នេះមិនមែនជារឿងនិទានកុមារធម្មតាទេ តែជាសៀវភៅទស្សនវិជ្ជាអំពី <strong>សេចក្តីស្រលាញ់ ភាពឯកា និងការស្វែងរកអត្ថន័យជីវិត</strong>។
                     </p>
-                    <button onclick="loadLesson(0)" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 text-xl flex items-center mx-auto tracking-widest border border-amber-300/50">
+                    <button onclick="loadLesson(0); tryPlayMusic();" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(251,191,36,0.5)] text-xl flex items-center mx-auto tracking-widest border border-amber-300/50 magic-glow">
                         <span>ចាប់ផ្តើមដំណើរ</span>
                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
@@ -732,6 +893,110 @@
         }
 
         initNav();
+        
+        // ========== FANTASY EFFECTS ==========
+        
+        // Sound Control
+        const bgMusic = document.getElementById('bgMusic');
+        const soundBtn = document.getElementById('soundBtn');
+        const soundWaves = document.getElementById('soundWaves');
+        let isMuted = true;
+        bgMusic.volume = 0.3;
+        
+        function toggleSound() {
+            if (isMuted) {
+                bgMusic.play().catch(e => console.log('Audio play failed:', e));
+                isMuted = false;
+                soundBtn.classList.remove('muted');
+                soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+            } else {
+                bgMusic.pause();
+                isMuted = true;
+                soundBtn.classList.add('muted');
+                soundWaves.setAttribute('d', 'M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
+            }
+        }
+        
+        // Auto-play music on first interaction (with user gesture)
+        function tryPlayMusic() {
+            if (isMuted) {
+                bgMusic.play().then(() => {
+                    isMuted = false;
+                    soundBtn.classList.remove('muted');
+                    soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                }).catch(e => console.log('Auto-play blocked:', e));
+            }
+        }
+        
+        // Create twinkling stars
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            const numStars = 80;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (2 + Math.random() * 3) + 's';
+                star.style.width = (2 + Math.random() * 3) + 'px';
+                star.style.height = star.style.width;
+                container.appendChild(star);
+            }
+        }
+        
+        // Create shooting stars periodically
+        function createShootingStar() {
+            const container = document.getElementById('starsContainer');
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.left = Math.random() * 50 + '%';
+            star.style.top = Math.random() * 30 + '%';
+            star.style.width = '2px';
+            star.style.height = '2px';
+            star.style.boxShadow = '0 0 10px #fbbf24, 0 0 20px #fbbf24, 50px 0 10px #fbbf24';
+            container.appendChild(star);
+            
+            setTimeout(() => star.remove(), 3000);
+        }
+        
+        // Create sparkles on mouse move
+        let lastSparkleTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastSparkleTime < 50) return;
+            lastSparkleTime = now;
+            
+            const sparkle = document.createElement('div');
+            sparkle.className = 'cursor-sparkle';
+            sparkle.style.left = e.clientX + 'px';
+            sparkle.style.top = e.clientY + 'px';
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.style.opacity = '0';
+                setTimeout(() => sparkle.remove(), 300);
+            }, 100);
+        });
+        
+        // Initialize fantasy effects
+        createStars();
+        setInterval(createShootingStar, 4000);
+        
+        // Add floating animation to welcome screen elements
+        setTimeout(() => {
+            const welcomeEmoji = document.querySelector('#welcomeScreen .text-8xl');
+            if (welcomeEmoji) {
+                welcomeEmoji.classList.add('floating-element');
+            }
+        }, 500);
+        
+        // Add magic glow to sidebar progress bar
+        const progressBarEl = document.getElementById('progressBar');
+        if (progressBarEl) {
+            progressBarEl.classList.add('magic-glow');
+        }
 
     </script>
 </body>
