@@ -220,6 +220,11 @@
                     <a href="#features" class="text-gray-300 hover:text-white transition font-medium">អត្ថប្រយោជន៍</a>
                     <a href="#about" class="text-gray-300 hover:text-white transition font-medium">អំពីយើង</a>
                     
+                    <!-- Premium Button -->
+                    <button onclick="showPaymentModal()" class="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:shadow-lg hover:shadow-amber-500/30 transition flex items-center">
+                        <span class="mr-1">👑</span> Premium
+                    </button>
+                    
                     <!-- Auth Button -->
                     <div id="authSection">
                         <button onclick="showAuthModal()" id="loginBtn" class="px-5 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition">
@@ -248,6 +253,53 @@
         </div>
     </nav>
     
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 max-w-md w-full mx-4 border border-white/10 shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                    <span class="text-3xl">👑</span>
+                </div>
+                <h2 class="text-2xl font-bold text-white kh-text-title">បើកសោមេរៀនទាំងអស់</h2>
+                <p class="text-gray-400 text-sm mt-1">Unlock All Premium Courses</p>
+            </div>
+            
+            <div class="bg-white/5 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-gray-400">Premium Access</span>
+                    <span class="text-2xl font-bold text-amber-400">$5</span>
+                </div>
+                <ul class="text-sm text-gray-300 space-y-2">
+                    <li>✅ Crucial Conversations (8 មេរៀន)</li>
+                    <li>✅ Psychology of Money (17 មេរៀន)</li>
+                    <li>✅ Atomic Habits (21 មេរៀន)</li>
+                    <li>✅ The Four Agreements</li>
+                    <li>✅ Personality Isn't Permanent</li>
+                    <li>✅ មេរៀនថ្មីៗទាំងអស់នាពេលអនាគត</li>
+                </ul>
+            </div>
+            
+            <a href="https://link-sandbox.payway.com.kh/SA66349h" target="_blank" class="block w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-amber-500/30 transition text-center mb-4">
+                💳 បង់ប្រាក់ឥឡូវនេះ (Pay Now)
+            </a>
+            
+            <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center">
+                <p class="text-blue-300 text-sm mb-2">បន្ទាប់ពីបង់ប្រាក់រួច សូមទាក់ទង Telegram:</p>
+                <a href="https://t.me/KrouAI" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
+                    @KrouAI
+                </a>
+                <p class="text-gray-500 text-xs mt-2">ផ្ញើរូបថតបង្កាន់ដៃ → ទទួលកូដបើកសោ</p>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <button onclick="hidePaymentModal()" class="text-gray-500 hover:text-gray-300 text-sm">
+                    ✕ បិទ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center">
         <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 max-w-md w-full mx-4 border border-white/10 shadow-2xl">
@@ -861,6 +913,17 @@
             setTimeout(() => {
                 if (!currentUser) showAuthModal();
             }, 500);
+        }
+        
+        // Payment modal functions
+        function showPaymentModal() {
+            document.getElementById('paymentModal').classList.remove('hidden');
+            document.getElementById('paymentModal').classList.add('flex');
+        }
+        
+        function hidePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            document.getElementById('paymentModal').classList.remove('flex');
         }
         
         // ========== PARTICLES & UI ==========
