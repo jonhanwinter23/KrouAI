@@ -248,9 +248,8 @@
 <body class="h-screen flex flex-col md:flex-row overflow-hidden">
 
     <!-- Fantasy Background Audio -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_0cc8660d58.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/audio/2024/11/04/audio_81b97e8cfe.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop preload="auto" crossorigin="anonymous">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
     
     <!-- Sound Toggle Button -->
@@ -909,24 +908,39 @@
         let isMuted = true;
         bgMusic.volume = 0.3;
         
+        // Debug: Log audio events
+        bgMusic.addEventListener('canplay', () => console.log('✅ Audio can play'));
+        bgMusic.addEventListener('playing', () => console.log('🎵 Audio is playing'));
+        bgMusic.addEventListener('error', (e) => {
+            console.error('❌ Audio error:', e);
+            alert('Audio error: ' + (bgMusic.error ? bgMusic.error.message : 'Unknown error'));
+        });
+        
         function toggleSound() {
             // Hide the sound hint
             const hint = document.getElementById('soundHint');
             if (hint) hint.style.display = 'none';
             
+            console.log('🔊 Toggle sound clicked, isMuted:', isMuted);
+            
             if (isMuted) {
-                bgMusic.play().catch(e => {
-                    console.log('Audio play failed:', e);
-                    alert('⚠️ សំឡេងមិនអាចចាក់បានទេ។ សូមសាកល្បងម្តងទៀត។');
-                });
-                isMuted = false;
-                soundBtn.classList.remove('muted');
-                soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                bgMusic.play()
+                    .then(() => {
+                        console.log('✅ Audio started playing');
+                        isMuted = false;
+                        soundBtn.classList.remove('muted');
+                        soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                    })
+                    .catch(e => {
+                        console.error('❌ Audio play failed:', e);
+                        alert('⚠️ Audio Error: ' + e.message + '\n\nTry: Check your browser volume or try a different browser.');
+                    });
             } else {
                 bgMusic.pause();
                 isMuted = true;
                 soundBtn.classList.add('muted');
                 soundWaves.setAttribute('d', 'M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
+                console.log('⏸️ Audio paused');
             }
         }
         
