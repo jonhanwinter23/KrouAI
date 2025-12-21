@@ -274,39 +274,31 @@
         let gainNode = null;
         
         function toggleSound() {
-            console.log('toggleSound called');
+            console.log('toggleSound called, isMuted:', isMuted);
             
             const bgMusic = document.getElementById('bgMusic');
-            const soundBtn = document.getElementById('soundBtn');
-            const soundWaves = document.getElementById('soundWaves');
             const hint = document.getElementById('soundHint');
             
             // Hide hint
             if (hint) hint.style.display = 'none';
             
             if (isMuted) {
-                // Try to play audio
+                // Update UI immediately
+                updateSoundUI(true);
+                
+                // Play tone immediately (this always works)
+                playTone();
+                
+                // Also try MP3 in background
                 if (bgMusic) {
-                    bgMusic.volume = 0.3;
-                    bgMusic.play()
-                        .then(() => {
-                            console.log('Audio playing!');
-                            updateSoundUI(true);
-                        })
-                        .catch(e => {
-                            console.log('MP3 failed, trying Web Audio:', e);
-                            playTone();
-                            updateSoundUI(true);
-                        });
-                } else {
-                    playTone();
-                    updateSoundUI(true);
+                    bgMusic.volume = 0.5;
+                    bgMusic.play().catch(e => console.log('MP3 failed:', e));
                 }
             } else {
-                // Stop audio
-                if (bgMusic) bgMusic.pause();
-                stopTone();
+                // Stop everything
                 updateSoundUI(false);
+                stopTone();
+                if (bgMusic) bgMusic.pause();
             }
         }
         
@@ -331,27 +323,41 @@
         
         function playTone() {
             try {
+                console.log('Creating audio context...');
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('Audio context created:', audioContext.state);
                 }
                 if (audioContext.state === 'suspended') {
                     audioContext.resume();
+                    console.log('Audio context resumed');
+                }
+                
+                // Stop previous oscillator if exists
+                if (oscillator) {
+                    try { oscillator.stop(); } catch(e) {}
                 }
                 
                 oscillator = audioContext.createOscillator();
                 gainNode = audioContext.createGain();
                 
+                // Create a pleasant chord
                 oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 1);
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4 note - louder frequency
+                
+                // LOUDER volume
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
                 
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 oscillator.start();
-                console.log('Tone playing!');
+                console.log('🔊 TONE IS NOW PLAYING!');
+                
+                // Visual confirmation
+                alert('🔊 សំឡេងកំពុងចាក់! (Sound is playing!)');
             } catch(e) {
                 console.error('Tone error:', e);
+                alert('❌ Audio error: ' + e.message);
             }
         }
         
