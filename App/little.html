@@ -916,6 +916,49 @@
             alert('Audio error: ' + (bgMusic.error ? bgMusic.error.message : 'Unknown error'));
         });
         
+        // Web Audio API for generating sound (fallback)
+        let audioContext = null;
+        let isPlayingTone = false;
+        let oscillator = null;
+        let gainNode = null;
+        
+        function playFantasyTone() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Create a gentle, dreamy ambient sound
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3 note
+            
+            // Add gentle fade in/out
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 1);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start();
+            
+            isPlayingTone = true;
+        }
+        
+        function stopFantasyTone() {
+            if (oscillator && gainNode) {
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+                setTimeout(() => {
+                    oscillator.stop();
+                    isPlayingTone = false;
+                }, 500);
+            }
+        }
+        
         function toggleSound() {
             // Hide the sound hint
             const hint = document.getElementById('soundHint');
@@ -924,19 +967,31 @@
             console.log('🔊 Toggle sound clicked, isMuted:', isMuted);
             
             if (isMuted) {
+                // Try HTML audio first
                 bgMusic.play()
                     .then(() => {
-                        console.log('✅ Audio started playing');
+                        console.log('✅ HTML Audio started playing');
                         isMuted = false;
                         soundBtn.classList.remove('muted');
                         soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
                     })
                     .catch(e => {
-                        console.error('❌ Audio play failed:', e);
-                        alert('⚠️ Audio Error: ' + e.message + '\n\nTry: Check your browser volume or try a different browser.');
+                        console.error('❌ HTML Audio failed, trying Web Audio API:', e);
+                        // Fallback to Web Audio API
+                        try {
+                            playFantasyTone();
+                            isMuted = false;
+                            soundBtn.classList.remove('muted');
+                            soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                            console.log('✅ Web Audio API playing');
+                        } catch (e2) {
+                            console.error('❌ Web Audio also failed:', e2);
+                            alert('⚠️ Audio not supported in this browser.\n\nError: ' + e.message);
+                        }
                     });
             } else {
                 bgMusic.pause();
+                stopFantasyTone();
                 isMuted = true;
                 soundBtn.classList.add('muted');
                 soundWaves.setAttribute('d', 'M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
