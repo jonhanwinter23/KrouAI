@@ -253,7 +253,7 @@
     </audio>
     
     <!-- Sound Toggle Button -->
-    <button id="soundBtn" class="sound-btn muted" onclick="alert('Button clicked!'); toggleSound();" title="បើក/បិទសំឡេង">
+    <button id="soundBtn" class="sound-btn muted" onclick="toggleSound()" title="បើក/បិទសំឡេង">
         <svg id="soundIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
             <path id="soundWaves" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" class=""></path>
@@ -264,6 +264,118 @@
     <div id="soundHint" class="fixed bottom-20 right-4 bg-slate-800/95 text-amber-400 px-4 py-2 rounded-full text-sm border border-amber-500/50 backdrop-blur-sm animate-bounce shadow-lg" style="z-index: 10000;">
         🎵 ចុចដើម្បីបើកសំឡេង
     </div>
+    
+    <!-- Sound Control Script (must be here, right after the button) -->
+    <script>
+        // Sound variables
+        let isMuted = true;
+        let audioContext = null;
+        let oscillator = null;
+        let gainNode = null;
+        
+        function toggleSound() {
+            console.log('toggleSound called');
+            
+            const bgMusic = document.getElementById('bgMusic');
+            const soundBtn = document.getElementById('soundBtn');
+            const soundWaves = document.getElementById('soundWaves');
+            const hint = document.getElementById('soundHint');
+            
+            // Hide hint
+            if (hint) hint.style.display = 'none';
+            
+            if (isMuted) {
+                // Try to play audio
+                if (bgMusic) {
+                    bgMusic.volume = 0.3;
+                    bgMusic.play()
+                        .then(() => {
+                            console.log('Audio playing!');
+                            updateSoundUI(true);
+                        })
+                        .catch(e => {
+                            console.log('MP3 failed, trying Web Audio:', e);
+                            playTone();
+                            updateSoundUI(true);
+                        });
+                } else {
+                    playTone();
+                    updateSoundUI(true);
+                }
+            } else {
+                // Stop audio
+                if (bgMusic) bgMusic.pause();
+                stopTone();
+                updateSoundUI(false);
+            }
+        }
+        
+        function updateSoundUI(isPlaying) {
+            const soundBtn = document.getElementById('soundBtn');
+            const soundWaves = document.getElementById('soundWaves');
+            
+            if (isPlaying) {
+                isMuted = false;
+                soundBtn.classList.remove('muted');
+                soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
+                soundBtn.style.borderColor = '#fbbf24';
+                soundBtn.style.color = '#fbbf24';
+            } else {
+                isMuted = true;
+                soundBtn.classList.add('muted');
+                soundWaves.setAttribute('d', 'M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
+                soundBtn.style.borderColor = '#64748b';
+                soundBtn.style.color = '#64748b';
+            }
+        }
+        
+        function playTone() {
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 1);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.start();
+                console.log('Tone playing!');
+            } catch(e) {
+                console.error('Tone error:', e);
+            }
+        }
+        
+        function stopTone() {
+            if (oscillator && gainNode && audioContext) {
+                try {
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+                    setTimeout(() => { oscillator.stop(); }, 300);
+                } catch(e) {}
+            }
+        }
+        
+        // Auto-hide hint after 8 seconds
+        setTimeout(() => {
+            const hint = document.getElementById('soundHint');
+            if (hint) {
+                hint.style.transition = 'opacity 0.5s';
+                hint.style.opacity = '0';
+                setTimeout(() => hint.remove(), 500);
+            }
+        }, 8000);
+        
+        console.log('Sound script loaded!');
+    </script>
     
     <!-- Floating Stars Background -->
     <div id="starsContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
@@ -450,7 +562,7 @@
                         "មនុស្សធំមិនដែលយល់អ្វីដោយខ្លួនឯងទេ ហើយវាពិតជាគួរឱ្យធុញសម្រាប់កុមារដែលត្រូវពន្យល់ពួកគេជារៀងរហូត។"<br><br>
                         នេះមិនមែនជារឿងនិទានកុមារធម្មតាទេ តែជាសៀវភៅទស្សនវិជ្ជាអំពី <strong>សេចក្តីស្រលាញ់ ភាពឯកា និងការស្វែងរកអត្ថន័យជីវិត</strong>។
                     </p>
-                    <button onclick="loadLesson(0); tryPlayMusic();" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(251,191,36,0.5)] text-xl flex items-center mx-auto tracking-widest border border-amber-300/50 magic-glow">
+                    <button onclick="loadLesson(0); toggleSound();" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-4 px-12 rounded-full shadow-lg transition transform hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(251,191,36,0.5)] text-xl flex items-center mx-auto tracking-widest border border-amber-300/50 magic-glow">
                         <span>ចាប់ផ្តើមដំណើរ</span>
                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
@@ -900,126 +1012,6 @@
         initNav();
         
         // ========== FANTASY EFFECTS ==========
-        
-        // Sound Control
-        const bgMusic = document.getElementById('bgMusic');
-        const soundBtn = document.getElementById('soundBtn');
-        const soundWaves = document.getElementById('soundWaves');
-        let isMuted = true;
-        bgMusic.volume = 0.3;
-        
-        // Debug: Log audio events
-        bgMusic.addEventListener('canplay', () => console.log('✅ Audio can play'));
-        bgMusic.addEventListener('playing', () => console.log('🎵 Audio is playing'));
-        bgMusic.addEventListener('error', (e) => {
-            console.error('❌ Audio error:', e);
-            alert('Audio error: ' + (bgMusic.error ? bgMusic.error.message : 'Unknown error'));
-        });
-        
-        // Web Audio API for generating sound (fallback)
-        let audioContext = null;
-        let isPlayingTone = false;
-        let oscillator = null;
-        let gainNode = null;
-        
-        function playFantasyTone() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-            
-            // Create a gentle, dreamy ambient sound
-            oscillator = audioContext.createOscillator();
-            gainNode = audioContext.createGain();
-            
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3 note
-            
-            // Add gentle fade in/out
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 1);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            oscillator.start();
-            
-            isPlayingTone = true;
-        }
-        
-        function stopFantasyTone() {
-            if (oscillator && gainNode) {
-                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
-                setTimeout(() => {
-                    oscillator.stop();
-                    isPlayingTone = false;
-                }, 500);
-            }
-        }
-        
-        function toggleSound() {
-            // Hide the sound hint
-            const hint = document.getElementById('soundHint');
-            if (hint) hint.style.display = 'none';
-            
-            console.log('🔊 Toggle sound clicked, isMuted:', isMuted);
-            
-            if (isMuted) {
-                // Try HTML audio first
-                bgMusic.play()
-                    .then(() => {
-                        console.log('✅ HTML Audio started playing');
-                        isMuted = false;
-                        soundBtn.classList.remove('muted');
-                        soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
-                    })
-                    .catch(e => {
-                        console.error('❌ HTML Audio failed, trying Web Audio API:', e);
-                        // Fallback to Web Audio API
-                        try {
-                            playFantasyTone();
-                            isMuted = false;
-                            soundBtn.classList.remove('muted');
-                            soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
-                            console.log('✅ Web Audio API playing');
-                        } catch (e2) {
-                            console.error('❌ Web Audio also failed:', e2);
-                            alert('⚠️ Audio not supported in this browser.\n\nError: ' + e.message);
-                        }
-                    });
-            } else {
-                bgMusic.pause();
-                stopFantasyTone();
-                isMuted = true;
-                soundBtn.classList.add('muted');
-                soundWaves.setAttribute('d', 'M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
-                console.log('⏸️ Audio paused');
-            }
-        }
-        
-        // Auto-play music on first interaction (with user gesture)
-        function tryPlayMusic() {
-            const hint = document.getElementById('soundHint');
-            if (isMuted) {
-                bgMusic.play().then(() => {
-                    isMuted = false;
-                    soundBtn.classList.remove('muted');
-                    soundWaves.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728');
-                    if (hint) hint.style.display = 'none';
-                }).catch(e => console.log('Auto-play blocked:', e));
-            }
-        }
-        
-        // Auto-hide hint after 10 seconds
-        setTimeout(() => {
-            const hint = document.getElementById('soundHint');
-            if (hint) hint.style.opacity = '0';
-            setTimeout(() => {
-                if (hint) hint.style.display = 'none';
-            }, 500);
-        }, 10000);
         
         // Create twinkling stars
         function createStars() {
