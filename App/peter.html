@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Pan - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Berkshire+Swash&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #020617; /* Midnight Blue */
+            color: #e2e8f0; /* Slate-200 */
+            line-height: 2;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(74, 222, 128, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(250, 204, 21, 0.1) 0%, transparent 25%),
+                url('https://www.transparenttextures.com/patterns/stardust.png');
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Berkshire Swash', cursive; /* Magical/Fairytale font */
+        }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Sidebar - Neverland Map Theme */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 100%);
+            border-left: 4px solid #4ade80; /* Green-400 */
+            color: #4ade80;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+        
+        .correct-answer {
+            background-color: #064e3b !important;
+            border: 1px solid #34d399 !important;
+            color: #d1fae5 !important;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border: 1px solid #ef4444 !important;
+            color: #fecaca !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Concept Cards */
+        .concept-card {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #facc15; /* Pixie Dust Gold */
+            margin: 2.5rem 0;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #4ade80; /* Peter's Green */
+            padding-left: 2rem;
+            color: #86efac;
+            margin: 2.5rem 0;
+            background-color: rgba(22, 163, 74, 0.1); 
+            padding: 2rem;
+            border-radius: 0 1rem 1rem 0;
+            font-size: 1.15rem;
+            font-family: 'Battambang', serif;
+        }
+
+        /* Details */
+        details {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #1e293b;
+        }
+        details[open] {
+            border-color: #facc15;
+            background: rgba(30, 41, 59, 0.9);
+        }
+        summary {
+            font-weight: bold;
+            color: #facc15;
+            outline: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        summary::before {
+            content: '✨';
+            margin-right: 12px;
+        }
+
+        /* Flying Button */
+        .btn-fly {
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+            color: white;
+            border: 2px solid #86efac;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+            font-family: 'Berkshire Swash', cursive;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-fly:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.7);
+            background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
+            color: #022c22;
+            border-color: #facc15;
+        }
+        .btn-fly::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            transform: scale(0);
+            transition: transform 0.6s;
+        }
+        .btn-fly:hover::after {
+            transform: scale(1);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Floating Stars Animation */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: floatUp 10s linear infinite;
+            opacity: 0;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#020617] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-[0_0_30px_#4ade80]">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-slate-400 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-full hover:shadow-[0_0_20px_#4ade80] transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-slate-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-green-400 hover:underline font-bold">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#020617] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-[#0f172a]/90 backdrop-blur-xl rounded-3xl border border-slate-700 shadow-[0_0_50px_rgba(74,222,128,0.2)]">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-400 to-yellow-400 rounded-full flex items-center justify-center shadow-[0_0_30px_#facc15]">
+                <span class="text-4xl">🧚</span>
+            </div>
+            <h2 class="text-2xl font-bold text-green-400 mb-2 en-title">PETER PAN</h2>
+            <p class="text-slate-400 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full btn-fly py-3 px-6 rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-slate-500 hover:text-green-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'peter';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#020617] p-4 shadow-lg flex justify-between items-center z-20 border-b border-slate-800">
+        <h1 class="text-lg font-bold text-[#4ade80] en-title">Peter Pan</h1>
+        <button id="menuBtn" class="text-slate-400 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-[#0b1120] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-slate-800">
+        <div class="p-8 border-b border-slate-800 hidden md:block bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#4ade80] to-[#22c55e] en-title tracking-wider mb-2 drop-shadow-lg" style="line-height: 1.2;">PETER PAN</h1>
+            <p class="text-xs text-slate-400 font-bold uppercase tracking-[0.2em] mt-2">The Boy Who Wouldn't Grow Up</p>
+            <p class="text-xs text-slate-600 mt-1 italic">J.M. Barrie</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-slate-800 bg-[#020617]">
+            <div class="flex justify-between text-xs mb-2 text-[#facc15] font-bold uppercase en-title">
+                <span>Flight to Neverland</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                <div id="progressBar" class="bg-gradient-to-r from-green-500 to-yellow-400 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_#4ade80]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#020617]" id="mainContent">
+        <!-- Decor: Floating Stars -->
+        <div class="star" style="left: 10%; animation-duration: 8s; animation-delay: 0s;"></div>
+        <div class="star" style="left: 30%; animation-duration: 12s; animation-delay: 2s;"></div>
+        <div class="star" style="left: 70%; animation-duration: 10s; animation-delay: 4s;"></div>
+        <div class="star" style="left: 90%; animation-duration: 15s; animation-delay: 1s;"></div>
+
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#0f172a]/70 backdrop-blur-xl p-16 rounded-3xl shadow-2xl max-w-3xl border border-slate-700 relative overflow-hidden group">
+                    <div class="absolute -top-32 -left-32 w-64 h-64 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div class="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    
+                    <div class="text-8xl mb-8 drop-shadow-[0_0_25px_rgba(250,204,21,0.5)]">🧚✨🐊</div>
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 kh-title leading-tight drop-shadow-md">ភីធើ ផេន និង នេវើលែន</h2>
+                    <p class="text-xl text-slate-300 mb-12 leading-loose font-light px-8">
+                        "កុមារទាំងអស់សុទ្ធតែធំឡើង... លើកលែងតែម្នាក់ប៉ុណ្ណោះ។"<br>
+                        តោះហោះទៅកាន់កោះនៃក្តីស្រមៃ ដែលគ្មាននរណាម្នាក់ចាស់។
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-fly py-5 px-12 rounded-full text-xl flex items-center mx-auto tracking-widest uppercase">
+                        <span>Second to the right...</span>
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-[#facc15] mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-slate-800 w-full pb-4 en-title">
+                    <span id="chapterNumber" class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700">Chapter 1</span>
+                    <span class="flex-1 text-right text-slate-500">The Adventure Begins</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-4xl md:text-6xl font-bold text-white mb-12 leading-snug kh-title text-shadow-lg"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-slate-300 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#0f172a] border-l-4 border-green-500 p-10 rounded-r-2xl mb-12 hidden shadow-[0_0_30px_rgba(74,222,128,0.1)] mt-20 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl"></div>
+                    <h3 class="text-2xl font-bold text-green-400 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                        មេរៀនពី Neverland (Reflection)
+                    </h3>
+                    <div id="scenarioContent" class="text-slate-200 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#0f172a]/80 rounded-3xl shadow-2xl p-10 md:p-16 border-t border-slate-700 mt-24 relative overflow-hidden backdrop-blur-xl">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#facc15]/5 rounded-bl-full"></div>
+                    <h3 class="text-3xl font-bold text-white mb-10 flex items-center relative z-10 kh-title">
+                        <span class="bg-[#facc15] text-black text-sm font-extrabold mr-6 px-6 py-2 rounded-full uppercase tracking-widest shadow-lg en-title">QUIZ</span>
+                        តើអ្នកជឿលើទេវតាទេ?
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-2xl font-medium mb-10 text-slate-200 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-6"></div>
+                        <div id="quizFeedback" class="mt-10 hidden p-8 rounded-2xl text-xl border-l-8 shadow-2xl bg-black/40"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-24 pt-12 border-t border-slate-800">
+                    <button id="prevBtn" class="px-10 py-4 rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
+                        ← Back
+                    </button>
+                    <button id="nextBtn" class="btn-fly py-4 px-10 rounded-xl flex items-center text-lg">
+                        Fly Next →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR PETER PAN (KHMER)
+        const lessons = [
+            {
+                title: "1. កុមារដែលមិនធំ (The Boy Who Wouldn't Grow Up)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">បន្ទប់របស់កូនក្មេង (The Nursery)</h3>
+                    <p class="mb-6">រឿងចាប់ផ្តើមនៅក្នុងផ្ទះរបស់គ្រួសារ Darling នៅទីក្រុងឡុងដ៍។ លោកស្រី Darling គឺជាម្តាយដ៏ល្អម្នាក់ដែលតែងតែរៀបចំ "ចិត្ត" របស់កូនៗ (Wendy, John, Michael) ឱ្យមានសណ្តាប់ធ្នាប់ ដូចជារៀបចំថតទូ។ ប៉ុន្តែនៅក្នុងចិត្តរបស់ពួកគេ មានកន្លែងមួយដែលចម្លែក នោះគឺ <strong>Neverland (កោះមិនចេះធំ)</strong>។</p>
+                    <p class="mb-6">យប់មួយ លោកស្រី Darling បានឃើញក្មេងប្រុសម្នាក់ចូលតាមបង្អួច។ នោះគឺ <strong>Peter Pan</strong>។ គាត់បានរត់គេចខ្លួន ប៉ុន្តែឆ្កែឈ្មោះ Nana បានខាំទាន់ <strong>"ស្រមោល" (Shadow)</strong> របស់គាត់។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-[#facc15] mb-4 en-title">🌑 អត្ថន័យនៃស្រមោល</h4>
+                        <p class="mb-3">Peter Pan បានត្រឡប់មកវិញដើម្បីរកស្រមោលរបស់គាត់។ គាត់ព្យាយាមបិទវាវិញដោយប្រើសាប៊ូ តែមិនជាប់។ Wendy ត្រូវយកម្ជុលមកដេរវាឱ្យជាប់នឹងជើងរបស់គាត់។</p>
+                        <p class="text-slate-300"><strong>ការវិភាគ៖</strong> ស្រមោលតំណាងឱ្យ <strong>"ភាពពិតនៃពិភពលោក" (Reality)</strong> ឬ <strong>"ភាពពេញវ័យ" (Adulthood)</strong>។ Peter តែងតែចង់ផ្តាច់ខ្លួនចេញពីស្រមោល ព្រោះគាត់ចង់នៅជាក្មេងជារៀងរហូត ដោយគ្មានការទទួលខុសត្រូវ។ ប៉ុន្តែបើគ្មានស្រមោល គាត់មិនមែនជាមនុស្សពេញលេញទេ។</p>
+                    </div>
+
+                    <p class="mb-6">Peter ប្រាប់ Wendy ថាគាត់បានរត់ចេញពីផ្ទះតាំងពីថ្ងៃដែលគាត់កើត ព្រោះគាត់ឮឪពុកម្តាយនិយាយពីគម្រោងឱ្យគាត់ធំឡើង ហើយក្លាយជា "មនុស្សធំ"។ គាត់ស្អប់មនុស្សធំ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការត្រិះរិះ៖</strong> តើអ្នកធ្លាប់មានអារម្មណ៍ថាចង់កុំឱ្យធំឡើងទេ? ពិភពមនុស្សធំពោរពេញដោយច្បាប់ លុយកាក់ និងភាពធុញទ្រាន់។ Peter Pan គឺជាតំណាងនៃក្តីប្រាថ្នានោះ ប៉ុន្តែតើវាអាចទៅរួចទេ?</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជា Peter Pan រត់ចេញពីផ្ទះតាំងពីថ្ងៃកើត?", options: ["គាត់វង្វេងផ្លូវ", "គាត់ឮឪពុកម្តាយនិយាយពីអនាគតដែលគាត់ត្រូវធំឡើង (He didn't want to grow up)", "គាត់ចង់ទៅលេងសួនសត្វ", "គាត់ត្រូវបានគេលួច"], correct: 1, explanation: "ត្រឹមត្រូវ! Peter តំណាងឱ្យ 'ភាពជាកុមារដ៏អស់កល្ប' (Eternal Youth) ដែលបដិសេធការទទួលខុសត្រូវរបស់មនុស្សធំ។" }
+            },
+            {
+                title: "2. ការហោះហើរ (The Flight)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">ផ្លូវទៅកាន់ Neverland</h3>
+                    <p class="mb-6">Peter បបួល Wendy ទៅ Neverland ដើម្បីធ្វើជា "ម្តាយ" សម្រាប់ក្មេងៗដែលបាត់បង់ (Lost Boys)។ Wendy យល់ព្រម ហើយនាំប្អូនប្រុសទាំងពីរទៅជាមួយ។</p>
+                    <p class="mb-6">ប៉ុន្តែតើធ្វើដូចម្តេចទើបហោះបាន? Peter និយាយថា៖ <strong>"You just think lovely wonderful thoughts, and they lift you up in the air."</strong> (គ្រាន់តែគិតរឿងសប្បាយៗ វានឹងលើកអ្នកឡើងទៅលើ)។</p>
+                    <p class="mb-6">ប៉ុន្តែនោះមិនគ្រប់គ្រាន់ទេ។ ពួកគេត្រូវការជំនួយបន្តិចបន្តួចគឺ <strong>Fairy Dust (ម្សៅទេវតា)</strong> ពី Tinker Bell។</p>
+                    
+                    <div class="quote-box">
+                        "Second to the right, and straight on till morning." (បត់ស្តាំផ្លូវទីពីរ ហើយហោះត្រង់រហូតដល់ភ្លឺ)
+                    </div>
+
+                    <p class="mb-6">នេះគឺជាអាសយដ្ឋានរបស់ Neverland។ វាមិនមែនជាទីតាំងភូមិសាស្ត្រទេ វាគឺជាទីតាំងនៃ <strong>ការស្រមើស្រមៃ</strong>។ នៅពេលពួកគេហោះហើរ ពួកគេបានចាកចេញពីពិភពនៃតក្កវិជ្ជា (ឡុងដ៍) ទៅកាន់ពិភពនៃវេទមន្ត។</p>
+                    
+                    <details>
+                        <summary>តើ Neverland គឺជាអ្វី?</summary>
+                        <div class="mt-4 text-emerald-100 bg-[#064e3b] p-4 rounded border border-green-600">
+                            <p>Neverland គឺជាកោះមួយដែលមានរូបរាងខុសៗគ្នាសម្រាប់កុមារម្នាក់ៗ។ សម្រាប់ John វាមានសត្វ flamingo។ សម្រាប់ Michael វាមាន flamingo ដែរ។ Neverland គឺជាផែនទីនៃចិត្តកុមារ (Map of a Child's Mind) ដែលគ្មានព្រំដែន។</p>
+                        </div>
+                    </details>
+                `,
+                scenario: `
+                    <p><strong>ការហោះហើរ៖</strong> តំណាងឱ្យសេរីភាពដាច់ខាត។ នៅពេលយើងនៅក្មេង យើងជឿថាយើងអាចធ្វើអ្វីក៏បាន។ តើពេលណាដែលអ្នកឈប់ជឿថាអ្នកអាចហោះបាន?</p>
+                `,
+                quiz: { question: "តើត្រូវការអ្វីខ្លះដើម្បីហោះបាន?", options: ["ស្លាប", "យន្តហោះ", "គំនិតសប្បាយៗ និងម្សៅទេវតា (Lovely thoughts and fairy dust)", "អាវធំ"], correct: 2, explanation: "ត្រឹមត្រូវ! គំនិតសប្បាយៗតំណាងឱ្យក្តីសង្ឃឹម ឯម្សៅទេវតាតំណាងឱ្យវេទមន្តនៃជំនឿ។" }
+            },
+            {
+                title: "3. កោះ Neverland (The Island)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">កន្លែងដែលពេលវេលាឈប់ដើរ</h3>
+                    <p class="mb-6">នៅ Neverland គ្មានច្បាប់ធម្មជាតិទេ។ រដូវផ្លាស់ប្តូរតាមអារម្មណ៍។ ក្មេងៗមិនធំឡើងទេ។</p>
+                    <p class="mb-6">ប្រជាជននៅទីនោះមាន៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-4 text-slate-300">
+                        <li><strong>The Lost Boys (ក្មេងដែលបាត់បង់)៖</strong> ក្មេងៗដែលធ្លាក់ពីលើរទេះរុញ ហើយគ្មានអ្នកណាមករក។ ពួកគេរស់នៅក្រោមដី។</li>
+                        <li><strong>Pirates (ចោរសមុទ្រ)៖</strong> ដឹកនាំដោយ Captain Hook។ ពួកគេតំណាងឱ្យមនុស្សធំដែលឃោរឃៅ។</li>
+                        <li><strong>Redskins (កុលសម្ព័ន្ធឥណ្ឌា)៖</strong> ដឹកនាំដោយ Tiger Lily។</li>
+                        <li><strong>Mermaids (មច្ឆា)៖</strong> ស្រស់ស្អាតតែគ្មានបេះដូង។</li>
+                        <li><strong>Beasts (សត្វព្រៃ)៖</strong> ពិសេសគឺក្រពើ។</li>
+                    </ul>
+                    <p class="mb-6">Peter Pan គឺជាស្តេចនៅទីនោះ។ ប៉ុន្តែគាត់មានច្បាប់មួយ៖ <strong>"ហាមធំឡើង"</strong>។ បើក្មេងណាហ៊ានធំឡើង Peter នឹង "កម្ចាត់" ពួកគេ (Thins them out)។ នេះគឺជាផ្នែកងងឹតនៃរឿង។ Peter គឺជាកុមារ ប៉ុន្តែក៏ជាឃាតករនៃភាពពេញវ័យដែរ។</p>
+                `,
+                scenario: `
+                    <p><strong>គ្រោះថ្នាក់នៃ Neverland៖</strong> ការនៅក្នុងពិភពស្រមើស្រមៃយូរពេក អាចធ្វើឱ្យយើងភ្លេចពិភពពិត។ មនុស្សខ្លះជាប់ក្នុង Neverland មួយជីវិត (Peter Pan Syndrome) - មិនព្រមទទួលខុសត្រូវ មិនព្រមធ្វើការ។</p>
+                `,
+                quiz: { question: "តើ Peter Pan ធ្វើអ្វីចំពោះ Lost Boys នៅពេលពួកគេចាប់ផ្តើមធំឡើង?", options: ["អបអរសាទរពួកគេ", "បញ្ជូនពួកគេទៅសាលារៀន", "កម្ចាត់ពួកគេចេញ (Thins them out)", "ឱ្យពួកគេធ្វើជាមេ"], correct: 2, explanation: "ត្រឹមត្រូវ! នៅក្នុង Neverland ការធំឡើងគឺជាបទឧក្រិដ្ឋ។ នេះបង្ហាញពីភាពអាត្មានិយមរបស់ Peter។" }
+            },
+            {
+                title: "4. ប្រធានក្រុម Hook (Captain Hook)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">ការភ័យខ្លាចចំពោះពេលវេលា</h3>
+                    <p class="mb-6"><strong>Captain James Hook</strong> គឺជាសត្រូវរបស់ Peter Pan។ គាត់មានដៃម្ខាងជា "ទំពក់ដែក" (Hook) ព្រោះ Peter Pan បានកាត់ដៃគាត់ហើយបោះឱ្យក្រពើស៊ី។</p>
+                    <p class="mb-6">ក្រពើនោះបានលេបនាឡិការោទ៍មួយចូលទៅក្នុងពោះ។ ដូច្នេះ រាល់ពេលវាដើរ វាមានសំឡេង <strong>"Tick-Tock, Tick-Tock"</strong>។</p>
+                    
+                    <div class="concept-card border-red-500">
+                        <h4 class="text-xl font-bold text-red-400 mb-4 font-cinzel">🐊 ក្រពើ និង នាឡិកា</h4>
+                        <p class="mb-3">Hook ខ្លាចក្រពើជាងអ្វីៗទាំងអស់។ ហេតុអ្វី?</p>
+                        <p class="text-slate-300">ក្រពើតំណាងឱ្យ <strong>"ពេលវេលា" (Time)</strong>។ សំឡេង Tick-Tock គឺជាសំឡេងនៃពេលវេលាដែលកំពុងដើរទៅមុខ ហើយកំពុងដេញតាមយើងគ្រប់គ្នា។ ទីបំផុត ពេលវេលានឹងស៊ីយើងទាំងអស់គ្នា។</p>
+                        <p class="mt-3">Peter មិនខ្លាចក្រពើទេ ព្រោះ Peter មិនមានអាយុ (Time doesn't apply to him)។ ប៉ុន្តែ Hook គឺជាមនុស្សធំ គាត់ដឹងថាគាត់នឹងចាស់ហើយស្លាប់។</p>
+                    </div>
+
+                    <p class="mb-6">Hook គឺជាមនុស្សដែលមានការអប់រំខ្ពស់ (រៀននៅ Eton) ប៉ុន្តែគាត់ឯកា និងសោកសៅ។ គាត់ច្រណែន Peter ដែលមានភាពក្មេងខ្ចី និងភាពរីករាយ។</p>
+                `,
+                scenario: `
+                    <p><strong>Hook គឺជាយើង៖</strong> Hook គឺជាមនុស្សធំដែលបាត់បង់ភាពសប្បាយរីករាយ និងរស់នៅក្នុងភាពភ័យខ្លាចនៃសេចក្តីស្លាប់។ យើងស្អប់ Peter ព្រោះ Peter រំលឹកយើងពីអ្វីដែលយើងបានបាត់បង់។</p>
+                `,
+                quiz: { question: "តើក្រពើដែលមាននាឡិកាក្នុងពោះ តំណាងឱ្យអ្វី?", options: ["សត្វចិញ្ចឹម", "ពេលវេលាដែលកំពុងដើរ និងសេចក្តីស្លាប់ (Time chasing us)", "ទ្រព្យសម្បត្តិ", "សម្លេងតន្ត្រី"], correct: 1, explanation: "ត្រឹមត្រូវ! Tick-Tock គឺជាសំឡេងនៃការរាប់ថយក្រោយនៃជីវិត។ Hook ខ្លាចវាខ្លាំងបំផុត។" }
+            },
+            {
+                title: "5. វេនឌី ជាម្តាយ (Wendy the Mother)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">តួនាទីនៃភាពជាស្ត្រី</h3>
+                    <p class="mb-6">នៅ Neverland ក្មេងៗ Lost Boys ចង់បាន "ម្តាយ"។ Wendy ទទួលយកតួនាទីនេះ។ នាងចំអិនអាហារ ដេរខោអាវ និងនិទានរឿងឱ្យពួកគេស្តាប់មុនចូលគេង។</p>
+                    <p class="mb-6">Peter Pan ចង់បាន Wendy ធ្វើជាម្តាយ ប៉ុន្តែគាត់មិនចង់ធ្វើជា "ឪពុក" ទេ។ គាត់ចង់ធ្វើជាកូនប្រុសដ៏ស្មោះត្រង់។ នៅពេល Wendy សួរពីអនាគត ឬអារម្មណ៍ស្នេហា Peter តែងតែគេចវេស ហើយថា "វាគ្រាន់តែជាការលេងសើចទេ" (Make-believe)។</p>
+                    <p class="mb-6">Wendy ចាប់ផ្តើមដឹងថា ជីវិតនៅ Neverland គឺសប្បាយ ប៉ុន្តែវាជាជីវិតដែល <strong>នៅទ្រឹង (Stagnant)</strong>។ នាងកំពុងលេងផ្ទះបាយ (Playing house) មិនមែនរស់នៅពិតប្រាកដទេ។ នាងចាប់ផ្តើមនឹកផ្ទះ និងនឹកឪពុកម្តាយ។</p>
+                    <p class="mb-6"><strong>ការលូតលាស់៖</strong> Wendy តំណាងឱ្យក្មេងស្រីដែលត្រៀមខ្លួនក្លាយជាស្ត្រី។ នាងយល់ថា ការធំឡើងមានន័យថា "ការទទួលយកទំនួលខុសត្រូវ"។ Peter បដិសេធរឿងនេះ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការសម្រេចចិត្តរបស់ Wendy:</strong> តើអ្នកសុខចិត្តធ្វើជាក្មេងលេងសើចរហូត ឬសុខចិត្តទទួលយកការឈឺចាប់នៃការធំឡើង ដើម្បីមានគ្រួសារពិតប្រាកដ? Wendy ជ្រើសរើសការពិត។</p>
+                `,
+                quiz: { question: "តើ Peter Pan មានអារម្មណ៍យ៉ាងណាចំពោះ Wendy?", options: ["គាត់ចង់រៀបការជាមួយនាង", "គាត់ចង់ឱ្យនាងធ្វើជាម្តាយរបស់គាត់ (Mother figure)", "គាត់ស្អប់នាង", "គាត់ចង់ឱ្យនាងធ្វើជាចោរសមុទ្រ"], correct: 1, explanation: "ត្រឹមត្រូវ! Peter មិនយល់ពីស្នេហាទេ។ គាត់យល់តែពីការត្រូវការការមើលថែដូចកូនក្មេងប៉ុណ្ណោះ។" }
+            },
+            {
+                title: "6. Tinker Bell (ទេពអប្សរតូច)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">មានបានដោយសារជំនឿ</h3>
+                    <p class="mb-6">Tinker Bell គឺជាទេពអប្សរតូចមួយ។ នាងមានលក្ខណៈពិសេសមួយ៖ <strong>នាងតូចពេក មិនអាចមានអារម្មណ៍ពីរក្នុងពេលតែមួយបានទេ</strong>។ បើនាងខឹង គឺខឹងសុទ្ធ។ បើនាងស្រលាញ់ គឺស្រលាញ់សុទ្ធ។ នាងមិនអាច "ស្រលាញ់ផងខឹងផង" បានទេ។</p>
+                    <p class="mb-6">នាងច្រណែន Wendy ខ្លាំងណាស់ ហើយព្យាយាមឱ្យ Lost Boys សម្លាប់ Wendy។ Peter ខឹងនាង ហើយបណ្តេញនាងចេញមួយរយៈ។</p>
+                    
+                    <div class="concept-card border-green-500 bg-[#064e3b]">
+                        <h4 class="text-xl font-bold text-green-400 mb-4 font-cinzel">✨ I Do Believe in Fairies!</h4>
+                        <p class="mb-3">នៅពេល Hook ដាក់ថ្នាំពុលក្នុងថ្នាំរបស់ Peter, Tinker Bell បានផឹកជំនួសដើម្បីសង្គ្រោះ Peter។ នាងជិតស្លាប់ ពន្លឺរបស់នាងខ្សោយទៅៗ។</p>
+                        <p class="mb-3">Peter ស្រែកប្រាប់ក្មេងៗទាំងអស់ក្នុងលោកថា៖ <strong>"បើអ្នកជឿលើទេវតា សូមទះដៃ!"</strong>។ សំឡេងទះដៃរបស់ក្មេងៗរាប់លាននាក់ បានធ្វើឱ្យ Tinker Bell រស់ឡើងវិញ។</p>
+                        <p class="text-slate-300"><strong>អត្ថន័យ៖</strong> ទេវតា (ឬក្តីសង្ឃឹម/វេទមន្ត) មានជីវិតបាន លុះត្រាតែយើង <strong>ជឿ</strong> លើវា។ នៅពេលយើងឈប់ជឿ (ពេលយើងធំឡើង) វេទមន្តនឹងស្លាប់។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការបាត់បង់ជំនឿ៖</strong> មនុស្សធំមើលមិនឃើញទេវតា មិនមែនមកពីទេវតាមិនមានទេ តែមកពីពួកគេឈប់ជឿ។ តើអ្នកនៅមានជំនឿលើអព្ភូតហេតុទេ?</p>
+                `,
+                quiz: { question: "តើអ្វីដែលអាចសង្គ្រោះ Tinker Bell ពីសេចក្តីស្លាប់?", options: ["ថ្នាំពេទ្យ", "សំឡេងទះដៃ និងជំនឿរបស់ក្មេងៗ (Belief)", "ទឹក", "ការថើប"], correct: 1, explanation: "ត្រឹមត្រូវ! នាងរស់រានមានជីវិតដោយសារជំនឿ។ 'Every time a child says, I don't believe in fairies, there is a fairy somewhere that falls down dead.'" }
+            },
+            {
+                title: "7. ការប្រយុទ្ធចុងក្រោយ (The Final Battle)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">Hook ឬ ខ្ញុំ</h3>
+                    <p class="mb-6">Hook ចាប់ខ្លួន Wendy និង Lost Boys។ គាត់ចង់ឱ្យពួកគេដើរលើក្តារ (Walk the plank) ចូលក្នុងមាត់សមុទ្រ។ Peter Pan មកជួយសង្គ្រោះ។</p>
+                    <p class="mb-6">ការប្រយុទ្ធរវាង Peter និង Hook គឺជាការប្រយុទ្ធរវាង <strong>ភាពក្មេងខ្ចី (Innocence/Youth)</strong> និង <strong>ភាពចាស់ទុំដែលជូរចត់ (Bitter Adulthood)</strong>។</p>
+                    <p class="mb-6">Hook ឈ្នះ Peter ខាងកម្លាំង និងល្បិចកល។ ប៉ុន្តែ Hook ចាញ់ Peter ត្រង់ថា <strong>Peter មិនចេះភ័យខ្លាច និងមាន "Form" (ឥរិយាបថ) ល្អ</strong>។ Hook ខ្វល់ខ្វាយពី "Good Form" (ក្បួនខ្នាតត្រឹមត្រូវ) ខ្លាំងពេក។</p>
+                    <p class="mb-6">ចុងក្រោយ Peter ធាក់ Hook ធ្លាក់ចូលក្នុងមាត់ក្រពើ។ Hook ស្លាប់។ ពេលវេលា (ក្រពើ) បានស៊ីគាត់ជាស្ថាពរ។ Peter ឈ្នះ ប៉ុន្តែ Peter ភ្លេចរឿងនេះភ្លាមៗ។ គាត់មិនចងចាំអតីតកាលទេ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការភ្លេច៖</strong> កម្លាំងរបស់ Peter គឺគាត់មិនចេះចងចាំរឿងទុក្ខសោក។ គាត់រស់នៅក្នុង "បច្ចុប្បន្នកាល" (Present) ជានិច្ច។ Hook រស់នៅក្នុងអតីតកាល និងការភ័យខ្លាចអនាគត។</p>
+                `,
+                quiz: { question: "តើ Hook ស្លាប់ដោយរបៀបណា?", options: ["Peter សម្លាប់ដោយដាវ", "គាត់ធ្លាក់ចូលមាត់ក្រពើ (Time caught up with him)", "គាត់ចាស់ស្លាប់", "គាត់លង់ទឹក"], correct: 1, explanation: "ត្រឹមត្រូវ! គាត់ត្រូវបានលេបត្របាក់ដោយពេលវេលា ដែលជាអ្វីដែលគាត់ខ្លាចបំផុត។" }
+            },
+            {
+                title: "8. ការត្រឡប់ទៅផ្ទះវិញ (The Return Home)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">ការជ្រើសរើសធំឡើង</h3>
+                    <p class="mb-6">ក្រោយពីឈ្នះ Hook, Wendy សម្រេចចិត្តនាំប្អូនៗ និង Lost Boys ត្រឡប់ទៅផ្ទះវិញ។ Peter មិនទៅទេ។ គាត់ខ្លាចការធំឡើង។</p>
+                    <p class="mb-6">Peter ហោះនាំកប៉ាល់ចោរសមុទ្រត្រឡប់ទៅឡុងដ៍។ លោកស្រី Darling សប្បាយចិត្តខ្លាំងណាស់ ហើយព្រមទទួលយក Lost Boys ទាំងអស់ធ្វើជាកូន។ នាងសុំទទួល Peter ដែរ។</p>
+                    <p class="mb-6">Peter បដិសេធ៖ <strong>"ខ្ញុំមិនចង់ទៅសាលារៀន ហើយរៀនធ្វើការងារ ហើយធំឡើងទេ។ ខ្ញុំចង់នៅជាក្មេងប្រុសតូច និងលេងសប្បាយជារៀងរហូត។"</strong></p>
+                    <p class="mb-6">គាត់សន្យាថានឹងមកយក Wendy ទៅ Neverland រាល់ឆ្នាំដើម្បីសម្អាតផ្ទះឱ្យគាត់ (Spring Cleaning)។ Wendy យល់ព្រម។</p>
+                `,
+                scenario: `
+                    <p><strong>សោកនាដកម្ម៖</strong> ការត្រឡប់ទៅផ្ទះ គឺជាការបញ្ចប់នៃកុមារភាព។ Wendy ជ្រើសរើសការធំឡើង។ Peter ជ្រើសរើសភាពឯកាដ៏អស់កល្ប។</p>
+                `,
+                quiz: { question: "ហេតុអ្វី Peter មិនព្រមនៅជាមួយគ្រួសារ Darling?", options: ["គាត់មិនចូលចិត្តពួកគេ", "គាត់ខ្លាចការធំឡើង និងការទទួលខុសត្រូវ (Fear of growing up)", "គាត់វង្វេងផ្លូវ", "គាត់ចង់ទៅរៀននៅកន្លែងផ្សេង"], correct: 1, explanation: "ត្រឹមត្រូវ! គាត់សុខចិត្តលះបង់ក្តីស្រលាញ់របស់ម្តាយ ដើម្បីរក្សាសេរីភាពរបស់គាត់។" }
+            },
+            {
+                title: "9. នៅពេល Wendy ធំឡើង (When Wendy Grew Up)",
+                content: `
+                    <h3 class="text-3xl font-bold text-[#4ade80] mb-6 kh-title">ការភ្លេចភ្លាំង</h3>
+                    <p class="mb-6">ឆ្នាំកន្លងផុតទៅ។ Peter មកយក Wendy តែពីរដងប៉ុណ្ណោះ។ គាត់ភ្លេចនាង។ សម្រាប់ Peter ពេលវេលាមិនមានន័យទេ។ សម្រាប់ Wendy ពេលវេលាគឺជារឿងពិត។</p>
+                    <p class="mb-6">Wendy ធំឡើង រៀបការ និងមានកូនស្រីម្នាក់ឈ្មោះ <strong>Jane</strong>។ ថ្ងៃមួយ Peter ហោះមកតាមបង្អួច។ គាត់ឃើញ Wendy ជាមនុស្សធំ។ គាត់ភ័យខ្លាច និងយំ។ គាត់មិនអាចយល់ថាហេតុអ្វីនាង "ក្បត់" គាត់ដោយការធំឡើង។</p>
+                    <p class="mb-6">ប៉ុន្តែ Jane (កូនស្រី Wendy) ភ្ញាក់ឡើង ហើយសួរ Peter ថា៖ "តើខ្ញុំអាចទៅជាមួយអ្នកបានទេ?"</p>
+                    <p class="mb-6">Peter ញញឹម។ គាត់យក Jane ទៅ Neverland ជំនួស Wendy។ Wendy មើលពួកគេហោះចេញទៅ។ នាងយល់ថា នេះគឺជាវដ្តនៃជីវិត។</p>
+                    <div class="quote-box">
+                        "កុមារទាំងអស់ត្រូវតែធំឡើង... ហើយនេះជារឿងដ៏សោកសៅ។ ប៉ុន្តែដរាបណានៅមានក្មេងដែលរីករាយ គ្មានទោសពៃរ៍ និងគ្មានបេះដូង (Gay, innocent, and heartless) Peter Pan នឹងនៅតែមានជីវិត។"
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Heartless (គ្មានបេះដូង)៖</strong> J.M. Barrie ហៅក្មេងថា "Heartless" ព្រោះពួកគេអាចភ្លេចមនុស្សជាទីស្រលាញ់បានយ៉ាងងាយ និងបន្តទៅមុខ។ នេះគឺជាកម្លាំងរបស់ពួកគេ។ មនុស្សធំកើតទុក្ខព្រោះការចងចាំ។</p>
+                `,
+                quiz: { question: "នៅទីបញ្ចប់ តើមានអ្វីកើតឡើង?", options: ["Peter នៅតែជាក្មេង ហើយនាំកូនស្រីរបស់ Wendy ទៅ Neverland ជំនួស", "Peter ធំឡើង", "Wendy ត្រឡប់ទៅ Neverland", "Neverland រលាយបាត់"], correct: 0, explanation: "ត្រឹមត្រូវ! Peter គឺជាវិញ្ញាណនៃកុមារភាព។ គាត់មិនផ្លាស់ប្តូរទេ មានតែពួកយើងទេដែលផ្លាស់ប្តូរ។" }
+            }
+        ];
+
+        // ... (Logic remains identical: initNav, loadLesson, setupQuiz, checkAnswer, updateProgress, launchConfetti) ...
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#0f172a] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-[#4ade80]' : 'text-slate-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-[#1e293b] text-[#4ade80] flex items-center justify-center text-[10px] mr-3 font-mono font-bold border border-[#4ade80]">${index + 1}</span>
+                    <span class="truncate tracking-wide font-kantumruy">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#0f172a]');
+                b.classList.add('border-transparent');
+                b.querySelector('span:first-child').classList.remove('bg-[#4ade80]', 'text-[#020617]', 'border-[#4ade80]');
+                b.querySelector('span:first-child').classList.add('bg-[#1e293b]', 'text-[#4ade80]', 'border-[#4ade80]');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#0f172a]');
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.querySelector('span:first-child').classList.remove('bg-[#1e293b]', 'text-[#4ade80]', 'border-[#4ade80]');
+                activeBtn.querySelector('span:first-child').classList.add('bg-[#4ade80]', 'text-[#020617]', 'border-[#4ade80]');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Adventure ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+            
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `ត្រឡប់ទៅផ្ទះ` : `បន្តដំណើរ`;
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-6 rounded-xl text-lg border-l-4 shadow-md bg-[#020617]/80 transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 hover:bg-[#1e293b] transition flex items-center shadow-md group bg-[#0f172a]/50 text-emerald-100 font-medium";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-[#4ade80] mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-[#4ade80] group-hover:bg-[#facc15] group-hover:text-black group-hover:border-[#facc15] transition font-mono">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="group-hover:text-white font-kantumruy">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer', 'ring-2', 'ring-green-500', 'border-transparent');
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2 font-serif">ត្រឹមត្រូវ! ✨</strong> ${explanation}`;
+                if(currentLessonIndex === lessons.length - 1) launchConfetti();
+            } else {
+                btnElement.classList.add('wrong-answer', 'ring-2', 'ring-red-500', 'border-transparent');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-6 rounded-xl bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2 font-serif">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("សូមកុំភ្លេចភាពជាកុមារនៅក្នុងចិត្តរបស់អ្នក!");
+        };
+
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    // Show continue button
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-6 bg-green-500/20 border border-green-500 text-green-400 font-bold py-2 px-6 rounded-full hover:bg-green-500 hover:text-black transition text-sm';
+                    continueBtn.innerHTML = `បន្តអាន Adventure ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-\\[\\#0f172a\\]\\/70')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        function launchConfetti() {
+            const colors = ['#facc15', '#4ade80', '#10b981', '#ffffff'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 8 + 4 + 'px';
+                conf.style.height = Math.random() * 8 + 4 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(74, 222, 128, 0.8)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    conf.style.transform = `rotate(${frame * 20}deg)`;
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>

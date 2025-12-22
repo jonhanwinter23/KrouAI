@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>As a Man Thinketh - The Mind Garden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #f3fcf6; /* Very light mint */
+            color: #1a4131; /* Deep forest green */
+            line-height: 2;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(167, 243, 208, 0.3) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, rgba(254, 240, 138, 0.3) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Smooth Animations */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); scale: 0.98; }
+            to { opacity: 1; transform: translateY(0); scale: 1; }
+        }
+
+        /* Sidebar Styling */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(209, 250, 229, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+            border-left: 4px solid #059669; /* Emerald 600 */
+            color: #047857; /* Emerald 700 */
+            font-weight: 700;
+        }
+
+        /* Card Styling - Glassmorphism */
+        .concept-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            margin: 2.5rem 0;
+            box-shadow: 0 10px 30px -10px rgba(6, 78, 59, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: linear-gradient(to bottom, #34d399, #059669);
+        }
+
+        /* Quote Styling */
+        .quote-box {
+            font-style: italic;
+            position: relative;
+            padding: 3rem 2rem 2rem 3rem;
+            background-color: #fffbeb;
+            border-radius: 1rem;
+            margin: 3rem 0;
+            box-shadow: inset 0 0 0 1px #fcd34d;
+            font-size: 1.2rem;
+            color: #92400e;
+        }
+        .quote-box::after {
+            content: "❝";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 4rem;
+            color: #fbbf24;
+            background: #fffbeb;
+            height: 40px;
+            line-height: 0.4;
+            padding: 0 10px;
+        }
+
+        /* Details / Expandable */
+        details {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        details[open] {
+            border-color: #34d399;
+            background: #ecfdf5;
+        }
+        summary {
+            font-weight: bold;
+            color: #059669;
+            outline: none;
+            font-size: 1.1rem;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.3s;
+        }
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        /* Buttons */
+        .btn-garden {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-garden:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .btn-garden:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Quiz Feedback */
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border: 2px solid #34d399 !important;
+            color: #065f46 !important;
+        }
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border: 2px solid #f87171 !important;
+            color: #991b1b !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #6ee7b7; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #34d399; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden text-gray-800">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#f3fcf6] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-emerald-900 mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-emerald-600 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-full hover:shadow-lg transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-emerald-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-emerald-700 hover:underline font-bold">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#f3fcf6] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-emerald-200">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-4xl">🌿</span>
+            </div>
+            <h2 class="text-2xl font-bold text-emerald-900 mb-2 en-title">AS A MAN THINKETH</h2>
+            <p class="text-emerald-600 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-emerald-700 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-emerald-600">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full btn-garden disabled:opacity-50 disabled:cursor-not-allowed">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-500 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-emerald-500 hover:text-emerald-700 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'world';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white/80 backdrop-blur-md p-4 shadow-sm flex justify-between items-center z-20 border-b border-green-100">
+        <h1 class="text-lg font-bold text-emerald-800 en-title">As a Man Thinketh</h1>
+        <button id="menuBtn" class="text-emerald-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-80 bg-white/90 backdrop-blur-xl shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-green-100">
+        <div class="p-8 border-b border-green-50 hidden md:block">
+            <h1 class="text-2xl font-bold text-emerald-900 en-title tracking-wider mb-1">AS A MAN<br>THINKETH</h1>
+            <p class="text-xs text-emerald-600 font-bold uppercase tracking-widest mt-2">James Allen</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-green-50 bg-white/50">
+            <div class="flex justify-between text-xs mb-2 text-emerald-800 font-bold uppercase font-serif">
+                <span>Serenity Growth</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-green-100 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-emerald-400 to-green-600 h-2 rounded-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative" id="mainContent">
+        <div class="max-w-4xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-white/60 backdrop-blur-md p-12 rounded-3xl shadow-xl border border-white max-w-3xl relative">
+                    <div class="absolute -top-10 -left-10 text-8xl opacity-20">🌿</div>
+                    <div class="absolute -bottom-10 -right-10 text-8xl opacity-20">🌻</div>
+                    
+                    <h2 class="text-5xl md:text-6xl font-bold text-emerald-900 mb-6 kh-title leading-tight drop-shadow-sm">សួននៃចិត្ត</h2>
+                    <p class="text-xl text-emerald-800 mb-10 leading-loose font-light">
+                        "ចិត្តរបស់មនុស្សគឺប្រៀបបានទៅនឹងសួនច្បារ...<br>
+                        បើអ្នកមិនដាំផ្កា ស្មៅចង្រៃនឹងដុះឡើងដោយឯកឯង។"
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-garden text-lg px-10 py-4">
+                        <span>ចូលថែសួនរបស់អ្នក</span>
+                        <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-3 text-emerald-600 mb-8 font-bold text-xs uppercase tracking-[0.2em] w-full pb-4 border-b border-green-200">
+                    <span id="chapterNumber" class="bg-green-100 px-3 py-1 rounded-full text-emerald-800">Chapter 1</span>
+                    <span class="flex-1 text-right en-title">Wisdom</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-4xl md:text-5xl font-bold text-emerald-950 mb-10 leading-snug kh-title"></h2>
+                
+                <div class="prose prose-xl prose-emerald max-w-none text-gray-700 leading-loose font-light" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-yellow-50 border-l-4 border-yellow-400 p-8 rounded-r-2xl mb-12 hidden shadow-sm mt-16 relative">
+                    <h3 class="text-2xl font-bold text-yellow-800 mb-4 flex items-center kh-title">
+                        <span class="bg-yellow-200 p-2 rounded-full mr-3">💡</span>
+                        ការអនុវត្ត (Mind Gardening)
+                    </h3>
+                    <div id="scenarioContent" class="text-yellow-900 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-white rounded-3xl shadow-xl p-10 md:p-14 border border-green-50 mt-20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-green-50 rounded-full -mr-32 -mt-32 opacity-50"></div>
+                    <h3 class="text-2xl font-bold text-emerald-900 mb-10 flex items-center relative z-10 kh-title">
+                        <span class="bg-emerald-600 text-white text-sm font-bold mr-5 px-4 py-2 rounded-full shadow-lg tracking-widest en-title">QUIZ</span>
+                        Check Your Understanding
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-xl font-medium mb-8 text-gray-800 leading-relaxed font-kantumruy"></p>
+                        <div id="quizOptions" class="space-y-4"></div>
+                        <div id="quizFeedback" class="mt-8 hidden p-8 rounded-2xl text-lg shadow-inner bg-gray-50"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-20 pt-10 border-t border-green-100">
+                    <button id="prevBtn" class="px-8 py-3 rounded-full border-2 border-emerald-100 text-emerald-600 hover:bg-white hover:border-emerald-300 transition-all flex items-center text-lg font-bold en-title disabled:opacity-50">
+                        ← Prev
+                    </button>
+                    <button id="nextBtn" class="btn-garden text-lg px-8 py-3">
+                        Next Lesson →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR AS A MAN THINKETH (KHMER)
+        const lessons = [
+            {
+                title: "1. គំនិត និង ចរិតលក្ខណៈ (Thought and Character)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">ច្បាប់នៃការបង្កើតខ្លួនឯង</h3>
+                    <p class="mb-6">James Allen បើកឆាកសៀវភៅដោយពាក្យស្លោកដ៏ល្បីល្បាញ៖ <strong>"As a man thinketh in his heart, so is he."</strong> (បុរសគិតយ៉ាងណាក្នុងចិត្ត គាត់គឺជាមនុស្សបែបនោះ)។</p>
+                    <p class="mb-6">មនុស្សមិនមែនត្រូវបានកំណត់ដោយព្រហ្មលិខិត ឬកាលៈទេសៈទេ។ មនុស្សគឺជា <strong>អ្នកបង្កើត (Master)</strong> នៃខ្លួនឯង។ គំនិតគឺជាជាងចម្លាក់ ដែលឆ្លាក់រូបរាងចរិតលក្ខណៈ និងវាសនារបស់យើង។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-emerald-700 mb-4 en-title">🌱 រុក្ខជាតិ និង គ្រាប់ពូជ</h4>
+                        <p class="mb-3">Allen ប្រៀបធៀបមនុស្សទៅនឹង <strong>រុក្ខជាតិ</strong>៖</p>
+                        <ul class="list-disc ml-6 space-y-2 text-emerald-900">
+                            <li><strong>គ្រាប់ពូជ (Seeds):</strong> គឺជារាល់គំនិតដែលអ្នកអនុញ្ញាតឱ្យចូលក្នុងចិត្ត។</li>
+                            <li><strong>ផ្កា (Blossom):</strong> គឺជាសកម្មភាពរបស់អ្នក (Act)។</li>
+                            <li><strong>ផ្លែ (Fruit):</strong> គឺជាសេចក្តីសុខ ឬសេចក្តីទុក្ខដែលអ្នកទទួលបាន។</li>
+                        </ul>
+                        <p class="mt-4 italic font-medium">"គំនិតល្អផ្តល់ផ្លែផ្កាល្អ។ គំនិតអាក្រក់ផ្តល់ផ្លែផ្កាអាក្រក់។ នេះគឺជាច្បាប់ធម្មជាតិដែលមិនអាចប្រកែកបាន។"</p>
+                    </div>
+
+                    <p class="mb-6">យើងមិនអាចលាក់គំនិតបានទេ។ គំនិតនឹងប្រែជាទម្លាប់ ហើយទម្លាប់នឹងរឹងទៅជាកាលៈទេសៈ។ បុរសម្នាក់មិនមែនជាប់គុកដោយចៃដន្យទេ គឺដោយសារ "គំនិតឧក្រិដ្ឋ" ដែលគាត់បានបណ្តុះជាយូរមកហើយ។</p>
+                `,
+                scenario: `
+                    <p><strong>សាកល្បង៖</strong> នៅថ្ងៃនេះ ចូរសង្កេតមើល "គ្រាប់ពូជ" ដែលអ្នកកំពុងដាំ។ តើអ្នកកំពុងគិតរឿងច្រណែនគេមែនទេ? ប្រយ័ត្ន! វានឹងដុះជាដើមបន្លានៃការឈឺចាប់នៅថ្ងៃស្អែក។</p>
+                `,
+                quiz: { question: "តើ James Allen ប្រៀបធៀបទំនាក់ទំនងរវាង 'គំនិត' និង 'សកម្មភាព' ទៅនឹងអ្វី?", options: ["គ្រាប់ពូជ និង រុក្ខជាតិ", "ឡាននិងអ្នកបើក", "ទឹកនិងភ្លើង", "មេឃនិងដី"], correct: 0, explanation: "ត្រឹមត្រូវ! សកម្មភាពគឺជាការរីកលូតលាស់នៃគំនិត។ បើគ្មានគ្រាប់ពូជ (គំនិត) ក៏គ្មានរុក្ខជាតិ (សកម្មភាព) ដែរ។" }
+            },
+            {
+                title: "2. ឥទ្ធិពលនៃគំនិតលើកាលៈទេសៈ (Effect of Thought on Circumstances)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">ចិត្តគឺជាសួនច្បារ</h3>
+                    <p class="mb-6">នេះគឺជាមេរៀនស្នូលនៃសៀវភៅ។ ចិត្តរបស់អ្នកគឺដូចជា <strong>សួនច្បារ</strong>។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-gray-700">
+                        <li><strong>Cultivated (ថែរក្សា):</strong> បើអ្នកព្យាយាមដាំផ្កា និងដកស្មៅ សួននោះនឹងស្រស់ស្អាត។</li>
+                        <li><strong>Neglected (បោះបង់ចោល):</strong> បើអ្នកមិនដាំអ្វីសោះ វាមិនមែននៅទំនេរទេ... <strong>ស្មៅចង្រៃ</strong> នឹងដុះឡើងពេញ!</li>
+                    </ul>
+                    
+                    <details>
+                        <summary>ហេតុអ្វីមនុស្សល្អជួបទុក្ខ?</summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>មនុស្សតែងសួរថា "ហេតុអ្វីខ្ញុំជាមនុស្សស្មោះត្រង់ តែខ្ញុំនៅតែក្រ?" Allen ឆ្លើយថា៖ នៅក្នុងសួននៃចិត្តរបស់អ្នក អ្នកអាចមានផ្កា (ភាពស្មោះត្រង់) ប៉ុន្តែអ្នកក៏អាចមានស្មៅចង្រៃ (ភាពភ័យខ្លាច, ភាពខ្ជិល, ឬកង្វះការប្រុងប្រយ័ត្ន) លាក់នៅក្បែរនោះដែរ។ យើងទទួលផលពី <strong>គ្រប់</strong> គ្រាប់ពូជដែលយើងដាំ មិនមែនតែគ្រាប់ដែលយើងចូលចិត្តនោះទេ។</p>
+                        </div>
+                    </details>
+
+                    <div class="quote-box">
+                        "Circumstance does not make the man; it reveals him to himself." <br>
+                        (កាលៈទេសៈមិនបង្កើតមនុស្សទេ... វាគ្រាន់តែ <strong>បង្ហាញ</strong> ថាមនុស្សនោះជានរណាប៉ុណ្ណោះ។)
+                    </div>
+
+                    <p class="mb-6">ឈប់បន្ទោសសេដ្ឋកិច្ច ឈប់បន្ទោសថៅកែ។ អ្នកស្ថិតនៅកន្លែងដែលអ្នកនៅសព្វថ្ងៃនេះ ព្រោះគំនិតរបស់អ្នកបាននាំអ្នកមកទីនេះ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong> បើអ្នកចង់ផ្លាស់ប្តូរជីវិតខាងក្រៅ (កាលៈទេសៈ) អ្នកត្រូវផ្លាស់ប្តូរជីវិតខាងក្នុង (គំនិត) ជាមុនសិន។ អ្នកមិនអាចកែផ្លែស្វាយឱ្យទៅជាផ្លែប៉ោមបានទេ បើអ្នកមិនដាំដើមប៉ោម។</p>
+                `,
+                quiz: { question: "តើកាលៈទេសៈខាងក្រៅ (Circumstances) មានទំនាក់ទំនងយ៉ាងណាចំពោះមនុស្ស?", options: ["វាកំណត់វាសនារបស់មនុស្ស", "វាមិនទាក់ទងគ្នាទេ", "វាជាកញ្ចក់ដែលឆ្លុះបង្ហាញពីស្ថានភាពផ្ទៃក្នុងនៃចិត្តរបស់មនុស្ស", "វាជាការសាកល្បងពីព្រះ"], correct: 2, explanation: "ត្រឹមត្រូវ! ពិភពលោកខាងក្រៅ គឺជាស្រមោលនៃពិភពលោកខាងក្នុង។" }
+            },
+            {
+                title: "3. ឥទ្ធិពលនៃគំនិតលើសុខភាព (Effect of Thought on Health and Body)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">រាងកាយគឺជាអ្នកបម្រើ</h3>
+                    <p class="mb-6">រាងកាយគឺជាអ្នកបម្រើដ៏ស្មោះត្រង់របស់ចិត្ត។ វាគោរពតាមបញ្ជារបស់ចិត្តជានិច្ច ទោះបីជាបញ្ជានោះល្អ ឬអាក្រក់ក៏ដោយ។</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                            <h4 class="text-lg font-bold text-red-700 mb-2">គំនិតឈឺចាប់/ភ័យខ្លាច</h4>
+                            <p class="text-sm">ធ្វើឱ្យរាងកាយចុះខ្សោយ បេះដូងលោតខុសចង្វាក់ និងឆាប់ចាស់។ "ការភ័យខ្លាចសម្លាប់មនុស្សលឿនជាងគ្រាប់កាំភ្លើង"។</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                            <h4 class="text-lg font-bold text-green-700 mb-2">គំនិតរីករាយ/បរិសុទ្ធ</h4>
+                            <p class="text-sm">ធ្វើឱ្យរាងកាយមានថាមពល ក្មេងជាងវ័យ និងមានភាពទាក់ទាញ (Graceful)។</p>
+                        </div>
+                    </div>
+
+                    <p class="mb-6">Allen និយាយថា៖ <strong>"ការផ្លាស់ប្តូររបបអាហារនឹងមិនជួយអ្វីទេ បើសិនជាអ្នកមិនផ្លាស់ប្តូរគំនិត។"</strong> (Change of diet will not help a man who will not change his thoughts.)</p>
+                    <p class="mb-6">មុខមាត់ដែលជ្រីវជ្រួញ មិនមែនមកពីអាយុតែមួយមុខទេ តែមកពីគំនិតដែលស្មុគស្មាញ ច្រណែន និងខឹងសម្បារ។ គំនិតល្អគឺជាថ្នាំប៉ូវកម្លាំងដ៏ស័ក្តិសិទ្ធិបំផុត។</p>
+                `,
+                scenario: `
+                    <p><strong>ពិសោធន៍៖</strong> ពេលក្រោយដែលអ្នកមានអារម្មណ៍មិនស្រួលខ្លួន ឬឈឺក្បាល សាកសួរខ្លួនឯងថា "តើខ្ញុំកំពុងមានគំនិតអវិជ្ជមានអ្វីខ្លះ?" ការព្យាបាលចិត្ត គឺជាការចាប់ផ្តើមនៃការព្យាបាលកាយ។</p>
+                `,
+                quiz: { question: "តាម James Allen តើអ្វីជាវិធីល្អបំផុតដើម្បីរក្សាសុខភាព និងភាពក្មេងជាងវ័យ?", options: ["ញ៉ាំថ្នាំវីតាមីន", "ហាត់ប្រាណធ្ងន់ៗ", "រក្សាគំនិតឱ្យរីករាយ បរិសុទ្ធ និងពោរពេញដោយមេត្តាធម៌", "គេងឱ្យបានច្រើន"], correct: 2, explanation: "ត្រឹមត្រូវ! ថ្នាំពុលពិតប្រាកដគឺគំនិតស្អប់ និងច្រណែន។" }
+            },
+            {
+                title: "4. គំនិត និង គោលបំណង (Thought and Purpose)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">កម្ចាត់ភាពរសាត់អណ្តែត</h3>
+                    <p class="mb-6">គំនិតដែលគ្មានគោលបំណង គឺជាការខ្ជះខ្ជាយ។ មនុស្សដែលគ្មានគោលដៅក្នុងជីវិត (Drifting) ងាយនឹងធ្លាក់ទៅក្នុងសេចក្តីព្រួយបារម្ភ ការភ័យខ្លាច និងបញ្ហាតូចតាច។ Allen ហៅភាពគ្មានគោលដៅថាជា <strong>"A Vice" (អំពើបាប/ទម្លាប់អាក្រក់)</strong>។</p>
+                    <p class="mb-6">អ្នកត្រូវមាន <strong>"គោលបំណងស្របច្បាប់" (Legitimate Purpose)</strong> ក្នុងចិត្ត ហើយលះបង់ខ្លួនឯងដើម្បីវា។ កុំឱ្យគំនិតរាយប៉ាយ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-emerald-700 mb-4 en-title">💪 ផ្លូវនៃភាពរឹងមាំ</h4>
+                        <p class="mb-3">មនុស្សខ្សោយប្រៀបដូចជាមនុស្សដែលចង់លើកទម្ងន់។ ដំបូងគាត់លើកមិនរួចទេ។ ប៉ុន្តែតាមរយៈការហ្វឹកហាត់រាល់ថ្ងៃ គាត់នឹងខ្លាំង។</p>
+                        <p class="mb-3">ដូចគ្នាដែរ មនុស្សដែលខ្សោយខាងចិត្តគំនិត អាចក្លាយជាមនុស្សខ្លាំងបាន តាមរយៈការហ្វឹកហាត់ <strong>"ការគិតដែលមានគោលដៅ" (Purposeful Thinking)</strong>។</p>
+                    </div>
+
+                    <p class="mb-6">"អ្នកដែលជោគជ័យ គឺជាអ្នកដែលហ៊ានកំណត់គោលដៅ ហើយដើរទៅរកវាដោយមិនងាករេ ទោះបីមានឧបសគ្គយ៉ាងណាក៏ដោយ។"</p>
+                `,
+                scenario: `
+                    <p><strong>Action Step:</strong> កំណត់គោលដៅមួយនៅថ្ងៃនេះ (តូចឬធំ)។ ហាមគិតរឿងផ្សេងដែលមិនទាក់ទងនឹងវា។ បង្ខំចិត្តរបស់អ្នកឱ្យផ្តោតលើវា រហូតដល់សម្រេច។ នេះគឺជាការហ្វឹកហាត់សាច់ដុំនៃចិត្ត។</p>
+                `,
+                quiz: { question: "តើការគ្មានគោលបំណង (Aimlessness) នាំទៅរកអ្វី?", options: ["សេរីភាព", "ការរសាត់អណ្តែត ការភ័យខ្លាច និងភាពទន់ខ្សោយ", "ការច្នៃប្រឌិត", "ការសំរាក"], correct: 1, explanation: "ត្រឹមត្រូវ! គំនិតដែលគ្មានទិសដៅ ប្រៀបដូចជាកប៉ាល់ដែលគ្មានចង្កូត វានឹងត្រូវខ្យល់បោកបក់ទៅបុកថ្ម។" }
+            },
+            {
+                title: "5. កត្តាគំនិតក្នុងការសម្រេចជោគជ័យ (The Thought-Factor in Achievement)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">ការលះបង់ដើម្បីជោគជ័យ</h3>
+                    <p class="mb-6">អ្វីគ្រប់យ៉ាងដែលមនុស្សម្នាក់សម្រេចបាន (ឬបរាជ័យ) គឺជាលទ្ធផលផ្ទាល់នៃគំនិតរបស់គាត់។ នៅក្នុងចក្រវាឡដែលមានយុត្តិធម៌នេះ <strong>"ភាពទន់ខ្សោយ និងកម្លាំងរបស់អ្នក ជារបស់អ្នកផ្ទាល់ មិនមែនរបស់អ្នកដទៃទេ"</strong>។</p>
+                    
+                    <p class="mb-6">Allen លើកឡើងថា៖ យើងតែងតែគិតថា "ទាសករ" ត្រូវគេជិះជាន់ដោយ "អ្នកមានអំណាច"។ យើងស្អប់អ្នកមានអំណាច។ ប៉ុន្តែ Allen និយាយថា៖ <strong>"អ្នកជិះជាន់ និងទាសករ គឺជាអ្នកសហការគ្នា (Co-operators) ក្នុងភាពល្ងង់ខ្លៅ"</strong>។</p>
+                    <ul class="list-disc ml-8 mb-6 text-gray-700">
+                        <li>អ្នកជិះជាន់ ខ្សោយត្រង់ថាមានចិត្តឃោរឃៅ។</li>
+                        <li>ទាសករ ខ្សោយត្រង់ថាមានចិត្តព្រមចុះចាញ់។</li>
+                    </ul>
+                    
+                    <div class="quote-box">
+                        "He who would achieve little must sacrifice little; he who would achieve much must sacrifice much."
+                    </div>
+                    <p class="mb-6">ជោគជ័យមិនមែនបានមកទទេទេ។ អ្នកត្រូវលះបង់ "គំនិតសត្វ" (Animal indulgences) និងភាពខ្ជិលច្រអូស ដើម្បីទទួលបាន "គំនិតជោគជ័យ"។</p>
+                `,
+                scenario: `
+                    <p><strong>ការត្រិះរិះ៖</strong> មុននឹងបន្ទោសថៅកែ ឬរដ្ឋាភិបាល សួរខ្លួនឯងថា "តើមានគំនិតទន់ខ្សោយអ្វីខ្លះនៅក្នុងខ្លួនខ្ញុំ ដែលអនុញ្ញាតឱ្យគេធ្វើបាបខ្ញុំបាន?" ការរំដោះខ្លួនចាប់ផ្តើមពីក្នុងចិត្ត។</p>
+                `,
+                quiz: { question: "តើអ្វីជាតម្លៃដែលត្រូវបង់ដើម្បីទទួលបានជោគជ័យ?", options: ["លុយ", "ការលះបង់គំនិតអវិជ្ជមាន និងការសប្បាយភ្លើតភ្លើន (Self-denial/Sacrifice)", "ការកេងប្រវ័ញ្ចអ្នកដទៃ", "សំណាង"], correct: 1, explanation: "ត្រឹមត្រូវ! អ្នកកាន់តែលះបង់ការសប្បាយខ្លីៗ អ្នកកាន់តែជោគជ័យធំ។" }
+            },
+            {
+                title: "6. ចក្ខុវិស័យ និង ឧត្តមគតិ (Visions and Ideals)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">អ្នកសុបិនគឺជាអ្នកសង្គ្រោះពិភពលោក</h3>
+                    <p class="mb-6">កុំមើលងាយការស្រមើស្រមៃ។ <strong>"Dreamers are the saviors of the world."</strong> អ្វីៗដែលយើងឃើញសព្វថ្ងៃ (អគារខ្ពស់, អ៊ីនធឺណិត, យន្តហោះ) ធ្លាប់តែជា "សុបិន" នៅក្នុងចិត្តរបស់នរណាម្នាក់។</p>
+                    <p class="mb-6">Allen ប្រាប់ថា៖ <strong>"អ្នកនឹងក្លាយជាអ្វីដែលអ្នកស្រលាញ់បំផុត"</strong> (You will become as small as your controlling desire; as great as your dominant aspiration)។</p>
+                    
+                    <details>
+                        <summary>រឿងរ៉ាវនៃយុវជនក្រីក្រ</summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>កុំគិតថាអ្នកក្រ មិនអាចជោគជ័យ។ យុវជនក្រីក្រដែលធ្វើការក្នុងរោងចក្រកខ្វក់ ប៉ុន្តែមានចិត្តស្រលាញ់ការរៀនសូត្រ និងមានឧត្តមគតិខ្ពស់ ថ្ងៃណាមួយនឹងចេញផុតពីរោងចក្រនោះ ហើយក្លាយជាអ្នកដឹកនាំ។ កាលៈទេសៈមិនអាចឃុំឃាំង "ចក្ខុវិស័យ" បានទេ។</p>
+                        </div>
+                    </details>
+
+                    <p class="mb-6 mt-6">ក្តីសុបិនរបស់អ្នកគឺជាប្លង់មេ (Blueprint) នៃអនាគតរបស់អ្នក។ ថែរក្សាវាឱ្យដូចជាសម្បត្តិដ៏មានតម្លៃ។</p>
+                `,
+                scenario: `
+                    <p><strong>Visualisation:</strong> បិទភ្នែក ហើយស្រមៃមើលខ្លួនឯងក្នុងរយៈពេល ៥ ឆ្នាំទៀត។ តើអ្នកចង់ក្លាយជាមនុស្សបែបណា? រូបភាពនោះហើយជាគ្រាប់ពូជដែលអ្នកត្រូវស្រោចទឹកនៅថ្ងៃនេះ។</p>
+                `,
+                quiz: { question: "តើ James Allen ណែនាំឱ្យយើងធ្វើអ្វីចំពោះក្តីសុបិនរបស់យើង?", options: ["បំភ្លេចវាចោលព្រោះវាមិនពិត", "ថែរក្សាវាឱ្យដូចជាសម្បត្តិដ៏មានតម្លៃបំផុត ព្រោះវាជាគ្រាប់ពូជនៃអនាគត", "ប្រាប់គេឱ្យអស់", "រង់ចាំសំណាង"], correct: 1, explanation: "ត្រឹមត្រូវ! 'The vision that you glorify in your mind, the ideal that you enthrone in your heart—this you will build your life by, this you will become.'" }
+            },
+            {
+                title: "7. ភាពស្ងប់សុខ (Serenity)",
+                content: `
+                    <h3 class="text-3xl font-bold text-emerald-800 mb-6 kh-title">មកុដនៃប្រាជ្ញា</h3>
+                    <p class="mb-6">នេះគឺជាជំពូកចុងក្រោយ និងជាគោលដៅកំពូល។ <strong>"ភាពស្ងប់សុខនៃចិត្ត" (Calmness of Mind)</strong> គឺជាត្បូងដ៏មានតម្លៃបំផុតនៃប្រាជ្ញា។</p>
+                    <p class="mb-6">ភាពស្ងប់សុខមិនមែនជាភាពខ្ជិល ឬការដេកលក់ទេ។ វាគឺជាលទ្ធផលនៃការគ្រប់គ្រងខ្លួនឯងដ៏យូរអង្វែង។ វាគឺជាកម្លាំងដែលនៅស្ងៀម (Power in Repose)។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-emerald-700 mb-4 en-title">🌊 ព្យុះ និង ថ្ម</h4>
+                        <p class="mb-3">មនុស្សភាគច្រើនដូចជាស្លឹកឈើដែលត្រូវខ្យល់បោកបក់ (ឆាប់ខឹង, ឆាប់ភ័យ, ឆាប់អរ)។ មនុស្សដែលមាន Serenity ប្រៀបដូចជាថ្មដា ឬដើមឈើធំ ដែលផ្តល់ម្លប់ដល់អ្នកដទៃ។</p>
+                        <p class="mb-3"><strong>"មនុស្សកាន់តែស្ងប់ស្ងាត់ កាន់តែមានអំណាច។"</strong> (The more tranquil a man becomes, the greater is his success)។ មនុស្សចូលចិត្តធ្វើការជាមួយមនុស្សដែលមានចិត្តស្ងប់។</p>
+                    </div>
+
+                    <p class="mb-6">សៀវភៅបញ្ចប់ដោយពាក្យថា៖ <strong>"Self-control is strength; Right Thought is mastery; Calmness is power. Say unto your heart, 'Peace, be still!'"</strong></p>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong> ពេលក្រោយដែលអ្នកខឹង ចូរនឹកឃើញថា "កំហឹងគឺជាភាពទន់ខ្សោយ។ ភាពស្ងប់គឺជាកម្លាំង"។ តើអ្នកចង់ក្លាយជាមនុស្សខ្សោយ ឬមនុស្សខ្លាំង?</p>
+                `,
+                quiz: { question: "តើលក្ខណៈសម្បត្តិអ្វីដែល Allen ចាត់ទុកថាជា 'មកុដនៃប្រាជ្ញា' (The beautiful jewel of wisdom)?", options: ["ភាពឆ្លាតវៃ", "ទ្រព្យសម្បត្តិ", "ភាពស្ងប់សុខនៃចិត្ត (Serenity/Calmness)", "កម្លាំងកាយ"], correct: 2, explanation: "ត្រឹមត្រូវ! ភាពស្ងប់សុខបង្ហាញថាអ្នកបានយល់ច្បាស់ពីខ្លួនឯង និងច្បាប់នៃជីវិត រហូតដល់គ្មានអ្វីអាចធ្វើឱ្យអ្នករង្គោះរង្គើបាន។" }
+            }
+        ];
+
+        // Logic (Navigation, Quiz, Progress)
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#d1fae5] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-emerald-800' : 'text-emerald-600'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-emerald-300 font-serif">${index + 1}</span>
+                    <span class="truncate tracking-wide font-serif">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active');
+                b.style.background = 'transparent';
+                b.querySelector('.lesson-indicator').classList.remove('bg-emerald-600', 'text-white');
+                b.querySelector('.lesson-indicator').classList.add('bg-emerald-100', 'text-emerald-700');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-emerald-100', 'text-emerald-700');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-emerald-600', 'text-white');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `បញ្ចប់` : `បន្ទាប់`;
+            
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+        }
+        
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    // Show continue button
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-6 bg-white/80 text-emerald-800 font-bold py-2 px-6 rounded-full hover:bg-white transition shadow-lg text-sm border border-emerald-200';
+                    continueBtn.innerHTML = `បន្តអាន Chapter ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-white\\/60')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-8 rounded-xl text-lg border-l-4 shadow-sm bg-green-50 transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border border-green-200 hover:bg-green-100 transition flex items-center shadow-sm group bg-white text-emerald-800";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-green-300 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-emerald-500 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition font-serif">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="font-medium group-hover:text-emerald-900 font-kantumruy">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-8 rounded-xl bg-green-100 text-green-900 border-l-4 border-green-500 shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-700 text-xl block mb-2 font-serif">ត្រឹមត្រូវ! 🌿</strong> ${explanation}`;
+            } else {
+                btnElement.classList.add('wrong-answer');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-8 rounded-xl bg-red-50 text-red-900 border-l-4 border-red-500 shadow-sm fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-700 text-xl block mb-2 font-serif">មិនត្រឹមត្រូវទេ 🍂</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("សូមអបអរសាទរ! អ្នកបានក្លាយជាអ្នកថែសួននៃចិត្តដ៏ពូកែ។");
+        };
+
+        initNav();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wizard of Oz - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Rye&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #064e3b; /* Emerald-900 */
+            color: #ecfdf5; /* Emerald-50 */
+            line-height: 2;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
+                url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Rye', serif; /* Whimsical/Western font */
+        }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Sidebar - The Yellow Brick Road Theme */
+        .sidebar-active {
+            background: linear-gradient(90deg, #fef08a 0%, #facc15 100%); /* Yellow-200 to Yellow-400 */
+            border-left: 6px solid #b45309; /* Amber-700 */
+            color: #713f12; /* Yellow-900 */
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
+        }
+        
+        .correct-answer {
+            background-color: #065f46 !important;
+            border: 2px solid #34d399 !important;
+            color: #d1fae5 !important;
+            box-shadow: 0 0 10px #34d399;
+        }
+        .wrong-answer {
+            background-color: #7f1d1d !important;
+            border: 2px solid #ef4444 !important;
+            color: #fecaca !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022c22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #10b981, #047857);
+            border-radius: 5px;
+            border: 2px solid #022c22;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #34d399;
+        }
+
+        /* Glassmorphism Cards */
+        .concept-card {
+            background: rgba(6, 78, 59, 0.7);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid #34d399;
+            margin: 2.5rem 0;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, #facc15, #10b981, #facc15);
+        }
+
+        .quote-box {
+            font-style: italic;
+            border-left: 6px solid #facc15;
+            padding-left: 2rem;
+            color: #fde047;
+            margin: 2.5rem 0;
+            background-color: rgba(253, 224, 71, 0.1); 
+            padding: 2rem;
+            border-radius: 0 1rem 1rem 0;
+            font-size: 1.2rem;
+            font-family: 'Battambang', serif;
+        }
+
+        /* Details */
+        details {
+            background: rgba(2, 44, 34, 0.6);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #059669;
+        }
+        details[open] {
+            background: rgba(6, 78, 59, 0.9);
+            border-color: #facc15;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+        summary {
+            font-weight: bold;
+            color: #facc15;
+            outline: none;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+        }
+        summary::before {
+            content: '🌪️';
+            margin-right: 10px;
+        }
+
+        /* Emerald City Button */
+        .btn-emerald {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border: 2px solid #6ee7b7;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            font-family: 'Rye', serif;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .btn-emerald:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: #064e3b;
+            border-color: #facc15;
+        }
+
+        /* Content Layer */
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #facc15;
+            border-radius: 50%;
+            animation: sparkleAnim 4s infinite ease-in-out;
+        }
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#064e3b] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-[0_0_30px_#facc15]">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-emerald-300 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-yellow-400 text-black font-bold rounded-full hover:bg-yellow-300 transition shadow-[0_0_20px_#facc15]">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-emerald-400 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-yellow-400 hover:underline font-bold">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#064e3b] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-[#022c22]/90 backdrop-blur-xl rounded-3xl border-2 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.3)]">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-[0_0_30px_#facc15]">
+                <span class="text-4xl">🌪️</span>
+            </div>
+            <h2 class="text-2xl font-bold text-yellow-400 mb-2 en-title">THE WIZARD OF OZ</h2>
+            <p class="text-emerald-300 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-emerald-900/50 border border-emerald-600 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-emerald-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full btn-emerald py-3 px-6 rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-emerald-400 hover:text-yellow-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'oz';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#022c22] p-4 shadow-lg flex justify-between items-center z-20 border-b border-emerald-800">
+        <h1 class="text-lg font-bold text-yellow-400 en-title">The Wizard of Oz</h1>
+        <button id="menuBtn" class="text-emerald-300 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-96 bg-[#022c22] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-emerald-900">
+        <div class="p-8 border-b border-emerald-800 hidden md:block bg-[url('https://www.transparenttextures.com/patterns/green-dust-and-scratches.png')]">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 en-title tracking-wider mb-2 drop-shadow-lg" style="line-height: 1.2;">THE WIZARD<br>OF OZ</h1>
+            <p class="text-xs text-emerald-400 font-bold uppercase tracking-[0.2em] mt-2">The Emerald City Edition</p>
+            <p class="text-xs text-emerald-600 mt-1 italic">L. Frank Baum</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-emerald-900 bg-[#064e3b]">
+            <div class="flex justify-between text-xs mb-2 text-yellow-400 font-bold uppercase en-title">
+                <span>Journey Home</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-[#022c22] rounded-full h-2.5 overflow-hidden border border-emerald-800">
+                <div id="progressBar" class="bg-gradient-to-r from-yellow-500 to-yellow-300 h-2.5 rounded-full transition-all duration-500 shadow-[0_0_10px_#facc15]" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#064e3b]" id="mainContent">
+        <!-- Decor: Sparkles -->
+        <div class="sparkle" style="top: 10%; left: 20%;"></div>
+        <div class="sparkle" style="top: 30%; left: 80%; animation-delay: 1s;"></div>
+        <div class="sparkle" style="top: 70%; left: 10%; animation-delay: 2s;"></div>
+
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#022c22]/80 backdrop-blur-xl p-16 rounded-3xl shadow-2xl max-w-3xl border-2 border-emerald-500 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none"></div>
+                    <div class="text-8xl mb-8 drop-shadow-[0_0_20px_#10b981]">🌪️👠🦁</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 kh-title leading-tight drop-shadow-md">ដំណើរទៅកាន់ដែនដីអូស</h2>
+                    <p class="text-xl text-emerald-100 mb-12 leading-loose font-light px-8">
+                        "គ្មានកន្លែងណាដូចផ្ទះទេ។"<br>
+                        ចូលរួមជាមួយ Dorothy, Scarecrow, Tin Woodman និង Lion ដើម្បីស្វែងរកអ្វីដែលពួកគេមាននៅក្នុងខ្លួនស្រាប់។
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-emerald py-5 px-12 rounded-full text-xl flex items-center mx-auto tracking-widest uppercase">
+                        <span>ដើរតាមផ្លូវឥដ្ឋពណ៌លឿង</span>
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-yellow-400 mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-emerald-700/50 w-full pb-4 en-title">
+                    <span id="chapterNumber" class="bg-emerald-900/50 px-4 py-2 rounded-lg border border-emerald-600">Chapter 1</span>
+                    <span class="flex-1 text-right text-emerald-300">The Story</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-4xl md:text-6xl font-bold text-white mb-12 leading-snug kh-title text-shadow-lg decoration-yellow-500/50 underline decoration-4 underline-offset-8"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-emerald-50 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#022c22] border border-yellow-500 p-10 rounded-2xl mb-12 hidden shadow-[0_0_30px_rgba(250,204,21,0.2)] mt-20 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                    <h3 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        មេរៀនជីវិត (Life Lesson)
+                    </h3>
+                    <div id="scenarioContent" class="text-emerald-100 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#022c22]/90 rounded-3xl shadow-2xl p-10 md:p-16 border-2 border-emerald-600 mt-24 relative overflow-hidden backdrop-blur-xl">
+                    <div class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-500 via-emerald-500 to-yellow-500"></div>
+                    <h3 class="text-3xl font-bold text-white mb-10 flex items-center relative z-10 kh-title">
+                        <span class="bg-yellow-500 text-black text-sm font-extrabold mr-6 px-6 py-2 rounded-full uppercase tracking-widest shadow-lg en-title">QUIZ</span>
+                        សាកល្បងប្រាជ្ញា
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-2xl font-medium mb-10 text-emerald-50 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-6"></div>
+                        <div id="quizFeedback" class="mt-10 hidden p-8 rounded-2xl text-xl border-l-8 shadow-2xl bg-black/40"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-24 pt-12 border-t border-emerald-800">
+                    <button id="prevBtn" class="px-10 py-4 rounded-xl border-2 border-emerald-700 text-emerald-400 hover:bg-emerald-900 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
+                        ← Back
+                    </button>
+                    <button id="nextBtn" class="btn-emerald py-4 px-10 rounded-xl flex items-center text-lg">
+                        Continue Journey →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL EXTENDED CONTENT FOR THE WIZARD OF OZ (KHMER)
+        const lessons = [
+            {
+                title: "1. ព្យុះស៊ីក្លូន (The Cyclone)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ពណ៌ប្រផេះនៃរដ្ឋ Kansas</h3>
+                    <p class="mb-6"><strong>Dorothy</strong> គឺជាក្មេងស្រីកំព្រាម្នាក់ដែលរស់នៅកណ្តាលវាលស្មៅពណ៌ប្រផេះដ៏ធំល្វឹងល្វើយនៃរដ្ឋ Kansas ជាមួយពូ Henry (ដែលជាកសិករធ្វើការធ្ងន់) និងមីង Em (ដែលជាស្ត្រីមេផ្ទះស្គមស្គាំង)។ ផ្ទះរបស់ពួកគេតូច និងចាស់ ធ្វើពីឈើដែលត្រូវកំដៅថ្ងៃដុតរហូតដល់ប្រែពណ៌។</p>
+                    <p class="mb-6">ជីវិតនៅទីនោះគឺស្ងួត និងគ្មានពណ៌សម្បុរ។ សូម្បីតែមីងនិងពូរបស់នាង ក៏លែងចេះញញឹមដែរ។ L. Frank Baum ពណ៌នាថា៖ <strong>"មេឃប្រផេះ វាលស្មៅប្រផេះ និងជីវិតដែលប្រផេះ"</strong>។ ពណ៌ប្រផេះនេះតំណាងឱ្យជីវិតដែលគ្មានការស្រមើស្រមៃ និងគ្មានសង្ឃឹម។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-400 mb-4 en-title">🐶 Toto: ពណ៌តែមួយគត់</h4>
+                        <p class="mb-3">អ្វីដែលធ្វើឱ្យ Dorothy សប្បាយចិត្តគឺ <strong>Toto</strong> (ឆ្កែតូចពណ៌ខ្មៅ)។ Toto តំណាងឱ្យភាពរីករាយ និងក្តីស្រលាញ់ដែលមិនចេះរីងស្ងួតនៅក្នុងពិភពលោកដ៏ក្រៀមក្រំ។ គាត់គឺជាមូលហេតុដែល Dorothy មិនប្រែទៅជាពណ៌ប្រផេះដូចមីងរបស់នាង។</p>
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-yellow-400 mt-10 mb-6">ការហោះហើរទៅកាន់ដែនដីអូស</h3>
+                    <p class="mb-6">ថ្ងៃមួយ ព្យុះស៊ីក្លូនដ៏ធំមួយបានបក់មកពីទិសខាងជើង។ ពូ Henry ស្រែកប្រាប់ឱ្យរត់។ មីង Em បើកទ្វាររ hầm (Cellar) ការពារព្យុះ។ ប៉ុន្តែ Dorothy រត់ទៅរក Toto ដែលលាក់ខ្លួននៅក្រោមគ្រែ។</p>
+                    <p class="mb-6">មុនពេលនាងអាចចូលរ hầm ផ្ទះទាំងមូលត្រូវបានព្យុះស៊ីក្លូនលើកឡើងទៅលើអាកាស។ ផ្ទះបានហោះយ៉ាងយូរ នៅចំកណ្តាលភ្នែកព្យុះ។ Dorothy មានអារម្មណ៍ថាដូចជាកំពុងជិះប៉េងប៉ោង។</p>
+                    <p class="mb-6">ទីបំផុត ផ្ទះបានធ្លាក់មកដីយ៉ាងខ្លាំង។ ពេល Dorothy បើកទ្វារ នាងមិនឃើញវាលស្មៅពណ៌ប្រផេះទៀតទេ។ នាងឃើញពិភពលោកមួយដែលពោរពេញដោយពណ៌បៃតង ផ្កាស្រស់ស្អាត និងទឹកហូរ។ នាងនិយាយថា៖ <strong>"Toto, ខ្ញុំគិតថាយើងលែងនៅ Kansas ទៀតហើយ។"</strong></p>
+                `,
+                scenario: `
+                    <p><strong>ការផ្លាស់ប្តូរដែលមិនបានរំពឹងទុក៖</strong> ព្យុះស៊ីក្លូនតំណាងឱ្យការផ្លាស់ប្តូរដ៏ធំនៅក្នុងជីវិត (ដូចជាការបាត់បង់ការងារ ការផ្លាស់ទីលំនៅ ឬវិបត្តិ)។ ដំបូងវាគួរឱ្យខ្លាច ប៉ុន្តែវាអាចនាំយើងចេញពី "កន្លែងប្រផេះ" ទៅកាន់កន្លែងថ្មីដែលមានពណ៌ស្រស់ស្អាត។ តើអ្នកធ្លាប់មាន "ព្យុះ" ដែលប្តូរជីវិតអ្នកទេ?</p>
+                `,
+                quiz: { question: "តើអ្វីដែលតំណាងឱ្យភាពសង្ឃឹម និងភាពរីករាយនៅក្នុងជីវិតរបស់ Dorothy នៅ Kansas?", options: ["ផ្ទះឈើ", "Toto (ឆ្កែរបស់នាង)", "មីង Em", "វាលស្រែ"], correct: 1, explanation: "ត្រឹមត្រូវ! Toto គឺជាតំណាងនៃភាពរីករាយតែមួយគត់។ បើគ្មាន Toto ទេ Dorothy ប្រហែលជាក្លាយជាមនុស្សក្រៀមក្រំដូចមីងរបស់នាង។" }
+            },
+            {
+                title: "2. ក្រុមប្រឹក្សាជាមួយ Munchkins (The Council with the Munchkins)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ស្បែកជើងពណ៌ប្រាក់ (The Silver Shoes)</h3>
+                    <p class="mb-6">នៅពេលផ្ទះធ្លាក់ចុះ វាបានធ្លាក់ចំពីលើ <strong>Wicked Witch of the East (មេធ្មប់អាក្រក់ទិសខាងកើត)</strong> ហើយសម្លាប់នាង។ នៅក្រោមផ្ទះ មានតែជើងពីរដែលពាក់ស្បែកជើងពណ៌ប្រាក់លេចចេញមក។</p>
+                    <p class="mb-6">ប្រជាជនតូចៗឈ្មោះ <strong>Munchkins</strong> បានចេញមកអរគុណ Dorothy ដែលបានរំដោះពួកគេពីទាសភាពរបស់មេធ្មប់នោះ។ ពួកគេគិតថា Dorothy គឺជាអាបធ្មប់ដ៏ខ្លាំងពូកែ។</p>
+                    <p class="mb-6"><strong>Good Witch of the North (មេធ្មប់ល្អទិសខាងជើង)</strong> បានមកដល់។ នាងពន្យល់ថា Oz គឺជាដែនដីវេទមន្តដែលព័ទ្ធជុំវិញដោយវាលខ្សាច់ដែលមិនអាចឆ្លងកាត់បាន។ មេធ្មប់ល្អផ្តល់ឱ្យ Dorothy នូវ <strong>"ស្បែកជើងពណ៌ប្រាក់" (Silver Shoes)</strong> របស់មេធ្មប់ដែលស្លាប់នោះ។</p>
+                    
+                    <details>
+                        <summary>Book vs Movie Detail</summary>
+                        <div class="mt-4 text-emerald-100 bg-[#022c22] p-4 rounded border border-emerald-600">
+                            <p>នៅក្នុងសៀវភៅ ស្បែកជើងមានពណ៌ <strong>ប្រាក់ (Silver)</strong>។ ប៉ុន្តែនៅក្នុងភាពយន្តឆ្នាំ 1939 គេប្តូរវាទៅជាពណ៌ <strong>ក្រហម (Ruby Slippers)</strong> ដើម្បីបង្ហាញភាពស្រស់ស្អាតនៃបច្ចេកវិទ្យា Technicolor ថ្មីនៅសម័យនោះ។ ពណ៌ប្រាក់តំណាងឱ្យ "Silver Standard" (ស្តង់ដារប្រាក់) នៅក្នុងនយោបាយសេដ្ឋកិច្ចអាមេរិកសម័យនោះ។</p>
+                        </div>
+                    </details>
+
+                    <h3 class="text-3xl font-bold text-yellow-400 mt-10 mb-6">ផ្លូវឥដ្ឋពណ៌លឿង</h3>
+                    <p class="mb-6">Dorothy ចង់ត្រឡប់ទៅ Kansas វិញ។ មេធ្មប់ល្អប្រាប់ថា នាងមិនអាចជួយបានទេ មានតែ <strong>Wizard of Oz</strong> ដ៏អស្ចារ្យទេដែលអាចជួយបាន។ គាត់រស់នៅក្នុង <strong>Emerald City (ទីក្រុងត្បូងមរកត)</strong> នៅចំកណ្តាលដែនដី។</p>
+                    <p class="mb-6">ដើម្បីទៅដល់ទីនោះ Dorothy ត្រូវដើរតាម <strong>"ផ្លូវឥដ្ឋពណ៌លឿង" (Yellow Brick Road)</strong>។ មេធ្មប់ល្អថើបថ្ងាស Dorothy ដើម្បីការពារនាងពីគ្រោះថ្នាក់។ ស្នាមថើបនោះគឺជាត្រាការពារដ៏ស័ក្តិសិទ្ធិ។</p>
+                `,
+                scenario: `
+                    <p><strong>ឧបករណ៍ដែលយើងមិនដឹង៖</strong> Dorothy មានស្បែកជើងវេទមន្តតាំងពីដើម ប៉ុន្តែនាងមិនដឹងពីរបៀបប្រើវាទេ។ នេះប្រៀបដូចជាសក្តានុពលនៅក្នុងខ្លួនយើង។ យើងមានសមត្ថភាពដោះស្រាយបញ្ហា ប៉ុន្តែយើងត្រូវឆ្លងកាត់ការរៀនសូត្រ និងការធ្វើដំណើរសិន ទើបយើងយល់ពីរបៀបប្រើវា។</p>
+                `,
+                quiz: { question: "តើ Dorothy ទទួលបានអ្វីពីមេធ្មប់អាក្រក់ដែលស្លាប់?", options: ["មួកវេទមន្ត", "ស្បែកជើងពណ៌ប្រាក់ (Silver Shoes)", "ដំបងវេទមន្ត", "ផែនទី"], correct: 1, explanation: "ត្រឹមត្រូវ! ស្បែកជើងនេះគឺជាគន្លឹះនៃការត្រឡប់ទៅផ្ទះវិញ ប៉ុន្តែនាងត្រូវរកឃើញអំណាចរបស់វាដោយខ្លួនឯងនៅពេលក្រោយ។" }
+            },
+            {
+                title: "3. តុក្កតាទីងមោង (The Scarecrow)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ការស្វែងរកប្រាជ្ញា</h3>
+                    <p class="mb-6">នៅតាមផ្លូវ Dorothy បានជួប <strong>Scarecrow (តុក្កតាទីងមោង)</strong> ដែលព្យួរនៅលើបង្គោលកណ្តាលវាលពោត។ គាត់និយាយថាគាត់មិនមែនជាមនុស្សទេ គាត់គ្រាន់តែជាបាវចំបើង។</p>
+                    <p class="mb-6">Scarecrow ត្អូញត្អែរថា៖ <strong>"ខ្ញុំមិនមានខួរក្បាលទេ។ ក្បាលខ្ញុំញាត់ដោយចំបើង។ ខ្ញុំខ្លាចគេហៅខ្ញុំថាអាល្ងង់។"</strong> គាត់ចង់ទៅរក Oz ដើម្បីសុំខួរក្បាល។</p>
+                    <p class="mb-6">ប៉ុន្តែនៅតាមផ្លូវ Scarecrow បង្ហាញភាពឆ្លាតវៃជាច្រើនដង៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-emerald-100">
+                        <li>គាត់គិតឃើញវិធីឆ្លងកាត់ជ្រោះជ្រៅ (ដោយកាប់ដើមឈើធ្វើស្ពាន)។</li>
+                        <li>គាត់គិតឃើញវិធីការពារ Dorothy ពីសត្វក្អែក។</li>
+                        <li>គាត់តែងតែជាអ្នករៀបចំផែនការក្នុងក្រុម។</li>
+                    </ul>
+                    
+                    <div class="concept-card border-l-4 border-yellow-500">
+                        <h4 class="text-xl font-bold text-yellow-400 mb-2">🧠 ភាពឆ្លាតវៃ vs ការជឿជាក់</h4>
+                        <p>Scarecrow តំណាងឱ្យ <strong>"ភាពឆ្លាតវៃតាមធម្មជាតិ" (Innate Wisdom)</strong>។ គាត់គិតថាគាត់ល្ងង់ ព្រោះគាត់ប្រៀបធៀបខ្លួនឯងនឹងមនុស្សដែលមាន "ខួរក្បាលសាច់"។ គាត់គិតថា "ការមានខួរក្បាល" ស្មើនឹង "ភាពឆ្លាតវៃ"។ តាមពិត គាត់ឆ្លាតជាងមនុស្សជាច្រើន។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Imposter Syndrome:</strong> មនុស្សជាច្រើនគិតថាខ្លួនឯងមិនឆ្លាត ឬមិនសក្តិសម ទាំងដែលពួកគេកំពុងដោះស្រាយបញ្ហារាល់ថ្ងៃ។ តើអ្នកត្រូវការសញ្ញាប័ត្រដើម្បីបញ្ជាក់ថាអ្នកឆ្លាត ឬអ្នកត្រូវការតែទំនុកចិត្តលើសមត្ថភាពខ្លួនឯង?</p>
+                `,
+                quiz: { question: "តើ Scarecrow ចង់បានអ្វីពី Wizard of Oz?", options: ["បេះដូង", "ខួរក្បាល (Brains)", "សេចក្តីក្លាហាន", "ផ្ទះ"], correct: 1, explanation: "ត្រឹមត្រូវ! គាត់ជឿថាបើគ្មានខួរក្បាល គាត់មិនមែនជាមនុស្សពេញលេញទេ។ ប៉ុន្តែតាមពិត គាត់គឺជាអ្នកដែលមានគំនិតល្អជាងគេក្នុងក្រុម។" }
+            },
+            {
+                title: "4. បុរសកំប៉ុង (The Tin Woodman)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ការស្វែងរកបេះដូង</h3>
+                    <p class="mb-6">បន្ទាប់មក ពួកគេបានជួបបុរសធ្វើពីដែកកំប៉ុង (Tin Woodman) ដែលច្រែះចាប់នៅកណ្តាលព្រៃ។ គាត់មិនអាចកម្រើកបានរាប់ឆ្នាំមកហើយ។ Dorothy ដាក់ប្រេងឱ្យគាត់ ទើបគាត់អាចនិយាយបាន។</p>
+                    <p class="mb-6">Tin Woodman ប្រាប់រឿងដ៏កំសត់មួយ។ គាត់ធ្លាប់ជាមនុស្សធម្មតាដែលមានសង្សារ។ ប៉ុន្តែមេធ្មប់អាក្រក់បានដាក់បណ្តាសាពូថៅរបស់គាត់ ធ្វើឱ្យគាត់កាប់ជើងខ្លួនឯងម្តងមួយៗ។ គាត់បានឱ្យជាងដែកធ្វើជើងដែកជំនួស។ ចុងក្រោយ គាត់កាប់ត្រូវទ្រូងខ្លួនឯង។ ជាងដែកបានធ្វើខ្លួនប្រាណដែកឱ្យគាត់ ប៉ុន្តែភ្លេចដាក់ <strong>"បេះដូង" (Heart)</strong>។</p>
+                    <p class="mb-6">គាត់និយាយថា៖ <strong>"ខ្ញុំសុខចិត្តរងទុក្ខជាជាងគ្មានបេះដូង។ បើគ្មានបេះដូង ខ្ញុំមិនអាចស្រលាញ់បានទេ។"</strong></p>
+                    
+                    <details>
+                        <summary>Paradox of the Tin Man</summary>
+                        <div class="mt-4 text-emerald-100 bg-[#022c22] p-4 rounded border border-emerald-600">
+                            <p>ទោះបីគាត់ថាគាត់គ្មានបេះដូង ប៉ុន្តែ Tin Woodman គឺជាមនុស្សដែលមានមនោសញ្ចេតនាជ្រាលជ្រៅបំផុត។ គាត់យំនៅពេលគាត់ដើរជាន់សត្វល្អិតដោយចៃដន្យ។ គាត់ប្រុងប្រយ័ត្នខ្លាំងមិនឱ្យធ្វើបាបអ្នកដទៃ។</p>
+                            <p><strong>មេរៀន៖</strong> ក្តីស្រលាញ់មិនមែនស្ថិតនៅលើសរីរាង្គបេះដូងទេ។ ក្តីស្រលាញ់ស្ថិតនៅលើ <strong>"សកម្មភាព និងការយកចិត្តទុកដាក់" (Action and Care)</strong>។ អ្នកដែលបារម្ភថាខ្លួនគ្មានក្តីស្រលាញ់ គឺជាអ្នកដែលមានក្តីស្រលាញ់ច្រើនជាងគេ។</p>
+                        </div>
+                    </details>
+                `,
+                scenario: `
+                    <p><strong>Brain vs Heart Debate:</strong> Scarecrow និង Tin Woodman តែងតែជជែកគ្នា។ Scarecrow ថា "ខួរក្បាលសំខាន់ជាង ព្រោះបើគ្មានខួរក្បាល អ្នកនឹងធ្វើរឿងល្ងង់"។ Tin Woodman ថា "បេះដូងសំខាន់ជាង ព្រោះបើគ្មានបេះដូង អ្នកនឹងមិនមានក្តីសុខទេ"។ តើអ្នកគិតថាមួយណាសំខាន់ជាង?</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជា Tin Woodman គិតថាគាត់ត្រូវការបេះដូង?", options: ["ដើម្បីរស់", "ដើម្បីអាចស្រលាញ់និងមានអារម្មណ៍ (To love and feel)", "ដើម្បីបូមឈាម", "ដើម្បីមើលទៅស្អាត"], correct: 1, explanation: "ត្រឹមត្រូវ! គាត់ជឿថាការបាត់បង់បេះដូងសាច់ ធ្វើឱ្យគាត់បាត់បង់សមត្ថភាពស្រលាញ់។ តែតាមពិត គាត់គឺជាមនុស្សដែលចិត្តល្អបំផុត។" }
+            },
+            {
+                title: "5. តោដែលកំសាក (The Cowardly Lion)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ការស្វែងរកសេចក្តីក្លាហាន</h3>
+                    <p class="mb-6">ចុងក្រោយ ក្រុមអ្នកដំណើរបានជួប <strong>តោ (Lion)</strong> មួយក្បាលដែលលោតមកគំរាមពួកគេ។ Toto (ឆ្កែតូច) បានព្រុសដាក់តោ។ តោនោះបែរជាភ័យរន្ធត់ ហើយថយក្រោយ។</p>
+                    <p class="mb-6">Dorothy វាយច្រមុះតោ ហើយថា៖ "ឯងធំសម្បើមណាស់ តែខ្លាចឆ្កែតូចមួយ! ឯងជាតោកំសាក!"</p>
+                    <p class="mb-6">តោសារភាពទាំងទឹកភ្នែកថា គាត់គឺជា <strong>"តោកំសាក" (Cowardly Lion)</strong>។ គាត់ខ្លាចគ្រប់យ៉ាង។ គាត់ចង់ទៅរក Oz ដើម្បីសុំ <strong>"សេចក្តីក្លាហាន" (Courage)</strong> ដើម្បីឱ្យសមនឹងឋានៈជាស្តេចនៃសត្វ។</p>
+                    
+                    <div class="concept-card bg-emerald-800 border-yellow-500">
+                        <h4 class="text-xl font-bold text-white mb-2">🦁 និយមន័យនៃភាពក្លាហាន</h4>
+                        <p class="text-emerald-100">តោគិតថា "ភាពក្លាហាន" មានន័យថា "មិនចេះខ្លាច"។ ប៉ុន្តែ Oz ប្រាប់គាត់នៅពេលក្រោយថា៖</p>
+                        <p class="mt-2 italic font-bold">"អ្នកមិនត្រូវការសេចក្តីក្លាហានទៀតទេ។ អ្នកមានវារួចហើយ។ ភាពក្លាហានគឺការហ៊ានប្រឈមមុខនឹងគ្រោះថ្នាក់ ទោះបីជាអ្នកកំពុងភ័យខ្លាចក៏ដោយ។ បើមិនខ្លាច មិនហៅថាក្លាហានទេ។"</p>
+                    </div>
+
+                    <p class="mb-6">នៅក្នុងដំណើរផ្សងព្រេង តោតែងតែចេញមុខការពារមិត្តភក្តិរបស់គាត់ពីសត្វចម្លែក (Kalidahs) ទោះបីជាគាត់ញ័រខ្លួនក៏ដោយ។ នេះហើយជាភាពក្លាហានពិតប្រាកដ។</p>
+                `,
+                scenario: `
+                    <p><strong>ការឆ្លុះបញ្ចាំង៖</strong> តើអ្នកធ្លាប់គិតថាខ្លួនឯងកំសាកទេ ព្រោះអ្នកភ័យមុនពេលឡើងនិយាយ ឬធ្វើអ្វីមួយ? ការភ័យនោះហើយជាឱកាសដើម្បីបង្ហាញភាពក្លាហាន។ "Brave is not the absence of fear. Brave is acting in spite of fear."</p>
+                `,
+                quiz: { question: "តើអ្វីជាភាពក្លាហានពិតប្រាកដនៅក្នុងរឿងនេះ?", options: ["ការមិនចេះខ្លាចអ្វីសោះ", "ការហ៊ានធ្វើសកម្មភាពទោះបីជាកំពុងភ័យខ្លាចក៏ដោយ (Acting despite fear)", "ការវាយគ្នាឈ្នះ", "ការស្រែកខ្លាំងៗ"], correct: 1, explanation: "ត្រឹមត្រូវ! តោគឺជាសត្វក្លាហានបំផុត ព្រោះគាត់ហ៊ានប្រឈមមុខនឹងការភ័យខ្លាចរបស់គាត់រាល់ថ្ងៃ។" }
+            },
+            {
+                title: "6. ទីក្រុងមរកត (The Emerald City)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ការបំភាន់ភ្នែក (The Great Deception)</h3>
+                    <p class="mb-6">ក្រោយពីឆ្លងកាត់វាលផ្កាអាភៀន (Poppy Field) ដែលធ្វើឱ្យងងុយគេង ពួកគេបានមកដល់ <strong>Emerald City</strong>។ វាស្រស់ស្អាត និងមានពណ៌បៃតងខ្ចី។</p>
+                    <p class="mb-6">មុនពេលចូល អ្នកយាមតម្រូវឱ្យពួកគេពាក់ <strong>"វ៉ែនតាពណ៌បៃតង" (Green Spectacles)</strong> និងចាក់សោរជាប់។ គេប្រាប់ថា "ដើម្បីការពារភ្នែកពីពន្លឺដ៏ខ្លាំងនៃទីក្រុង"។</p>
+                    <p class="mb-6">នេះគឺជាការបោកបញ្ឆោតដំបូងរបស់ Oz។ តាមពិតទៅ ទីក្រុងនេះប្រហែលជាមិនមែនពណ៌បៃតងទាំងអស់ទេ។ វ៉ែនតានោះធ្វើឱ្យអ្វីៗមើលទៅជាពណ៌បៃតង។</p>
+                    <p class="mb-6">ពួកគេបានចូលជួប Oz ម្តងម្នាក់ៗ។ Oz បង្ហាញខ្លួនក្នុងទម្រង់ផ្សេងៗគ្នា៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-emerald-100">
+                        <li><strong>Dorothy:</strong> ឃើញក្បាលយក្ស។</li>
+                        <li><strong>Scarecrow:</strong> ឃើញស្ត្រីស្អាត។</li>
+                        <li><strong>Tin Woodman:</strong> ឃើញសត្វចម្លែក។</li>
+                        <li><strong>Lion:</strong> ឃើញដុំភ្លើង។</li>
+                    </ul>
+                    <p class="mb-6">Oz សន្យាថានឹងបំពេញបំណងពួកគេ តែត្រូវមានលក្ខខណ្ឌមួយ៖ <strong>"សម្លាប់ Wicked Witch of the West"</strong>។ ពួកគេគ្មានជម្រើសក្រៅពីធ្វើតាម។</p>
+                `,
+                scenario: `
+                    <p><strong>អំណាចនៃរូបភាព៖</strong> អ្នកដឹកនាំ ឬអ្នកមានអំណាច តែងតែប្រើប្រាស់ "រូបភាព" និង "ពិធីការ" (ដូចជាវ៉ែនតា និងការបន្លំខ្លួន) ដើម្បីធ្វើឱ្យខ្លួនមើលទៅអស្ចារ្យ និងគួរឱ្យខ្លាច។ នេះគឺជា Psychology of Power។ ពួកគេបង្កើតការបំភាន់ដើម្បីឱ្យប្រជាជនគោរព។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជាអ្នកយាមតម្រូវឱ្យគ្រប់គ្នាពាក់វ៉ែនតាពណ៌បៃតង?", options: ["ដើម្បីការពារភ្នែក", "ដើម្បីធ្វើឱ្យអ្វីៗទាំងអស់មើលទៅពណ៌បៃតង (បង្កើតការបំភាន់ភ្នែកថាទីក្រុងនេះធ្វើពីត្បូងមរកត)", "ដើម្បីមើលផ្លូវឃើញ", "ដើម្បីជាម៉ូត"], correct: 1, explanation: "ត្រឹមត្រូវ! Oz គឺជាអ្នកជំនាញខាងការបង្កើតការបំភាន់ (Illusionist)។ បើដោះវ៉ែនតាចេញ ទីក្រុងនោះប្រហែលជាគ្រាន់តែជាទីក្រុងថ្មម៉ាបពណ៌សធម្មតា។" }
+            },
+            {
+                title: "7. មេធ្មប់អាក្រក់ និងទឹកមួយធុង (The Wicked Witch of the West)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ការយកឈ្នះដោយចៃដន្យ</h3>
+                    <p class="mb-6">ពួកគេធ្វើដំណើរទៅទិសខាងលិច។ មេធ្មប់អាក្រក់មានភ្នែកមួយដែលអាចមើលឃើញឆ្ងាយ។ នាងខឹងខ្លាំង ហើយបញ្ជូនកងទ័ពមកវាយប្រហារ៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-2 text-emerald-100">
+                        <li><strong>ឆ្កែចចក ៤០ ក្បាល៖</strong> Tin Woodman កាប់សម្លាប់អស់។</li>
+                        <li><strong>ក្អែក ៤០ ក្បាល៖</strong> Scarecrow ចាប់បំបាក់កអស់។</li>
+                        <li><strong>ឃ្មុំខ្មៅ៖</strong> ពួកវាមកទិច Tin Woodman (ដែលធ្វើពីដែក) ហើយបាក់ធ្មេញងាប់អស់។</li>
+                    </ol>
+                    <p class="mb-6">ចុងក្រោយ មេធ្មប់ប្រើ <strong>Golden Cap (មួកមាស)</strong> ដើម្បីហៅ <strong>ស្វាស្លាប (Winged Monkeys)</strong>។ ពួកវាចាប់ Dorothy និង Lion ទៅប្រាសាទ។ មេធ្មប់មិនហ៊ានធ្វើបាប Dorothy ទេ ព្រោះនាងមានស្នាមថើបរបស់មេធ្មប់ល្អនៅលើថ្ងាស។ ប៉ុន្តែនាងប្រើ Dorothy ជាអ្នកបម្រើ។</p>
+                    <p class="mb-6">ថ្ងៃមួយ មេធ្មប់ប្រើល្បិចលួចស្បែកជើងពណ៌ប្រាក់របស់ Dorothy មួយចំហៀង។ ដោយកំហឹង Dorothy លើកធុងទឹកដែលនាងកំពុងដុសផ្ទះ ហើយជះទៅលើមេធ្មប់។</p>
+                    <p class="mb-6">ដោយមិននឹកស្មានដល់ មេធ្មប់ស្រែកថា៖ <strong>"ទឹក! ឯងសម្លាប់ខ្ញុំហើយ! ខ្ញុំកំពុងរលាយ!"</strong>។ នាងរលាយបាត់អស់នៅសល់តែសម្លៀកបំពាក់។</p>
+                    <div class="concept-card">
+                        <p class="mb-2"><strong>មេរៀន៖</strong> អំពើអាក្រក់ពេលខ្លះមើលទៅគួរឱ្យខ្លាច ប៉ុន្តែវាមានចំណុចខ្សោយដ៏សាមញ្ញ។ ទឹក (និមិត្តរូបនៃភាពបរិសុទ្ធ និងជីវិត) អាចលាងជម្រះអំពើអាក្រក់បាន។ Dorothy មិនបានប្រើកម្លាំង ឬវេទមន្តទេ នាងប្រើការការពារខ្លួនធម្មតា។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការប្រឈមមុខ៖</strong> បញ្ហាដែលយើងខ្លាចបំផុត (The Witch) ជាញឹកញាប់អាចដោះស្រាយបានដោយវិធីសាមញ្ញបំផុត (ធុងទឹក) នៅពេលយើងហ៊ានប្រឈមមុខនឹងវា។ ភាពភ័យខ្លាចធ្វើឱ្យបញ្ហាមើលទៅធំជាងការពិត។</p>
+                `,
+                quiz: { question: "តើ Dorothy សម្លាប់មេធ្មប់ដោយរបៀបណា?", options: ["ប្រើដាវ", "ប្រើវេទមន្ត", "ជះទឹកដាក់នាងដោយកំហឹង (Accidentally melted her)", "ឱ្យតោខាំ"], correct: 2, explanation: "ត្រឹមត្រូវ! មេធ្មប់ស្ងួតហួតហែងពេក (តំណាងឱ្យភាពគ្មានជីវិត/សេចក្តីស្អប់) មិនអាចទ្រាំនឹងទឹក (ជីវិត) បានទេ។" }
+            },
+            {
+                title: "8. ការពិតអំពីអូស (The Discovery of Oz the Terrible)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">បុរសនៅពីក្រោយវាំងនន</h3>
+                    <p class="mb-6">ពួកគេត្រឡប់ទៅ Emerald City វិញដោយជោគជ័យ។ ប៉ុន្តែ Oz មិនព្រមជួបពួកគេទេ។ នៅពេលពួកគេបង្ខំចូលទៅក្នុងបន្ទប់រាជវាំង Toto បានរត់ទៅទាញវាំងនននៅជ្រុងបន្ទប់។</p>
+                    <p class="mb-6">នៅពីក្រោយវាំងនន គឺមិនមែនជាយក្ស ឬទេវតាទេ គឺគ្រាន់តែជា <strong>បុរសចំណាស់តូចម្នាក់</strong> ដែលកំពុងបញ្ជាម៉ាស៊ីន និងនិយាយតាមមីក្រូហ្វូន។</p>
+                    <p class="mb-6">គាត់សារភាពថា៖ <strong>"ខ្ញុំគឺជា Humbug (អ្នកបោកប្រាស់)"</strong>។ គាត់មកពី Omaha (អាមេរិក) ហើយធ្លាក់មកទីនេះដោយប៉េងប៉ោង។ ប្រជាជនគិតថាគាត់ជាគ្រូធ្មប់ គាត់ក៏បន្លំខ្លួនធ្វើជាអ្នកដឹកនាំ។ គាត់ឱ្យប្រជាជនពាក់វ៉ែនតាពណ៌បៃតង ដើម្បីឱ្យឃើញទីក្រុង (ដែលសាងសង់ពីកញ្ចក់ធម្មតា) ទៅជាពណ៌មរកត។</p>
+                    <div class="quote-box">
+                        "ខ្ញុំជាបុរសល្អម្នាក់ ប៉ុន្តែខ្ញុំជាអ្នកជំនួយការដ៏អន់ម្នាក់ (I'm a very good man, but I'm a very bad wizard)."
+                    </div>
+                    <p class="mb-6">មិត្តភក្តិទាំង ៤ ខកចិត្តយ៉ាងខ្លាំង។ ពួកគេគិតថាដំណើររបស់ពួកគេបរាជ័យហើយ។ តើបុរសធម្មតាម្នាក់អាចឱ្យខួរក្បាល បេះដូង និងសេចក្តីក្លាហានដល់ពួកគេបានយ៉ាងដូចម្តេច?</p>
+                `,
+                scenario: `
+                    <p><strong>The Man Behind the Curtain:</strong> នៅក្នុងជីវិត យើងតែងតែគិតថា អ្នកដឹកនាំ, CEO, ឬអ្នកមានអំណាច គឺជាមនុស្សអស្ចារ្យ។ ប៉ុន្តែបើមើលឱ្យជិត ពួកគេគ្រាន់តែជាមនុស្សធម្មតាដែលមាន "Tools" (ឧបករណ៍) និង "Systems" (ប្រព័ន្ធ) ប៉ុណ្ណោះ។ កុំខ្លាចអំណាច កុំខ្លាចឋានៈ។</p>
+                `,
+                quiz: { question: "តើការពិត Oz ជានរណា?", options: ["ជាអាទិទេព", "ជាបុរសចំណាស់ធម្មតាម្នាក់ដែលចេះលេងល្បិច (A Humbug/Ventriloquist)", "ជាមេធ្មប់", "ជាបិសាច"], correct: 1, explanation: "ត្រឹមត្រូវ! អំណាចរបស់គាត់បានមកពីជំនឿរបស់អ្នកដទៃ និងការប្រើប្រាស់បច្ចេកវិទ្យា (Sound/Effects) មិនមែនមកពីវេទមន្តទេ។" }
+            },
+            {
+                title: "9. អំណោយទាន (The Gifts)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">ឥទ្ធិពលនៃជំនឿ (The Placebo Effect)</h3>
+                    <p class="mb-6">ទោះបីជា Oz មិនមែនជាគ្រូធ្មប់ ប៉ុន្តែគាត់មានប្រាជ្ញាខាងចិត្តសាស្ត្រ។ គាត់ដឹងថា មិត្តភក្តិទាំង ៣ នាក់ មិនត្រូវការវេទមន្តទេ ពួកគេត្រូវការ <strong>"ការជឿជាក់លើខ្លួនឯង" (Self-Belief)</strong> និង <strong>"និមិត្តរូប" (Symbols)</strong> ដើម្បីបញ្ជាក់ពីសមត្ថភាពរបស់ពួកគេ។</p>
+                    <p class="mb-6">គាត់ធ្វើពិធីប្រគល់អំណោយ៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-4 text-emerald-100">
+                        <li><strong>Scarecrow:</strong> Oz យកកន្ទក់ (Bran) លាយជាមួយម្ជុល (Pins) ដាក់ក្នុងក្បាល Scarecrow ហើយហៅវាថា "Bran-new Brains" (លេងពាក្យ Brand-new)។ Scarecrow មានអារម្មណ៍ថាឆ្លាតភ្លាម។ (ម្ជុលតំណាងឱ្យភាពមុតស្រួចនៃគំនិត)។</li>
+                        <li><strong>Tin Woodman:</strong> Oz យកបេះដូងធ្វើពីសូត្រ (Silk Heart) ដាក់ក្នុងទ្រូង។ Tin Woodman មានអារម្មណ៍ថាមានក្តីស្រលាញ់។</li>
+                        <li><strong>Lion:</strong> Oz ឱ្យគាត់ផឹកទឹកមួយចាន ហើយហៅវាថា "សេចក្តីក្លាហានរាវ" (Liquid Courage)។ Lion ផឹកហើយមានអារម្មណ៍ក្លាហានភ្លាម។</li>
+                    </ul>
+                    <p class="mb-6"><strong>មេរៀន៖</strong> របស់ទាំងនេះគឺក្លែងក្លាយ។ ប៉ុន្តែដោយសារពួកគេ "ជឿ" ថាវាពិត ពួកគេក៏មានអារម្មណ៍ថាពេញលេញ។ អ្វីដែលពួកគេស្វែងរក គឺមាននៅក្នុងខ្លួនពួកគេតាំងពីដើមមក គ្រាន់តែពួកគេត្រូវការនរណាម្នាក់មកបញ្ជាក់ (Validate) ប៉ុណ្ណោះ។</p>
+                `,
+                scenario: `
+                    <p><strong>Placebo Effect:</strong> ពេលខ្លះ យើងត្រូវការសញ្ញាប័ត្រ, ឯកសណ្ឋាន, ឬការសរសើរពីអ្នកដទៃ ដើម្បីជឿថាខ្លួនឯងពូកែ។ ប៉ុន្តែសមត្ថភាពនោះគឺជារបស់យើងតាំងពីដើម។ Oz គ្រាន់តែជួយដោះសោរប៉ុណ្ណោះ។ អ្នកមិនត្រូវការវេទមន្តទេ អ្នកត្រូវការតែការជឿជាក់។</p>
+                `,
+                quiz: { question: "តើអំណោយរបស់ Oz មានវេទមន្តពិតទេ?", options: ["មាន", "អត់ទេ វាគ្រាន់តែជារបស់ធម្មតា ប៉ុន្តែវាមានប្រសិទ្ធភាពដោយសារជំនឿរបស់អ្នកទទួល (Placebo Effect)", "វាមានពិស", "វាមិនដំណើរការទេ"], correct: 1, explanation: "ត្រឹមត្រូវ! Scarecrow ឆ្លាតស្រាប់ហើយ, Lion ក្លាហានស្រាប់ហើយ។ Oz គ្រាន់តែផ្តល់និមិត្តរូប (Symbol) ឱ្យពួកគេមានទំនុកចិត្តប៉ុណ្ណោះ។" }
+            },
+            {
+                title: "10. ផ្លូវត្រឡប់ទៅផ្ទះ (Glinda & Home)",
+                content: `
+                    <h3 class="text-3xl font-bold text-yellow-400 mb-6 kh-title">អំណាចនៅក្នុងខ្លួនយើង</h3>
+                    <p class="mb-6">Oz ព្យាយាមនាំ Dorothy ទៅផ្ទះដោយប៉េងប៉ោង ប៉ុន្តែប៉េងប៉ោងហោះទៅបាត់មុន Dorothy ឡើងទាន់។ ពួកគេត្រូវធ្វើដំណើរទៅខាងត្បូងដើម្បីជួប <strong>Glinda (មេធ្មប់ល្អ)</strong>។</p>
+                    <p class="mb-6">Glinda ជាមេធ្មប់ពិតប្រាកដ។ នាងប្រាប់ Dorothy នូវការពិត៖ <strong>"នាងមានអំណាចត្រឡប់ទៅផ្ទះវិញ តាំងពីថ្ងៃដំបូងដែលនាងមកដល់ម្ល៉េះ។"</strong></p>
+                    <p class="mb-6">អំណាចនោះគឺនៅក្នុង <strong>"ស្បែកជើងពណ៌ប្រាក់"</strong>។ នាងគ្រាន់តែគោះកែងជើង ៣ ដង ហើយប្រាប់ទីកន្លែងដែលចង់ទៅ។</p>
+                    <p class="mb-6">Scarecrow សួរថា៖ "ហេតុអ្វីអ្នកមិនប្រាប់នាងតាំងពីដំបូង?"</p>
+                    <p class="mb-6">ចម្លើយគឺ៖ បើ Dorothy ត្រឡប់ទៅវិញភ្លាមៗ នាងនឹងមិនបានជួយ Scarecrow, Tin Woodman, និង Lion ទេ។ នាងនឹងមិនបានរៀនមេរៀនអំពីមិត្តភាព និងការតស៊ូទេ។ នាងត្រូវការ <strong>"បទពិសោធន៍នៃដំណើរ" (The Journey)</strong> ដើម្បីយល់ពីតម្លៃនៃ <strong>"ផ្ទះ" (Home)</strong>។ បើនាងមិនបានបាត់បង់ផ្ទះទេ នាងមិនដឹងថាផ្ទះមានតម្លៃប៉ុណ្ណាទេ។</p>
+                    <p class="mb-6">Dorothy ធ្វើតាម ហើយនាងក៏ភ្ញាក់ឡើងនៅ Kansas វិញ។ នាងរត់ទៅរកមីង Em ហើយនិយាយប្រយោគដ៏ល្បីល្បាញថា៖ <strong>"There's no place like home" (គ្មានកន្លែងណាដូចផ្ទះទេ)</strong>។</p>
+                `,
+                scenario: `
+                    <p><strong>ការសន្និដ្ឋាន៖</strong> យើងតែងតែស្វែងរកចម្លើយនៅទីឆ្ងាយ (Oz)។ យើងគិតថាយើងត្រូវការគ្រូ, សៀវភៅ, ឬវត្ថុវេទមន្ត។ ប៉ុន្តែចម្លើយពិតប្រាកដគឺស្ថិតនៅជាមួយយើងតាំងពីដើម (ស្បែកជើង)។ យើងគ្រាន់តែត្រូវការឆ្លងកាត់ការលំបាក ដើម្បីមើលឃើញវា។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីបានជា Dorothy ត្រូវឆ្លងកាត់ដំណើរដ៏វែងឆ្ងាយ បើនាងអាចទៅផ្ទះបានតាំងពីដំបូង?", options: ["ព្រោះនាងមិនដឹង", "ព្រោះ Glinda ចង់លេងសើច", "ព្រោះនាងត្រូវរៀនមេរៀនជីវិត និងជួយមិត្តភក្តិសិន ទើបនាងយល់ពីតម្លៃនៃផ្ទះ (Growth through journey)", "ព្រោះស្បែកជើងខូច"], correct: 2, explanation: "ត្រឹមត្រូវ! បើនាងទៅផ្ទះភ្លាម នាងគ្រាន់តែជាក្មេងស្រីធម្មតា។ ឥឡូវនាងគឺជាក្មេងស្រីដែលមានប្រាជ្ញា (Scarecrow), បេះដូង (Tin Man), និងសេចក្តីក្លាហាន (Lion) នៅក្នុងខ្លួននាង។" }
+            }
+        ];
+
+        // ... (Logic remains consistent with previous versions) ...
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#022c22] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-yellow-400' : 'text-emerald-300'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-[#064e3b] text-emerald-300 flex items-center justify-center text-[10px] mr-3 font-mono font-bold border border-emerald-600">${index + 1}</span>
+                    <span class="truncate tracking-wide font-kantumruy">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#022c22]');
+                b.classList.add('border-transparent');
+                b.querySelector('span:first-child').classList.remove('bg-yellow-400', 'text-black', 'border-yellow-400');
+                b.querySelector('span:first-child').classList.add('bg-[#064e3b]', 'text-emerald-300', 'border-emerald-600');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#022c22]');
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.querySelector('span:first-child').classList.remove('bg-[#064e3b]', 'text-emerald-300', 'border-emerald-600');
+                activeBtn.querySelector('span:first-child').classList.add('bg-yellow-400', 'text-black', 'border-yellow-400');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+            
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `ត្រឡប់ទៅផ្ទះ` : `បន្តដំណើរ`;
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-8 hidden p-8 rounded-xl text-lg border-l-4 shadow-xl bg-black/40 backdrop-blur-sm transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-emerald-700 hover:bg-[#065f46] transition flex items-center shadow-md group bg-[#064e3b]/50 text-emerald-100 font-medium";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-emerald-500 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-emerald-300 group-hover:bg-yellow-500 group-hover:text-black group-hover:border-yellow-500 transition font-mono">
+                        ${String.fromCharCode(65 + i)}
+                    </span> 
+                    <span class="group-hover:text-white font-kantumruy">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-8 rounded-xl bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2 font-serif">អស្ចារ្យ! ✨</strong> ${explanation}`;
+                if(currentLessonIndex === lessons.length - 1) launchConfetti();
+            } else {
+                btnElement.classList.add('wrong-answer');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-8 p-8 rounded-xl bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-md fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2 font-serif">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("សូមស្វាគមន៍មកកាន់ផ្ទះវិញ Dorothy! (There's no place like home.)");
+        };
+
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    // Show continue button
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-6 bg-yellow-400/20 border border-yellow-400 text-yellow-400 font-bold py-2 px-6 rounded-full hover:bg-yellow-400 hover:text-black transition text-sm';
+                    continueBtn.innerHTML = `បន្តអាន Chapter ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-\\[\\#022c22\\]\\/80')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        function launchConfetti() {
+            const colors = ['#facc15', '#34d399', '#10b981', '#ffffff'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 8 + 4 + 'px';
+                conf.style.height = Math.random() * 8 + 4 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = '50%';
+                conf.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.8)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    conf.style.transform = `rotate(${frame * 20}deg)`;
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
