@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Interpretation of Dreams - Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #0f0518; /* Deepest Violet/Black */
+            color: #e9d5ff; /* Lavender-100 */
+            line-height: 2;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(59, 7, 100, 0.2) 0%, transparent 40%),
+                url('https://www.transparenttextures.com/patterns/foggy-birds.png');
+            background-attachment: fixed;
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .fade-in {
+            animation: fadeIn 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; filter: blur(10px); transform: scale(0.95); }
+            to { opacity: 1; filter: blur(0); transform: scale(1); }
+        }
+        
+        /* Sidebar - The Unconscious Theme */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(107, 33, 168, 0.2) 0%, rgba(107, 33, 168, 0) 100%);
+            border-left: 4px solid #a855f7; /* Purple-500 */
+            color: #d8b4fe; /* Purple-300 */
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+        }
+        
+        .correct-answer {
+            background-color: #064e3b !important;
+            border: 1px solid #34d399 !important;
+            color: #d1fae5 !important;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.2);
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border: 1px solid #ef4444 !important;
+            color: #fecaca !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0518;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b21a8;
+        }
+
+        /* Psychoanalytic Cards */
+        .concept-card {
+            background: rgba(20, 10, 40, 0.6);
+            padding: 2.5rem;
+            border-radius: 0.5rem;
+            border-top: 4px solid #a855f7;
+            margin: 2.5rem 0;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        
+        .quote-box {
+            font-style: italic;
+            border-left: 3px solid #d8b4fe;
+            padding-left: 2rem;
+            color: #e9d5ff;
+            margin: 3rem 0;
+            background: linear-gradient(to right, rgba(88, 28, 135, 0.2), transparent);
+            padding: 2rem;
+            font-size: 1.15rem;
+            font-family: 'Battambang', serif;
+            position: relative;
+        }
+        .quote-box::before {
+            content: '“';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            font-size: 5rem;
+            color: rgba(168, 85, 247, 0.2);
+            font-family: serif;
+        }
+
+        /* Deep Dive Details */
+        details {
+            background: rgba(30, 20, 50, 0.5);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid #4c1d95;
+        }
+        details[open] {
+            background: rgba(46, 16, 101, 0.8);
+            border-color: #a855f7;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+        }
+        summary {
+            font-weight: bold;
+            color: #d8b4fe;
+            outline: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        summary::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        /* Hypnotic Button */
+        .btn-psycho {
+            background: transparent;
+            color: #d8b4fe;
+            border: 2px solid #a855f7;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn-psycho::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
+            background: #a855f7;
+            z-index: -1;
+            transition: width 0.5s ease;
+        }
+        .btn-psycho:hover::before {
+            width: 100%;
+        }
+        .btn-psycho:hover {
+            color: #0f0518;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            transform: scale(1.05);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Floating Fog Animation */
+        .fog {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('https://www.transparenttextures.com/patterns/foggy-birds.png');
+            opacity: 0.1;
+            animation: drift 60s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#0f0518] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-fuchsia-600 rounded-full flex items-center justify-center shadow-[0_0_30px_#a855f7]">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-purple-300 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white font-bold rounded-full hover:shadow-[0_0_20px_#a855f7] transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-purple-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-purple-400 hover:underline font-bold">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#0f0518] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-[#14061f]/90 backdrop-blur-xl rounded-3xl border border-purple-800 shadow-[0_0_50px_rgba(168,85,247,0.2)]">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-fuchsia-400 rounded-full flex items-center justify-center shadow-[0_0_30px_#a855f7]">
+                <span class="text-4xl">👁️</span>
+            </div>
+            <h2 class="text-2xl font-bold text-purple-400 mb-2 en-title">DREAM INTERPRETATION</h2>
+            <p class="text-purple-300 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-purple-900/30 border border-purple-700 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-purple-300 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-400">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full btn-psycho py-3 px-6 rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-purple-500 hover:text-purple-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'sig';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#0f0518] p-4 shadow-lg flex justify-between items-center z-20 border-b border-purple-900">
+        <h1 class="text-lg font-bold text-purple-400 en-title">Dream Interpretation</h1>
+        <button id="menuBtn" class="text-purple-300 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-96 bg-[#0a0210] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-purple-900/30">
+        <div class="p-8 border-b border-purple-900/30 hidden md:block bg-gradient-to-b from-[#14061f] to-[#0a0210]">
+            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-purple-600 en-title tracking-widest mb-2" style="line-height: 1.3;">THE<br>INTERPRETATION<br>OF DREAMS</h1>
+            <p class="text-xs text-purple-400 font-bold uppercase tracking-[0.2em] mt-3">Die Traumdeutung</p>
+            <p class="text-xs text-purple-600 mt-1 italic">Sigmund Freud</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-purple-900/30 bg-[#0a0210]">
+            <div class="flex justify-between text-xs mb-2 text-purple-400 font-bold uppercase en-title">
+                <span>Psychoanalysis</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-[#1e0a2e] rounded-full h-1.5 overflow-hidden border border-purple-900">
+                <div id="progressBar" class="bg-gradient-to-r from-purple-600 to-fuchsia-500 h-1.5 rounded-full transition-all duration-500 box-shadow-glow" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#0f0518]" id="mainContent">
+        <div class="fog"></div>
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#14061f]/80 backdrop-blur-xl p-16 rounded-sm shadow-2xl max-w-3xl border border-purple-800/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-40"></div>
+                    
+                    <div class="text-7xl mb-8 opacity-80 filter drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">👁️🗝️🧠</div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 kh-title leading-tight drop-shadow-md">ការបកស្រាយសុបិន</h2>
+                    <p class="text-lg text-purple-200 mb-12 leading-loose font-light px-8 border-l-2 border-r-2 border-purple-500/20 py-6">
+                        "សុបិនគឺជាផ្លូវរាជវង្ស ទៅកាន់ការយល់ដឹងអំពីសកម្មភាពនៃចិត្តសន្លប់។"<br>
+                        (The interpretation of dreams is the royal road to a knowledge of the unconscious activities of the mind.)
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-psycho py-4 px-12 rounded-sm text-lg flex items-center mx-auto tracking-widest uppercase">
+                        <span>ចូលទៅក្នុងចិត្តសន្លប់</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-purple-400 mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-purple-800/30 w-full pb-4 en-title">
+                    <span id="chapterNumber" class="bg-purple-900/30 px-4 py-2 rounded border border-purple-700/50">Chapter 1</span>
+                    <span class="flex-1 text-right text-purple-300">Psychoanalysis</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-white mb-12 leading-snug kh-title text-shadow-lg decoration-purple-500/30 underline decoration-2 underline-offset-8"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-purple-100 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#1a0b2e] border-l-4 border-fuchsia-600 p-10 rounded-r-lg mb-12 hidden shadow-[0_0_40px_rgba(168,85,247,0.1)] mt-20 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl"></div>
+                    <h3 class="text-2xl font-bold text-fuchsia-400 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-4 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        មន្ទីរពិសោធន៍សុបិន (Dream Lab)
+                    </h3>
+                    <div id="scenarioContent" class="text-purple-100 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#14061f]/90 rounded-sm shadow-2xl p-10 md:p-16 border border-purple-800 mt-24 relative overflow-hidden backdrop-blur-xl">
+                    <h3 class="text-3xl font-bold text-white mb-10 flex items-center relative z-10 kh-title">
+                        <span class="bg-purple-600 text-white text-sm font-extrabold mr-6 px-6 py-2 rounded-sm uppercase tracking-widest shadow-lg en-title">ANALYSIS</span>
+                        ការវិភាគការយល់ដឹង
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-2xl font-medium mb-10 text-purple-100 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-6"></div>
+                        <div id="quizFeedback" class="mt-10 hidden p-8 rounded-sm text-xl border-l-4 shadow-2xl bg-[#0a0210]/80"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-24 pt-12 border-t border-purple-900/50">
+                    <button id="prevBtn" class="px-10 py-4 rounded-sm border border-purple-700 text-purple-400 hover:bg-purple-900/50 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
+                        ← Prev
+                    </button>
+                    <button id="nextBtn" class="btn-psycho py-4 px-10 rounded-sm flex items-center text-lg uppercase font-bold">
+                        Next Chapter →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR THE INTERPRETATION OF DREAMS (KHMER)
+        const lessons = [
+            {
+                title: "1. អក្សរសិល្ប៍វិទ្យាសាស្ត្រ និង បញ្ហានៃសុបិន (Scientific Literature on Dreams)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">មុនពេល Freud មកដល់</h3>
+                    <p class="mb-6">នៅក្នុងជំពូកដំបូងដ៏វែងអន្លាយនេះ Freud បានធ្វើការពិនិត្យឡើងវិញនូវទ្រឹស្តីទាំងអស់អំពីសុបិន ដែលមានមុនសម័យកាលរបស់គាត់។ នៅសតវត្សទី ១៩ អ្នកវិទ្យាសាស្ត្រនិងវេជ្ជបណ្ឌិតភាគច្រើនបានចាត់ទុកសុបិនថាជា <strong>"សំរាមនៃខួរក្បាល"</strong>។</p>
+                    <p class="mb-6">ពួកគេជឿថា សុបិនកើតឡើងដោយសារការរំញោចរាងកាយ (Somatic Stimuli) ដូចជា៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-purple-200">
+                        <li>ការពិបាករំលាយអាហារ (ធ្វើឱ្យយល់សប្តិអាក្រក់)។</li>
+                        <li>សំឡេងរំខានពីខាងក្រៅ (ដូចជានាឡិការោទ៍)។</li>
+                        <li>ការឈឺចាប់ក្នុងរាងកាយ។</li>
+                    </ul>
+                    <p class="mb-6">សម្រាប់ពួកគេ សុបិនគ្មានន័យអ្វីទាំងអស់ (Meaningless)។ វាគ្រាន់តែជាការបាញ់សញ្ញាខុសប្រក្រតីនៃកោសិកាខួរក្បាលនៅពេលដេកលក់។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-fuchsia-400 mb-4 font-cinzel">⚠️ បដិវត្តន៍របស់ Freud</h4>
+                        <p class="mb-3">Freud បដិសេធទស្សនៈនេះទាំងស្រុង។ គាត់ប្រកាសថា៖ <strong>"សុបិនមានអត្ថន័យ។ វាគឺជាសកម្មភាពផ្លូវចិត្តដ៏ពេញលេញ (Psychical Structure) ដែលមានគោលបំណងច្បាស់លាស់។"</strong></p>
+                        <p class="text-purple-200">គាត់ជឿថា សុបិនមិនមែនមកពីក្រពះទេ តែមកពី <strong>"ចិត្តសន្លប់" (Unconscious Mind)</strong>។ វាគឺជាសារដែលផ្នែកងងឹតនៃចិត្តរបស់យើង ព្យាយាមផ្ញើមកកាន់ផ្នែកដឹងខ្លួន។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការពិសោធន៍៖</strong> ស្រមៃថាអ្នកយល់សប្តិថាឃ្លានទឹក។ អ្នកវិទ្យាសាស្ត្រចាស់នឹងថា "មកពីបំពង់កស្ងួត"។ Freud នឹងថា "បំពង់កស្ងួតគ្រាន់តែជាកត្តាជំរុញទេ ប៉ុន្តែហេតុអ្វីអ្នកយល់សប្តិឃើញបឹងទឹកថ្លា? នោះគឺជា <strong>ការបំពេញបំណង (Wish Fulfillment)</strong> ដើម្បីឱ្យអ្នកបន្តដេកលក់។"</p>
+                `,
+                quiz: { question: "តើអ្នកវិទ្យាសាស្ត្រមុនសម័យ Freud យល់យ៉ាងណាចំពោះសុបិន?", options: ["វាជាសារពីព្រះ", "វាជាដំណើរការផ្លូវចិត្តដែលមានអត្ថន័យជ្រាលជ្រៅ", "វាគ្មានន័យអ្វីទេ គ្រាន់តែជាប្រតិកម្មរាងកាយចំពោះការរំញោច (Meaningless Somatic Reaction)", "វាជាការព្យាករណ៍អនាគត"], correct: 2, explanation: "ត្រឹមត្រូវ! Freud គឺជាមនុស្សដំបូងដែលយកសុបិនមកសិក្សាយ៉ាងម៉ត់ចត់ក្នុងន័យចិត្តវិទ្យា។" }
+            },
+            {
+                title: "2. វិធីសាស្ត្របកស្រាយសុបិន៖ សុបិនរបស់ Irma (Method of Interpreting Dreams)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">សុបិនគំរូ (The Specimen Dream)</h3>
+                    <p class="mb-6">Freud ណែនាំវិធីសាស្ត្ររបស់គាត់តាមរយៈការវិភាគសុបិនផ្ទាល់ខ្លួនរបស់គាត់ ដែលល្បីល្បាញថា <strong>"Irma's Injection"</strong>។</p>
+                    <p class="mb-6"><strong>សុបិន៖</strong> Freud យល់សប្តិឃើញអតីតអ្នកជំងឺម្នាក់ឈ្មោះ Irma។ នៅក្នុងសុបិន នាងមើលទៅឈឺខ្លាំង។ Freud បានពិនិត្យនាង ហើយបន្ទោសនាងដែលមិនស្តាប់តាមគាត់។ បន្ទាប់មក វេជ្ជបណ្ឌិតម្នាក់ទៀតឈ្មោះ Dr. M បានមកចាក់ថ្នាំនាងដោយប្រើម្ជុលកខ្វក់។</p>
+                    
+                    <details>
+                        <summary>ការបកស្រាយ (Analysis)</summary>
+                        <div class="mt-4 text-purple-200 bg-[#1e0a2e] p-6 rounded border border-purple-800">
+                            <p class="mb-3">Freud មិនបកស្រាយសុបិនទាំងមូលតែម្តងទេ។ គាត់បំបែកវាជាផ្នែកតូចៗ ហើយប្រើបច្ចេកទេស <strong>"Free Association" (ការភ្ជាប់ដោយសេរី)</strong>។</p>
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><strong>Irma:</strong> តំណាងឱ្យអ្នកជំងឺដែលមិនជាសះស្បើយ (ធ្វើឱ្យ Freud មានអារម្មណ៍ថាបរាជ័យ)។</li>
+                                <li><strong>ការចាក់ថ្នាំកខ្វក់:</strong> តំណាងឱ្យកំហុសរបស់វេជ្ជបណ្ឌិតផ្សេងទៀត (Otto)។</li>
+                                <li><strong>អត្ថន័យលាក់កំបាំង:</strong> Freud កំពុងព្យាយាម <strong>"ដោះសារ" (Absolve Guilt)</strong>។ សុបិននេះចង់ប្រាប់ថា "Irma ឈឺមិនមែនដោយសារខ្ញុំទេ គឺដោយសារនាងខ្លួនឯង ឬដោយសារគ្រូពេទ្យផ្សេងចាក់ថ្នាំកខ្វក់"។</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <p class="mb-6 mt-6"><strong>សេចក្តីសន្និដ្ឋាន៖</strong> សុបិននេះមិនមែនជារឿងចៃដន្យទេ។ វាគឺជាការបំពេញបំណងប្រាថ្នារបស់ Freud ដែលចង់ឱ្យខ្លួនឯងរួចផុតពីការទទួលខុសត្រូវចំពោះជំងឺរបស់ Irma។</p>
+                `,
+                scenario: `
+                    <p><strong>Dream Lab:</strong> អ្នកយល់សប្តិថាប្រលងធ្លាក់។ Freud នឹងសួរថា៖ តើការប្រលងធ្លាក់ធ្វើឱ្យអ្នកមានអារម្មណ៍យ៉ាងណា? ប្រហែលជាអ្នកចង់ធ្លាក់ ដើម្បីកុំឱ្យឪពុកម្តាយរំពឹងខ្ពស់ពេក? ឬដើម្បីដាក់ទោសខ្លួនឯង?</p>
+                `,
+                quiz: { question: "តើអ្វីជាគោលបំណងពិតប្រាកដនៃសុបិនរបស់ Freud អំពី Irma?", options: ["ដើម្បីព្យាបាលនាង", "ដើម្បីដោះសារកំហុសខ្លួនឯង និងបន្ទោសអ្នកដទៃ (To absolve himself of guilt)", "ដើម្បីមើលអនាគត", "ដើម្បីរំលឹកពីអតីតកាល"], correct: 1, explanation: "ត្រឹមត្រូវ! សុបិនគឺជាយន្តការការពារខ្លួនរបស់ចិត្ត (Defense Mechanism)។" }
+            },
+            {
+                title: "3. សុបិនគឺជាការបំពេញបំណង (A Dream is the Fulfillment of a Wish)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">ទ្រឹស្តីស្នូលរបស់ Freud</h3>
+                    <p class="mb-6">នេះគឺជាជំពូកដែលសំខាន់បំផុត និងសាមញ្ញបំផុត។ Freud ប្រកាសថា៖ <strong>"រាល់សុបិនទាំងអស់ គឺជាការបំពេញបំណងប្រាថ្នា (Wish Fulfillment)"</strong>។</p>
+                    
+                    <div class="concept-card border-l-4 border-yellow-500">
+                        <h4 class="text-xl font-bold text-yellow-400 mb-4 font-cinzel">🌟 សុបិនរបស់កុមារ</h4>
+                        <p class="mb-3">ដើម្បីបង្ហាញទ្រឹស្តីនេះ Freud លើកយកសុបិនរបស់ក្មេងតូចៗ។ សុបិនក្មេងៗមិនមានការក្លែងបន្លំទេ។</p>
+                        <ul class="list-disc ml-6 space-y-2 text-purple-200">
+                            <li>ក្មេងឃ្លានការេម -> យល់សប្តិឃើញញ៉ាំការេម។</li>
+                            <li>ក្មេងចង់ទៅលេងបឹង -> យល់សប្តិឃើញជិះទូក។</li>
+                        </ul>
+                        <p class="mt-4">ក្នុងករណីនេះ <strong>Latent Content (អត្ថន័យលាក់កំបាំង)</strong> និង <strong>Manifest Content (រូបភាពក្នុងសុបិន)</strong> គឺដូចគ្នា។ គ្មានការបិទបាំងទេ។</p>
+                    </div>
+
+                    <p class="mb-6">ប៉ុន្តែចំពោះមនុស្សធំ បំណងប្រាថ្នារបស់យើងច្រើនតែជា <strong>"បំណងហាមឃាត់" (Forbidden Wishes)</strong> ដូចជា ចំណង់ផ្លូវភេទខុសច្បាប់ ការចង់សម្លាប់សត្រូវ ឬការច្រណែន។ ដោយសារសង្គម និងសីលធម៌ (Superego) ហាមឃាត់រឿងទាំងនេះ ចិត្តរបស់យើងមិនហ៊ានសុបិនត្រង់ៗទេ។ យើងត្រូវ "ក្លែងបន្លំ" វា។</p>
+                    <p class="mb-6">ដូច្នេះ សុបិនអាក្រក់ (Nightmares) ក៏ជាការបំពេញបំណងដែរ។ វាគ្រាន់តែជាការបំពេញបំណងដែលត្រូវបាន "បង្ខូចទ្រង់ទ្រាយ" (Distorted) រហូតដល់យើងមើលមិនយល់ និងមានអារម្មណ៍ភ័យខ្លាចជំនួសវិញ។</p>
+                `,
+                scenario: `
+                    <p><strong>ឧទាហរណ៍៖</strong> អ្នកយល់សប្តិថាមិត្តភក្តិស្លាប់ ហើយអ្នកយំ។ តើនេះជាការបំពេញបំណងយ៉ាងម៉េច? Freud អាចនឹងថា៖ ប្រហែលជាមានពេលមួយដែលអ្នកច្រណែនមិត្តនោះ ហើយចង់ឱ្យគេបាត់ពីមុខ។ សុបិនបំពេញបំណងនោះ ប៉ុន្តែចិត្តរបស់អ្នកដាក់ទោសអ្នកវិញដោយធ្វើឱ្យអ្នកយំ។</p>
+                `,
+                quiz: { question: "តាម Freud តើសុបិនទាំងអស់មានគោលដៅអ្វី?", options: ["ប្រាប់ហេតុ", "បំពេញបំណងប្រាថ្នា (To fulfill a wish)", "សម្រាកខួរក្បាល", "លាងជម្រះជាតិពុល"], correct: 1, explanation: "ត្រឹមត្រូវ! សូម្បីតែសុបិនអាក្រក់ ក៏ជាការបំពេញបំណងដែលត្រូវបានក្លែងបន្លំដែរ។" }
+            },
+            {
+                title: "4. ការបង្ខូចទ្រង់ទ្រាយក្នុងសុបិន (Distortion in Dreams)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">អ្នកយាមទ្វារ (The Censor)</h3>
+                    <p class="mb-6">ប្រសិនបើសុបិនគឺជាការបំពេញបំណង ហេតុអ្វីយើងយល់សប្តិឃើញរឿងដែលមិនសប្បាយចិត្ត? ចម្លើយគឺ៖ <strong>Dream Distortion (ការបង្ខូចទ្រង់ទ្រាយ)</strong>។</p>
+                    <p class="mb-6">ចិត្តរបស់យើងមានពីរផ្នែកដែលឈ្លោះគ្នា៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-purple-200">
+                        <li><strong>The Unconscious (Id):</strong> ចង់បានអ្វីដែលហាមឃាត់ (សិច, ហិង្សា, អំណាច)។</li>
+                        <li><strong>The Censor (Ego/Superego):</strong> ជាអ្នកយាមទ្វារ។ វាហាមមិនឱ្យគំនិតអាក្រក់ៗចេញមកក្រៅ។</li>
+                    </ul>
+                    <p class="mb-6">នៅពេលយើងដេក អ្នកយាមទ្វារ (Censor) ងងុយដេក តែមិនដេកលក់ទាំងស្រុងទេ។ ដើម្បីឱ្យគំនិតអាក្រក់ (Latent thoughts) អាចឆ្លងកាត់អ្នកយាមបាន វានឹងត្រូវ <strong>"ក្លែងខ្លួន"</strong>។</p>
+                    <div class="quote-box">
+                        "សុបិនគឺជាការបំពេញបំណងដែលត្រូវបានក្លែងបន្លំ (Disguised fulfillment of a suppressed wish)."
+                    </div>
+                    <p class="mb-6">ជំនួសឱ្យការសុបិនថាអ្នកសម្លាប់ឪពុក (ដែលគួរឱ្យរន្ធត់) អ្នកអាចសុបិនថា "ស្តេចមួយអង្គបានសុគត"។ អ្នកយាមទ្វារអនុញ្ញាតឱ្យសុបិននេះឆ្លងកាត់ ព្រោះវាមិនផ្ទាល់ពេក។ នេះហើយជាមូលហេតុដែលសុបិនតែងតែមានលក្ខណៈចម្លែក និងអាថ៌កំបាំង។</p>
+                `,
+                scenario: `
+                    <p><strong>Metaphor:</strong> ស្រមៃថាអ្នកចង់ផ្ញើសំបុត្រសម្ងាត់ទៅមិត្តភក្តិនៅក្នុងគុក។ អ្នកមិនអាចសរសេរត្រង់ៗបានទេ ព្រោះអ្នកយាមគុកនឹងចាប់បាន។ អ្នកត្រូវសរសេរជាកូដសម្ងាត់។ សុបិនគឺជា "កូដសម្ងាត់" នោះ។</p>
+                `,
+                quiz: { question: "តើអ្វីជាតួនាទីរបស់ 'Censor' (អ្នកយាម) នៅក្នុងចិត្ត?", options: ["បង្កើតសុបិន", "ហាមឃាត់ឬបង្ខូចទ្រង់ទ្រាយបំណងប្រាថ្នាដែលមិនសមរម្យ មិនឱ្យចូលមកក្នុងស្មារតីដឹងខ្លួន (To repress/distort forbidden wishes)", "ដាស់យើងឱ្យភ្ញាក់", "ជួយយើងចាំសុបិន"], correct: 1, explanation: "ត្រឹមត្រូវ! Censor ការពារយើងពីការភ្ញាក់ផ្អើលដោយសារគំនិតដ៏ខ្មៅងងឹតរបស់យើង។" }
+            },
+            {
+                title: "5. សម្ភារៈនិងប្រភពនៃសុបិន (The Material and Sources of Dreams)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">តើសុបិនយកវត្ថុធាតុដើមមកពីណា?</h3>
+                    <p class="mb-6">Freud និយាយថា អ្វីគ្រប់យ៉ាងនៅក្នុងសុបិន សុទ្ធតែបានមកពីបទពិសោធន៍ដែលយើងធ្លាប់ជួប។ គ្មានអ្វីថ្មីសុទ្ធសាធទេ។ ប្រភពសំខាន់ៗមាន ៣៖</p>
+                    
+                    <details open>
+                        <summary>១. Day Residues (សំណល់ប្រចាំថ្ងៃ)</summary>
+                        <div class="mt-4 text-purple-200">
+                            <p>រឿងរ៉ាវតូចតាចដែលកើតឡើងកាលពីម្សិលមិញ។ ឧទាហរណ៍៖ អ្នកឃើញមនុស្សពាក់អាវក្រហមនៅតាមផ្លូវ (អ្នកមិនចាប់អារម្មណ៍ទេ) ប៉ុន្តែយប់ឡើង មនុស្សពាក់អាវក្រហមនោះលេចឡើងក្នុងសុបិន។ ចិត្តសន្លប់យក "រូបភាពដែលគ្មានតម្លៃ" នេះមកប្រើដើម្បីបិទបាំង "អត្ថន័យសំខាន់"។</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>២. Infantile Memories (ការចងចាំពីកុមារភាព)</summary>
+                        <div class="mt-4 text-purple-200">
+                            <p>នេះសំខាន់បំផុត។ សុបិនតែងតែនាំយើងត្រឡប់ទៅរកបំណងប្រាថ្នាកាលពីក្មេង។ សុបិនឃើញផ្ទះធំ អាចតំណាងឱ្យសុវត្ថិភាពដែលយើងធ្លាប់មានក្នុងផ្ទះឪពុកម្តាយ។</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>៣. Somatic Sources (ប្រភពរាងកាយ)</summary>
+                        <div class="mt-4 text-purple-200">
+                            <p>ការឈឺចាប់, ការស្រេកទឹក, សំឡេងរោទ៍។ ប៉ុន្តែ Freud ថា រាងកាយគ្រាន់តែផ្តល់ "ឱកាស" ប៉ុណ្ណោះ។ ចិត្តនឹងយកឱកាសនោះមកត្បាញជារឿង។ (ឧ. នាឡិការោទ៍ -> យល់សប្តិថាជួងវិហាររោទ៍ក្នុងពិធីមង្គលការ)។</p>
+                        </div>
+                    </details>
+                `,
+                scenario: `
+                    <p><strong>វិភាគ៖</strong> ហេតុអ្វីអ្នកយល់សប្តិឃើញមិត្តរួមថ្នាក់បឋមសិក្សា ដែលមិនដែលជួបគ្នា ២០ ឆ្នាំ? មិនមែនព្រោះអ្នកនឹកគេទេ តែព្រោះ "ឈ្មោះ" ឬ "ចរិត" របស់គេ មានទំនាក់ទំនងអ្វីមួយជាមួយបញ្ហាដែលអ្នកកំពុងជួបប្រទះថ្ងៃនេះ (Association)។</p>
+                `,
+                quiz: { question: "តើ Day Residues គឺជាអ្វី?", options: ["អាហារសល់", "រឿងរ៉ាវតូចតាចពីថ្ងៃមុន ដែលលេចឡើងក្នុងសុបិន (Trivial events from the previous day)", "អនាគត", "ការចងចាំជាតិមុន"], correct: 1, explanation: "ត្រឹមត្រូវ! Day Residues គឺជា 'សំលៀកបំពាក់' ដែលបំណងប្រាថ្នាខាងក្នុងយកមកស្លៀកពាក់ដើម្បីបន្លំភ្នែក Censor ។" }
+            },
+            {
+                title: "6. ការងារនៃសុបិន (The Dream-Work)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">យន្តការនៃការក្លែងបន្លំ</h3>
+                    <p class="mb-6">តើចិត្តបំប្លែង <strong>Latent Content</strong> (បំណងពិត) ទៅជា <strong>Manifest Content</strong> (រឿងចម្លែកក្នុងសុបិន) ដោយរបៀបណា? Freud ហៅដំណើរការនេះថា <strong>"Dream-Work"</strong>។ វាមានឧបករណ៍សំខាន់ ២៖</p>
+
+                    <div class="grid grid-cols-1 gap-6 mb-8">
+                        <div class="concept-card border-l-4 border-green-500">
+                            <h4 class="text-xl font-bold text-green-400 mb-2">១. Condensation (ការបង្រួម)</h4>
+                            <p>រូបភាពមួយក្នុងសុបិន អាចមានន័យច្រើនយ៉ាង។</p>
+                            <p class="mt-2 text-sm text-gray-300">ឧទាហរណ៍៖ អ្នកយល់សប្តិឃើញ "មនុស្សម្នាក់"។ មនុស្សនោះមានមុខដូចឪពុកអ្នក ប៉ុន្តែស្លៀកពាក់ដូចមិត្តភក្តិអ្នក និងមានឈ្មោះដូចគ្រូអ្នក។ រូបភាពតែមួយនេះតំណាងឱ្យមនុស្ស ៣ នាក់ដែលមានឥទ្ធិពលលើអ្នក។ នេះគឺជាការ "បង្រួម" ព័ត៌មាន។</p>
+                        </div>
+
+                        <div class="concept-card border-l-4 border-blue-500">
+                            <h4 class="text-xl font-bold text-blue-400 mb-2">២. Displacement (ការផ្លាស់ប្តូរទីតាំង)</h4>
+                            <p>ការធ្វើឱ្យរឿងសំខាន់ មើលទៅដូចជារឿងតូចតាច។</p>
+                            <p class="mt-2 text-sm text-gray-300">ឧទាហរណ៍៖ អ្នកខឹងម្តាយរបស់អ្នកខ្លាំងណាស់ (រឿងសំខាន់)។ ប៉ុន្តែក្នុងសុបិន អ្នកបែរជាយល់សប្តិថាអ្នកខឹងឆ្កែរបស់អ្នកដែលធ្វើឱ្យថូផ្កាបែក (រឿងតូចតាច)។ អារម្មណ៍ "ខឹង" ត្រូវបានប្តូរទីតាំងពីម្តាយ ទៅឆ្កែ ដើម្បីកុំឱ្យ Censor ចាប់បាន។</p>
+                        </div>
+                    </div>
+
+                    <p class="mb-6"><strong>Symbolism (និមិត្តសញ្ញា):</strong> Freud ល្បីល្បាញដោយសារការបកស្រាយនិមិត្តសញ្ញា ជាពិសេសនិមិត្តសញ្ញាផ្លូវភេទ។ (ឧ. ដើមឈើ, កាំភ្លើង, ពស់ = លិង្គ / ប្រអប់, គុហា, ផ្ទះ = យោនី)។ ទោះយ៉ាងណា គាត់ព្រមានថា "ជួនកាល បារីគឺគ្រាន់តែជាបារីប៉ុណ្ណោះ" (Sometimes a cigar is just a cigar)។</p>
+                `,
+                scenario: `
+                    <p><strong>Dream Lab:</strong> អ្នកយល់សប្តិថាអ្នករត់មិនរួច។ ជើងរបស់អ្នកធ្ងន់ដូចដុំថ្ម។ នេះមិនមែនមានន័យថាជើងអ្នកមានបញ្ហាទេ។ វាជា Symbolism នៃស្ថានភាពជីវិតដែលអ្នកមានអារម្មណ៍ថា "ជាប់គាំង" ឬ "គ្មានអំណាច"។</p>
+                `,
+                quiz: { question: "តើ Displacement (ការផ្លាស់ប្តូរទីតាំង) ក្នុងសុបិនមានន័យដូចម្តេច?", options: ["ការដើរក្នុងសុបិន", "ការផ្ទេរអារម្មណ៍ពីវត្ថុសំខាន់ ទៅកាន់វត្ថុដែលមិនសំខាន់ ដើម្បីបន្លំភ្នែក (Shifting emotional emphasis)", "ការភ្លេចសុបិន", "ការយល់សប្តិឃើញកន្លែងផ្សេង"], correct: 1, explanation: "ត្រឹមត្រូវ! វាគឺជាល្បិចកលរបស់ចិត្តសន្លប់ ដើម្បីលួចបញ្ចេញអារម្មណ៍ដោយមិនឱ្យយើងដឹងខ្លួន។" }
+            },
+            {
+                title: "7. ចិត្តវិទ្យានៃដំណើរការសុបិន (The Psychology of the Dream-Processes)",
+                content: `
+                    <h3 class="text-3xl font-bold text-fuchsia-400 mb-6 kh-title">ផែនទីនៃចិត្ត</h3>
+                    <p class="mb-6">នៅក្នុងជំពូកចុងក្រោយ Freud ផ្តល់នូវគំរូនៃចិត្តមនុស្ស។ គាត់ប្រៀបធៀបវាទៅនឹងឧបករណ៍អុបទិក (Optical Instrument) ដូចជាមីក្រូទស្សន៍។</p>
+                    <p class="mb-6">ចិត្តមានដំណើរការពីរ៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-purple-200">
+                        <li><strong>Progressive (ទៅមុខ):</strong> ពីការយល់ឃើញ (Perception) -> ទៅការចងចាំ -> ទៅសកម្មភាព (Motor activity)។ នេះគឺជាដំណើរការពេលភ្ញាក់។</li>
+                        <li><strong>Regressive (ថយក្រោយ):</strong> ពីការចងចាំ/បំណងប្រាថ្នា -> ត្រឡប់ទៅការយល់ឃើញ (Hallucination)។ នេះគឺជាដំណើរការពេលដេក។</li>
+                    </ul>
+                    
+                    <p class="mb-6">ក្នុងសុបិន យើងមិនអាចធ្វើសកម្មភាពបានទេ (ព្រោះរាងកាយពិការពេលដេក)។ ដូច្នេះ ថាមពលនៃបំណងប្រាថ្នា "ហូរត្រឡប់ក្រោយ" (Regress) ហើយបង្កើតជា "រូបភាព" ជំនួសវិញ។</p>
+
+                    <div class="quote-box">
+                        "The interpretation of dreams is the royal road to a knowledge of the unconscious activities of the mind."
+                    </div>
+
+                    <p class="mb-6"><strong>សេចក្តីសន្និដ្ឋាន៖</strong> សុបិនមិនមែនជារឿងអនាគតទេ។ សុបិនជារឿង <strong>អតីតកាល</strong>។ វាជាការរស់ឡើងវិញនៃបំណងប្រាថ្នាកាលពីកុមារភាពដែលត្រូវបានសង្កត់សង្កិន។ ការយល់ពីសុបិន គឺការយល់ពី "ក្មេងតូច" ដែលលាក់ខ្លួននៅក្នុងខ្លួនយើងគ្រប់គ្នា។</p>
+                `,
+                scenario: `
+                    <p><strong>Oedipus Complex:</strong> Freud ជឿថាឬសគល់នៃបំណងប្រាថ្នាទាំងអស់ គឺមកពីទំនាក់ទំនងដំបូងជាមួយឪពុកម្តាយ។ សុបិននាំយើងត្រឡប់ទៅរកគ្រាដែលយើងចង់បានក្តីស្រលាញ់ និងការយកចិត្តទុកដាក់ផ្តាច់មុខពីពួកគេ។</p>
+                `,
+                quiz: { question: "តើសុបិនប្រាប់យើងអំពីអ្វី?", options: ["អនាគត", "អតីតកាល និងបំណងប្រាថ្នាក្នុងចិត្តសន្លប់ (Past & Unconscious)", "លេខឆ្នោត", "អាកាសធាតុ"], correct: 1, explanation: "ត្រឹមត្រូវ! សុបិនគឺជាបុរាណវិទ្យានៃចិត្ត (Archaeology of the mind)។" }
+            }
+        ];
+
+        // LOGIC
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#1a0b2e] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-fuchsia-400' : 'text-purple-400/50'}`;
+                const simpleTitle = lesson.title.split('(')[0];
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full bg-[#1e0a2e] text-purple-400 flex items-center justify-center text-xs mr-3 font-mono font-bold border border-purple-800">${index + 1}</span><span class="truncate tracking-wide">${simpleTitle}</span>`;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#1a0b2e]');
+                b.classList.add('border-transparent');
+                b.querySelector('span:first-child').classList.remove('bg-fuchsia-600', 'text-white', 'border-fuchsia-500');
+                b.querySelector('span:first-child').classList.add('bg-[#1e0a2e]', 'text-purple-400', 'border-purple-800');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#1a0b2e]');
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.querySelector('span:first-child').classList.remove('bg-[#1e0a2e]', 'text-purple-400', 'border-purple-800');
+                activeBtn.querySelector('span:first-child').classList.add('bg-fuchsia-600', 'text-white', 'border-fuchsia-500');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Section ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+            
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `បញ្ចប់` : `បន្ត`;
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-10 hidden p-8 rounded-sm text-xl border-l-4 shadow-2xl bg-[#0a0210]/80 transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 rounded-sm border border-purple-800 hover:bg-[#2e1065] transition flex items-center shadow-lg group bg-[#14061f] text-purple-200 font-medium";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-purple-600 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-purple-400 group-hover:bg-fuchsia-600 group-hover:text-white group-hover:border-fuchsia-500 transition font-mono">${String.fromCharCode(65 + i)}</span><span class="group-hover:text-white">${opt}</span>`;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                quizFeedback.className = "mt-10 p-8 rounded-sm bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-lg fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2 font-serif">ត្រឹមត្រូវ! ✨</strong> ${explanation}`;
+            } else {
+                btnElement.classList.add('wrong-answer');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-10 p-8 rounded-sm bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-lg fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2 font-serif">មិនត្រឹមត្រូវទេ</strong> ចម្លើយដែលត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("អ្នកបានបញ្ចប់ការសិក្សាអំពីចិត្តសន្លប់ហើយ។ សូមបន្តវិភាគសុបិនរបស់អ្នក!");
+        };
+
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-6 btn-psycho py-2 px-6 rounded-sm text-sm';
+                    continueBtn.innerHTML = `បន្តអាន Section ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-\\[\\#14061f\\]\\/80')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        initNav();
+
+    </script>
+</body>
+</html>
