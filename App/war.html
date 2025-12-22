@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of War - Strategic Masterclass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@300;400;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #0f0f0f; /* Chinese Ink Black */
+            color: #d4d4d4; /* Ancient Silver */
+            line-height: 1.9;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+        }
+        h1, h2, h3, h4, h5, .kh-title {
+            font-family: 'Battambang', serif;
+        }
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Sidebar - War Room Theme */
+        .sidebar-active {
+            background: linear-gradient(90deg, #450a0a 0%, #0f0f0f 100%); /* Dark Red to Black */
+            border-left: 4px solid #ef4444; /* Red-500 */
+            color: #fca5a5; /* Red-200 */
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .correct-answer {
+            background-color: #064e3b !important;
+            border: 1px solid #10b981 !important;
+            color: #d1fae5 !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+        .wrong-answer {
+            background-color: #450a0a !important;
+            border: 1px solid #ef4444 !important;
+            color: #fecaca !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0f0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #450a0a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b91c1c;
+        }
+
+        /* Strategy Cards */
+        .concept-card {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 2.5rem;
+            border-radius: 0.25rem;
+            border-top: 4px solid #b91c1c; /* Crimson Red */
+            margin: 2.5rem 0;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid #333;
+        }
+        
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #d4af37; /* Ancient Gold */
+            padding-left: 2rem;
+            color: #fcd34d;
+            margin: 3rem 0;
+            background: linear-gradient(to right, rgba(212, 175, 55, 0.1), transparent);
+            padding: 2rem;
+            font-size: 1.2rem;
+            font-family: 'Battambang', serif;
+            position: relative;
+        }
+        .quote-box::before {
+            content: '孫子'; /* Sun Tzu in Chinese */
+            position: absolute;
+            top: -25px;
+            left: 20px;
+            font-size: 3rem;
+            color: rgba(212, 175, 55, 0.2);
+            font-family: serif;
+        }
+
+        /* Deep Tactics Details */
+        details {
+            background: #171717;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid #333;
+        }
+        details[open] {
+            background: #1c1917;
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        summary {
+            font-weight: bold;
+            color: #d4af37; /* Gold */
+            outline: none;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        summary::before {
+            content: '⚔️';
+            margin-right: 15px;
+        }
+
+        /* War Button */
+        .btn-war {
+            background: #7f1d1d;
+            color: #fee2e2;
+            border: 1px solid #b91c1c;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-war:hover {
+            background: #991b1b;
+            color: white;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Bamboo Background Pattern */
+        .bamboo-bg {
+            position: absolute;
+            top: 0; right: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/black-scales.png');
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Login Required Gate -->
+    <div id="loginGate" class="fixed inset-0 bg-[#0f0f0f] z-[200] flex items-center justify-center">
+        <div class="text-center p-8 max-w-md">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center shadow-[0_0_30px_#b91c1c]">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4 kh-title">ត្រូវការចូលគណនី</h2>
+            <p class="text-gray-400 mb-8">សូមចូលគណនីដើម្បីចូលមើលមេរៀននេះ</p>
+            <a href="../index.html?login=true" class="inline-block px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full hover:shadow-[0_0_20px_#b91c1c] transition">
+                ចូលគណនី / Login
+            </a>
+            <p class="mt-4 text-gray-500 text-sm">ឬសាកល្បង <a href="sophie.html" class="text-red-400 hover:underline font-bold">Sophie's World (ឥតគិតថ្លៃ)</a></p>
+        </div>
+    </div>
+    
+    <!-- Unlock with Credits Gate -->
+    <div id="unlockGate" class="fixed inset-0 bg-[#0f0f0f] z-[199] hidden items-center justify-center">
+        <div class="text-center p-8 max-w-md bg-[#171717]/90 backdrop-blur-xl rounded-sm border-t-4 border-red-700 shadow-[0_0_50px_rgba(185,28,28,0.2)]">
+            <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-600 to-yellow-600 rounded-full flex items-center justify-center shadow-[0_0_30px_#d4af37]">
+                <span class="text-4xl">⚔️</span>
+            </div>
+            <h2 class="text-2xl font-bold text-red-500 mb-2 en-title">THE ART OF WAR</h2>
+            <p class="text-gray-400 mb-6">បើកសោសៀវភៅនេះដោយ Credits</p>
+            
+            <div class="bg-red-950/30 border border-red-900 rounded-sm p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-400 text-sm">Credits របស់អ្នក:</span>
+                    <span id="userCreditsDisplay" class="text-2xl font-bold text-yellow-500">0 💰</span>
+                </div>
+                <button id="unlockWithCreditsBtn" onclick="unlockWithCredits()" class="w-full btn-war py-3 px-6 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                    បើកសោដោយ 20 Credits 🔓
+                </button>
+                <p id="creditsError" class="text-red-400 text-sm mt-2 hidden"></p>
+            </div>
+            
+            <a href="../index.html" class="text-gray-500 hover:text-red-400 text-sm">
+                ← ត្រឡប់ទៅទំព័រដើម
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const BOOK_ID = 'war';
+        const UNLOCK_COST = 20;
+        let userCredits = 0;
+        let supabaseClient;
+        
+        (async function() {
+            supabaseClient = window.supabase.createClient('https://dzpriubbvgnraiuvxwgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6cHJpdWJidmducmFpdXZ4d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzkzNTYsImV4cCI6MjA4MTgxNTM1Nn0.SpAw2RAqvAJWfQ0FYmaLXBu-v9h6trFnDawibXeLH84');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            
+            if (user) {
+                document.getElementById('loginGate').style.display = 'none';
+                
+                const { data } = await supabaseClient
+                    .from('user_credits')
+                    .select('credits, unlocked_books')
+                    .eq('user_id', user.id)
+                    .single();
+                
+                if (data) {
+                    userCredits = data.credits || 0;
+                    const unlockedBooks = data.unlocked_books || [];
+                    
+                    if (unlockedBooks.includes(BOOK_ID)) {
+                        document.getElementById('unlockGate').style.display = 'none';
+                    } else {
+                        document.getElementById('unlockGate').classList.remove('hidden');
+                        document.getElementById('unlockGate').classList.add('flex');
+                        updateCreditsDisplay();
+                    }
+                } else {
+                    document.getElementById('unlockGate').classList.remove('hidden');
+                    document.getElementById('unlockGate').classList.add('flex');
+                }
+            }
+        })();
+        
+        function updateCreditsDisplay() {
+            document.getElementById('userCreditsDisplay').textContent = userCredits + ' 💰';
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = userCredits < UNLOCK_COST;
+            if (userCredits < UNLOCK_COST) btn.classList.add('opacity-50');
+        }
+        
+        async function unlockWithCredits() {
+            const btn = document.getElementById('unlockWithCreditsBtn');
+            btn.disabled = true;
+            btn.textContent = 'កំពុងបើកសោ...';
+            
+            try {
+                const { data, error } = await supabaseClient.rpc('spend_credits', {
+                    book_id: BOOK_ID,
+                    cost: UNLOCK_COST
+                });
+                
+                if (error) throw error;
+                
+                if (data.success) {
+                    document.getElementById('unlockGate').style.display = 'none';
+                    alert('🎉 សូមអបអរសាទរ! អ្នកបានបើកសោសៀវភៅនេះ!');
+                } else {
+                    document.getElementById('creditsError').textContent = data.message;
+                    document.getElementById('creditsError').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('creditsError').textContent = 'មានបញ្ហា សូមព្យាយាមម្តងទៀត';
+                document.getElementById('creditsError').classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'បើកសោដោយ 20 Credits 🔓';
+                updateCreditsDisplay();
+            }
+        }
+    </script>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-[#0a0a0a] p-4 shadow-lg flex justify-between items-center z-20 border-b border-red-900">
+        <h1 class="text-lg font-bold text-red-500 en-title">The Art of War</h1>
+        <button id="menuBtn" class="text-gray-400 focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-96 bg-[#0a0a0a] shadow-2xl transition duration-300 ease-in-out z-10 flex flex-col border-r border-red-900/30">
+        <div class="p-8 border-b border-red-900/30 hidden md:block bg-gradient-to-b from-[#1a0505] to-[#0a0a0a]">
+            <h1 class="text-3xl font-bold text-red-600 en-title tracking-widest mb-2" style="text-shadow: 2px 2px 0px #000;">THE ART<br>OF WAR</h1>
+            <p class="text-xs text-yellow-600 font-bold uppercase tracking-[0.3em] mt-3">Sun Tzu</p>
+            <p class="text-xs text-gray-600 mt-1 italic">Strategic Masterclass</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 space-y-1" id="lessonList">
+            <!-- Navigation Items injected here -->
+        </div>
+
+        <div class="p-6 border-t border-red-900/30 bg-[#0a0a0a]">
+            <div class="flex justify-between text-xs mb-2 text-red-500 font-bold uppercase en-title">
+                <span>Campaign Progress</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-[#1a1a1a] rounded-full h-1.5 overflow-hidden border border-red-900">
+                <div id="progressBar" class="bg-gradient-to-r from-red-700 to-yellow-600 h-1.5 rounded-full transition-all duration-500 box-shadow-glow" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto relative bg-[#0f0f0f]" id="mainContent">
+        <div class="bamboo-bg"></div>
+        <div class="max-w-5xl mx-auto p-8 md:p-16 pb-40 content-layer">
+            
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full min-h-[85vh] text-center fade-in">
+                <div class="bg-[#171717]/90 backdrop-blur-md p-16 rounded-sm shadow-2xl max-w-3xl border-t-8 border-red-800 relative overflow-hidden group">
+                    <div class="text-8xl mb-8 opacity-90 filter drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]">🏯⚔️📜</div>
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-200 mb-6 kh-title leading-tight drop-shadow-md">សិល្បៈនៃសង្គ្រាម</h2>
+                    <p class="text-lg text-gray-400 mb-12 leading-loose font-light px-8 border-l-2 border-r-2 border-red-900/50 py-6">
+                        "ជ័យជម្នះដ៏អស្ចារ្យបំផុត គឺការយកឈ្នះដោយមិនចាំបាច់ប្រយុទ្ធ។"<br>
+                        (The supreme art of war is to subdue the enemy without fighting.)
+                    </p>
+                    <button onclick="loadLesson(0)" class="btn-war py-4 px-12 rounded-sm text-lg flex items-center mx-auto tracking-widest uppercase">
+                        <span>ចូលបន្ទប់សង្គ្រាម</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div id="lessonContainer" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-red-500 mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-red-900/50 w-full pb-4 en-title">
+                    <span id="chapterNumber" class="bg-red-950/30 px-4 py-2 rounded border border-red-900">Chapter 1</span>
+                    <span class="flex-1 text-right text-yellow-700">Strategy</span>
+                </div>
+                
+                <h2 id="lessonTitle" class="text-3xl md:text-5xl font-bold text-gray-200 mb-12 leading-snug kh-title text-shadow-lg decoration-red-900/50 underline decoration-4 underline-offset-8"></h2>
+                
+                <div class="prose prose-xl prose-invert max-w-none text-gray-300 leading-loose font-light text-justify" id="lessonBody"></div>
+
+                <!-- Scenario Box -->
+                <div id="scenarioBox" class="bg-[#1a0505] border-l-4 border-red-600 p-10 rounded-r-lg mb-12 hidden shadow-[0_0_30px_rgba(185,28,28,0.1)] mt-20 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-red-500/5 rounded-full blur-3xl"></div>
+                    <h3 class="text-2xl font-bold text-red-400 mb-4 flex items-center kh-title relative z-10">
+                        <svg class="w-8 h-8 mr-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        បន្ទប់សង្គ្រាម (War Room Simulation)
+                    </h3>
+                    <div id="scenarioContent" class="text-gray-300 text-lg relative z-10 leading-relaxed"></div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="bg-[#121212] rounded-sm shadow-2xl p-10 md:p-16 border-t-2 border-red-900 mt-24 relative overflow-hidden">
+                    <h3 class="text-3xl font-bold text-white mb-10 flex items-center relative z-10 kh-title">
+                        <span class="bg-red-700 text-white text-sm font-extrabold mr-6 px-6 py-2 rounded-sm uppercase tracking-widest shadow-lg en-title">TACTICS</span>
+                        សាកល្បងយុទ្ធសាស្ត្រ
+                    </h3>
+                    <div id="quizContainer" class="relative z-10">
+                        <p id="quizQuestion" class="text-2xl font-medium mb-10 text-gray-200 leading-relaxed"></p>
+                        <div id="quizOptions" class="space-y-6"></div>
+                        <div id="quizFeedback" class="mt-10 hidden p-8 rounded-sm text-xl border-l-4 shadow-2xl bg-[#0a0a0a]"></div>
+                    </div>
+                </div>
+
+                <!-- Nav Buttons -->
+                <div class="flex justify-between items-center mt-24 pt-12 border-t border-gray-800">
+                    <button id="prevBtn" class="px-10 py-4 rounded-sm border border-gray-700 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
+                        ← Retreat
+                    </button>
+                    <button id="nextBtn" class="btn-war py-4 px-10 rounded-sm flex items-center text-lg font-bold">
+                        Advance →
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // FULL DETAILED CONTENT FOR THE ART OF WAR (KHMER)
+        // Includes 13 Chapters with Deep Analysis & Modern Application
+        const lessons = [
+            {
+                title: "1. ការវាយតម្លៃ (Laying Plans)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">សង្គ្រាមគឺជាកិច្ចការសំខាន់បំផុតរបស់រដ្ឋ</h3>
+                    <p class="mb-6">Sun Tzu បើកឆាកដោយពាក្យដាស់តឿន៖ <strong>"សង្គ្រាមគឺជាបញ្ហានៃជីវិតនិងសេចក្តីស្លាប់ ជាផ្លូវឆ្ពោះទៅរកសុវត្ថិភាព ឬសេចក្តីវិនាស។ ដូច្នេះ មិនត្រូវធ្វេសប្រហែសឡើយ។"</strong></p>
+                    <p class="mb-6">មុនពេលធ្វើសកម្មភាព អ្នកដឹកនាំត្រូវធ្វើការវាយតម្លៃលើ <strong>កត្តា ៥ យ៉ាង (The 5 Constant Factors)</strong>៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-4 text-gray-300">
+                        <li><strong>ច្បាប់សីលធម៌ (The Moral Law):</strong> តើប្រជាជននិងទាហានមានចិត្តស្មោះត្រង់និងស្រលាញ់អ្នកដឹកនាំទេ? (ការឯកភាពជាតិ)។</li>
+                        <li><strong>មេឃ (Heaven):</strong> ពេលវេលា, អាកាសធាតុ, រដូវកាល។ (Timing)។</li>
+                        <li><strong>ដី (Earth):</strong> ភូមិសាស្ត្រ, ចម្ងាយផ្លូវ, ឧបសគ្គ។ (Market Landscape)។</li>
+                        <li><strong>មេទ័ព (The Commander):</strong> ភាពឈ្លាសវៃ, ភាពស្មោះត្រង់, មនុស្សធម៌, សេចក្តីក្លាហាន, និងភាពតឹងរ៉ឹង។ (Leadership)។</li>
+                        <li><strong>វិន័យ (Method and Discipline):</strong> ការរៀបចំកងទ័ព, ការផ្គត់ផ្គង់, ច្បាប់ទម្លាប់។ (Operations/Logistics)។</li>
+                    </ol>
+                    <p class="mb-6"><strong>"អ្នកណាដែលគណនាបានច្រើន អ្នកនោះឈ្នះ។ អ្នកណាដែលគណនាបានតិច អ្នកនោះចាញ់។"</strong> ការប្រយុទ្ធចាប់ផ្តើមតាំងពីមុនពេលទាហានចេញដំណើរម្ល៉េះ។</p>
+                    
+                    <div class="concept-card">
+                        <h4 class="text-xl font-bold text-yellow-500 mb-4 font-cinzel">🏛️ ការអនុវត្តក្នុងជំនួញ</h4>
+                        <p class="mb-3">មុននឹងបើកក្រុមហ៊ុន សូមកុំគ្រាន់តែមើលលុយ។ មើលកត្តាទាំង ៥៖</p>
+                        <ul class="list-disc ml-6 space-y-2 text-gray-400">
+                            <li>តើបុគ្គលិកស្រលាញ់ក្រុមហ៊ុនទេ? (Moral Law)</li>
+                            <li>តើនេះជាពេលវេលាល្អទេ? (Heaven/Timing)</li>
+                            <li>តើទីផ្សារនៅត្រង់ណា? (Earth/Location)</li>
+                            <li>តើអ្នកដឹកនាំពូកែទេ? (Commander)</li>
+                            <li>តើប្រព័ន្ធគ្រប់គ្រងច្បាស់លាស់ទេ? (Discipline)</li>
+                        </ul>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>សេណារីយ៉ូ៖</strong> អ្នកចង់បើកហាងកាហ្វេ។ ទីតាំងល្អ (Earth) ប៉ុន្តែឥឡូវជារដូវភ្លៀង ហើយសេដ្ឋកិច្ចកំពុងធ្លាក់ចុះ (Heaven)។ តើអ្នកគួរបើកទេ? Sun Tzu នឹងថា៖ "រង់ចាំសិន។ កុំប្រយុទ្ធពេលមេឃមិនអំណោយផល។"</p>
+                `,
+                quiz: { question: "តើកត្តាទី ១ (The Moral Law) សំដៅលើអ្វី?", options: ["ច្បាប់របស់ព្រះ", "ការឯកភាពគ្នារវាងអ្នកដឹកនាំនិងប្រជាជន (Unity of purpose)", "ច្បាប់សឹក", "អាកាសធាតុ"], correct: 1, explanation: "ត្រឹមត្រូវ! បើគ្មានការឯកភាពនិងជំនឿចិត្តពីក្រុមទេ យុទ្ធសាស្ត្រល្អយ៉ាងណាក៏បរាជ័យដែរ។" }
+            },
+            {
+                title: "2. ការធ្វើសង្គ្រាម (Waging War)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ល្បឿនគឺជាខ្លឹមសារនៃសង្គ្រាម</h3>
+                    <p class="mb-6">សង្គ្រាមត្រូវចំណាយលុយច្រើនណាស់។ កាន់តែយូរ កាន់តែខាត។ Sun Tzu និយាយថា៖ <strong>"មិនដែលធ្លាប់មានប្រទេសណាដែលចំណេញពីសង្គ្រាមដែលអូសបន្លាយពេលយូរនោះទេ។"</strong></p>
+                    <p class="mb-6">គោលដៅគឺ៖ <strong>"ជ័យជម្នះរហ័ស" (Victory, not lengthy campaigns)</strong>។</p>
+                    <p class="mb-6"><strong>ការផ្គត់ផ្គង់ (Logistics):</strong> យកស្បៀងពីសត្រូវ។ "ស្បៀងមួយរទេះរបស់សត្រូវ មានតម្លៃស្មើនឹងស្បៀង ២០ រទេះរបស់យើង" (ព្រោះមិនបាច់ដឹកជញ្ជូនឆ្ងាយ)។</p>
+                    
+                    <details>
+                        <summary>ការអនុវត្តក្នុងជីវិត</summary>
+                        <div class="mt-4 text-gray-300 bg-[#0a0a0a] p-4 rounded border border-gray-700">
+                            <p class="mb-2"><strong>Project Management:</strong> កុំឱ្យគម្រោងអូសបន្លាយពេលយូរពេក។ កាន់តែយូរ កាន់តែអស់លុយ និងអស់កម្លាំងចិត្ត (Burnout)។ ធ្វើឱ្យចប់ឆាប់ គឺចំណេញបំផុត។</p>
+                            <p><strong>Startups:</strong> "Fail fast, learn fast." (បរាជ័យឱ្យលឿន រៀនឱ្យលឿន)។ កុំអូសបន្លាយពេលស្រាវជ្រាវយូរពេក។</p>
+                        </div>
+                    </details>
+                `,
+                scenario: `
+                    <p><strong>War Room Decision:</strong> កងទ័ពរបស់អ្នកកំពុងឡោមព័ទ្ធទីក្រុងមួយ។ ការឡោមព័ទ្ធនេះមានរយៈពេល ៣ ខែហើយ។ ទាហានចាប់ផ្តើមឈឺ និងអស់កម្លាំង។ តើអ្នកគួរធ្វើអ្វី? ក. បន្តឡោមព័ទ្ធ។ ខ. ប្រើកម្លាំងវាយលុកឱ្យចប់ឆាប់ៗ។ គ. ដកថយ។ Sun Tzu ណែនាំឱ្យរកវិធីបញ្ចប់ឱ្យលឿនបំផុត។</p>
+                `,
+                quiz: { question: "តើអ្វីជាសត្រូវដ៏ធំបំផុតនៅក្នុងការធ្វើសង្គ្រាម?", options: ["សត្រូវដែលខ្លាំង", "ការពន្យារពេលយូរ (Prolonged campaigns)", "កង្វះអាវុធ", "អាកាសធាតុ"], correct: 1, explanation: "ត្រឹមត្រូវ! សង្គ្រាមដែលអូសបន្លាយនឹងធ្វើឱ្យរដ្ឋហិនហោច ទោះបីជាអ្នកឈ្នះក៏ដោយ។" }
+            },
+            {
+                title: "3. យុទ្ធសាស្ត្រវាយលុក (Attack by Stratagem)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">កំពូលនៃយុទ្ធសាស្ត្រ</h3>
+                    <div class="quote-box">
+                        "ការឈ្នះ ១០០ ដងក្នុងការប្រយុទ្ធ ១០០ ដង មិនមែនជាកំពូលនៃជំនាញទេ។ ការបង្ក្រាបសត្រូវដោយមិនបាច់ប្រយុទ្ធ ទើបជាកំពូលនៃជំនាញ។"
+                    </div>
+                    <p class="mb-6">លំដាប់នៃជ័យជម្នះ៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-3 text-gray-300">
+                        <li><strong>ល្អបំផុត៖</strong> វាយប្រហារយុទ្ធសាស្ត្ររបស់សត្រូវ (Attack Strategy)។ (ធ្វើឱ្យផែនការគេបរាជ័យមុនពេលចាប់ផ្តើម)។</li>
+                        <li><strong>ល្អ៖</strong> វាយបំបែកសម្ព័ន្ធមិត្តរបស់សត្រូវ (Disrupt Alliances)។ (ធ្វើឱ្យគេនៅម្នាក់ឯង)។</li>
+                        <li><strong>មធ្យម៖</strong> វាយប្រហារទាហានសត្រូវ (Attack Army)។</li>
+                        <li><strong>អន់បំផុត៖</strong> វាយប្រហារទីក្រុងដែលមានកំពែង (Siege Walled Cities)។ (ចំណាយពេលយូរ និងស្លាប់ច្រើន)។</li>
+                    </ol>
+                    <p class="mb-6"><strong>"ស្គាល់គេ ស្គាល់ឯង ច្បាំង ១០០ ដង ឈ្នះ ១០០ ដង។"</strong> (Know the enemy and know yourself).</p>
+                `,
+                scenario: `
+                    <p><strong>Business Negotiation:</strong> ជំនួសឱ្យការ "ប្រយុទ្ធ" (តថ្លៃគ្នាខ្លាំងៗ) ចូររកវិធី "ឈ្នះដោយមិនបាច់ប្រយុទ្ធ"។ ស្វែងយល់ថាដៃគូចង់បានអ្វីពិតប្រាកដ ហើយបង្កើត Win-Win Solution ដែលធ្វើឱ្យគេព្រមចុះចាញ់ដោយរីករាយ។</p>
+                `,
+                quiz: { question: "តើយុទ្ធសាស្ត្រណាដែល Sun Tzu ចាត់ទុកថាអន់បំផុត?", options: ["ការទូត", "ការវាយប្រហារទីក្រុងដែលមានកំពែង (Siege warfare)", "ការវាយឆ្មក់", "ការបំផ្លាញស្បៀង"], correct: 1, explanation: "ត្រឹមត្រូវ! វាធ្វើឱ្យខាតបង់ទាំងសងខាង។ អ្នកឆ្លាតមិនជ្រើសរើសផ្លូវនេះទេ។" }
+            },
+            {
+                title: "4. ការរៀបចំទ័ព (Tactical Dispositions)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ធ្វើខ្លួនឱ្យមិនអាចចាញ់បាន (Invincibility)</h3>
+                    <p class="mb-6">Sun Tzu និយាយថា៖ <strong>"ភាពមិនអាចចាញ់បាន (Invincibility) ស្ថិតនៅក្នុងដៃរបស់យើង។ ប៉ុន្តែឱកាសដើម្បីឈ្នះ ស្ថិតនៅក្នុងដៃសត្រូវ។"</strong></p>
+                    <p class="mb-6">អ្នកមិនអាចបង្ខំឱ្យខ្លួនឯងឈ្នះបានទេ (ព្រោះសត្រូវអាចនឹងខ្លាំង)។ ប៉ុន្តែអ្នកអាចធ្វើឱ្យខ្លួនឯង <strong>"មិនអាចចាញ់"</strong> បាន ដោយការរៀបចំការពារឱ្យរឹងមាំ។</p>
+                    <p class="mb-6">អ្នកចម្បាំងដែលពូកែ ឈ្នះជាមុនសិន ទើបទៅច្បាំងតាមក្រោយ។ (Wins first, then goes to war). អ្នកចម្បាំងដែលអន់ ទៅច្បាំងសិន ទើបសង្ឃឹមថានឹងឈ្នះ។</p>
+                    
+                    <div class="concept-card bg-[#1a1a1a] border-yellow-600">
+                        <h4 class="text-xl font-bold text-yellow-500 mb-4 font-cinzel">🛡️ ការការពារ និង ការវាយលុក</h4>
+                        <p class="mb-2"><strong>ការការពារ៖</strong> ប្រើនៅពេលកម្លាំងមិនគ្រប់គ្រាន់។ (លាក់ខ្លួន)។</p>
+                        <p class="mb-2"><strong>ការវាយលុក៖</strong> ប្រើនៅពេលកម្លាំងលើសលប់។ (បង្ហាញខ្លួនដូចរន្ទះ)។</p>
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Investment:</strong> Warren Buffett និយាយថា "ច្បាប់ទី ១៖ កុំឱ្យខាតលុយ។ ច្បាប់ទី ២៖ កុំភ្លេចច្បាប់ទី ១"។ នេះគឺជាគោលការណ៍ Invincibility។ ការពារទ្រព្យសម្បត្តិឱ្យជាប់សិន មុននឹងគិតពីការចំណេញ។</p>
+                `,
+                quiz: { question: "តើអ្នកចម្បាំងដែលពូកែ (Skillful Fighter) ធ្វើអ្វីមុនគេ?", options: ["វាយលុកភ្លាមៗ", "ធ្វើឱ្យខ្លួនឯងមិនអាចចាញ់បានសិន (Put himself beyond the possibility of defeat)", "សុំជំនួយ", "បន់ស្រន់"], correct: 1, explanation: "ត្រឹមត្រូវ! ការពារខ្លួនឯងជាមុន រួចរង់ចាំសត្រូវធ្វើកំហុស ទើបវាយបកយកជ័យជម្នះ។" }
+            },
+            {
+                title: "5. ថាមពល (Energy)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">កម្លាំងផ្ទាល់ និង កម្លាំងប្រយោល</h3>
+                    <p class="mb-6">ការគ្រប់គ្រងទ័ពធំ គឺដូចជាការគ្រប់គ្រងទ័ពតូចដែរ។ វាអាស្រ័យលើ <strong>ការរៀបចំ (Organization)</strong>។</p>
+                    <p class="mb-6">នៅក្នុងការប្រយុទ្ធ មានវិធីសាស្ត្រតែពីរទេ៖</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-3 text-gray-300">
+                        <li><strong>Cheng (Direct):</strong> ការវាយប្រហារចំៗ ដើម្បីទប់ទល់។ (ធម្មតា)។</li>
+                        <li><strong>Ch'i (Indirect):</strong> ការវាយប្រហារពីចំហៀង ឬពីក្រោយ ដើម្បីយកឈ្នះ។ (ភ្ញាក់ផ្អើល)។</li>
+                    </ul>
+                    <p class="mb-6">ការរួមបញ្ចូលគ្នានៃ Cheng និង Ch'i គឺមិនចេះចប់មិនចេះហើយ ដូចជាវង់មូល។</p>
+                    <p class="mb-6"><strong>Momentum (សន្ទុះ):</strong> ទាហានប្រៀបដូចជាទឹក។ ទឹកដែលហូរធ្លាក់ពីលើភ្នំ អាចរុញច្រានថ្មធំៗបាន។ នោះមិនមែនមកពីទឹកខ្លាំងទេ តែមកពី <strong>សន្ទុះ</strong>។ មេទ័ពពូកែបង្កើតសន្ទុះ មិនមែនពឹងលើកម្លាំងបុគ្គលទេ។</p>
+                `,
+                scenario: `
+                    <p><strong>Marketing:</strong> Direct Marketing គឺការលក់ចំៗ (Cheng)។ Indirect Marketing គឺការបង្កើតមាតិកា ឬការផ្តល់តម្លៃ (Ch'i)។ ការប្រើទាំងពីររួមគ្នាបង្កើតបានជាយុទ្ធនាការដែលខ្លាំងក្លា។</p>
+                `,
+                quiz: { question: "តើអ្វីបង្កើតឱ្យមានសន្ទុះ (Momentum) ក្នុងការប្រយុទ្ធ?", options: ["កម្លាំងទាហានម្នាក់ៗ", "ការរួមបញ្ចូលគ្នានៃវិធីសាស្ត្រចំៗ និងប្រយោល (Direct and Indirect methods)", "អាវុធទំនើប", "សំណាង"], correct: 1, explanation: "ត្រឹមត្រូវ! ប្រើកម្លាំងចំៗដើម្បីទាក់ទាញសត្រូវ ហើយប្រើកម្លាំងប្រយោលដើម្បីវាយកម្ទេចគេនៅពេលគេភ្លេចខ្លួន។" }
+            },
+            {
+                title: "6. ចំណុចខ្សោយ និងចំណុចខ្លាំង (Weak Points and Strong)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ទឹកមិនមានរូបរាងថេរ</h3>
+                    <p class="mb-6">គោលការណ៍សំខាន់៖ <strong>"ជៀសវាងកន្លែងខ្លាំង វាយប្រហារកន្លែងខ្សោយ"</strong> (Avoid strength, strike weakness)។</p>
+                    <p class="mb-6">កុំប្រយុទ្ធនឹងសត្រូវនៅកន្លែងដែលគេរៀបចំរួចរាល់។ ត្រូវធ្វើឱ្យសត្រូវទៅដល់សមរភូមិក្រោយយើង (ឱ្យគេហត់)។ ត្រូវបង្ហាញខ្លួននៅកន្លែងដែលគេមិននឹកស្មានដល់។</p>
+                    <p class="mb-6"><strong>"យុទ្ធសាស្ត្រយោធាគឺដូចជាទឹក"</strong>។ ទឹកហូរពីខ្ពស់មកទាប (វាយកន្លែងខ្សោយ)។ ទឹកផ្លាស់ប្តូររូបរាងទៅតាមដី (កែប្រែយុទ្ធសាស្ត្រតាមសត្រូវ)។ គ្មានយុទ្ធសាស្ត្រណាដែលថេរជារៀងរហូតទេ។</p>
+                    <div class="quote-box">
+                        "អ្នកដែលអាចកែប្រែយុទ្ធសាស្ត្រតាមសត្រូវ ហើយទទួលបានជ័យជម្នះ អាចហៅបានថាជាទេវតា។"
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>Blue Ocean Strategy:</strong> ក្នុងជំនួញ កុំចូលប្រកួតប្រជែងនៅកន្លែងដែលគូប្រជែងខ្លាំង (Red Ocean)។ រកមើលកន្លែងដែលគេមើលរំលង ឬធ្វើមិនបានល្អ (Weak Points) ហើយវាយលុកទីនោះ។</p>
+                `,
+                quiz: { question: "ហេតុអ្វី Sun Tzu ប្រៀបធៀបកងទ័ពទៅនឹងទឹក?", options: ["ព្រោះទឹកទន់ខ្សោយ", "ព្រោះទឹកអាចពន្លត់ភ្លើង", "ព្រោះទឹកគ្មានរូបរាងថេរ ហើយហូរទៅរកកន្លែងទាប (Adaptability and striking weakness)", "ព្រោះទាហានត្រូវការទឹក"], correct: 2, explanation: "ត្រឹមត្រូវ! ភាពបត់បែន (Adaptability) គឺជាគន្លឹះ។ កុំរឹងត្អឹងនឹងផែនការចាស់។" }
+            },
+            {
+                title: "7. ការផ្លាស់ទីទ័ព (Maneuvering)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ការបង្វែរឧបសគ្គឱ្យទៅជាឱកាស</h3>
+                    <p class="mb-6">ការផ្លាស់ទីទ័ពគឺជារឿងពិបាកបំផុត។ អ្នកត្រូវបំប្លែងផ្លូវវាងឱ្យទៅជាផ្លូវកាត់ (Make the devious route the most direct)។ ទាក់ទាញសត្រូវដោយផលប្រយោជន៍ ដើម្បីឱ្យគេដើរយឺត។</p>
+                    <p class="mb-6"><strong>"Let your plans be dark and impenetrable as night, and when you move, fall like a thunderbolt."</strong> (ផែនការត្រូវងងឹតដូចយប់ ពេលវាយលុកត្រូវលឿនដូចរន្ទះ)។</p>
+                    <p class="mb-6">កុំដាក់សម្ពាធលើសត្រូវដែលអស់ផ្លូវរត់ (Desperate foe)។ បើគេដឹងថាគេនឹងស្លាប់ គេនឹងតស៊ូដល់ដំណាក់កាលចុងក្រោយ។ ទុកផ្លូវឱ្យគេរត់ ដើម្បីឱ្យចិត្តគេបែកខ្ញែក។</p>
+                `,
+                scenario: `
+                    <p><strong>ការប្រកួតប្រជែង៖</strong> បើអ្នកដេញគូប្រជែងឱ្យដល់ផ្លូវទាល់ច្រក គេនឹងតបតយ៉ាងសាហាវ (Price War)។ ទុកផ្លូវឱ្យគេដកថយ ឬសហការ នោះអ្នកនឹងឈ្នះដោយចំណាយតិច។</p>
+                `,
+                quiz: { question: "ហេតុអ្វីយើងមិនគួរឡោមព័ទ្ធសត្រូវឱ្យជិតឈឹង?", options: ["ព្រោះវាអាក្រក់", "ព្រោះសត្រូវដែលអស់សង្ឃឹមនឹងប្រយុទ្ធដល់ស្លាប់ (They will fight harder)", "ព្រោះយើងខ្វះមនុស្ស", "ព្រោះយើងចង់ធ្វើមិត្ត"], correct: 1, explanation: "ត្រឹមត្រូវ! 'To a surrounded enemy, you must leave a way of escape.' នេះគឺជាចិត្តសាស្ត្រសង្គ្រាម។" }
+            },
+            {
+                title: "8. ការផ្លាស់ប្តូរយុទ្ធសាស្ត្រ (Variation in Tactics)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">កំហុសទាំង ៥ របស់មេទ័ព</h3>
+                    <p class="mb-6">មេទ័ពត្រូវចេះបត់បែន។ មានផ្លូវខ្លះមិនគួរដើរ។ មានកងទ័ពខ្លះមិនគួរវាយ។ មានទីក្រុងខ្លះមិនគួរឡោមព័ទ្ធ។</p>
+                    <p class="mb-6">កំហុសគ្រោះថ្នាក់ ៥ យ៉ាងរបស់មេដឹកនាំ៖</p>
+                    <ol class="list-decimal ml-8 mb-6 space-y-2 text-gray-300">
+                        <li><strong>Recklessness (ហ៊ានហួសហេតុ):</strong> នាំទៅរកសេចក្តីស្លាប់។</li>
+                        <li><strong>Cowardice (កំសាក):</strong> នាំទៅរកការចាប់ខ្លួន។</li>
+                        <li><strong>Hasty Temper (ឆាប់ខឹង):</strong> ងាយត្រូវគេឌឺដងឱ្យបាត់បង់ម្ចាស់ការ។</li>
+                        <li><strong>Delicacy of Honor (ស្រលាញ់កិត្តិយសពេក):</strong> ខ្លាចអាម៉ាស់ មិនហ៊ានដកថយ។</li>
+                        <li><strong>Over-solicitude (ស្រលាញ់កូនចៅពេក):</strong> នាំឱ្យពិបាកធ្វើការសម្រេចចិត្តធំ។</li>
+                    </ol>
+                `,
+                scenario: `
+                    <p><strong>Leadership:</strong> មេដឹកនាំដែលឆាប់ខឹង ងាយនឹងធ្វើកំហុស។ គូប្រជែងអាចបង្ករឿងបន្តិចបន្តួចឱ្យអ្នកខឹង ដើម្បីឱ្យអ្នកធ្វើការសម្រេចចិត្តខុស។ រក្សាចិត្តឱ្យត្រជាក់។</p>
+                `,
+                quiz: { question: "តើកំហុសមួយណាដែលកើតឡើងដោយសារការស្រលាញ់កិត្តិយសហួសហេតុ?", options: ["ឆាប់ខឹង", "មិនហ៊ានដកថយព្រោះខ្លាចខ្មាសគេ (Sensitive to shame)", "កំសាក", "ស្រលាញ់កូនចៅ"], correct: 1, explanation: "ត្រឹមត្រូវ! កិត្តិយសសំខាន់ ប៉ុន្តែការរស់រានមានជីវិតសំខាន់ជាង។ មេទ័ពល្អហ៊ានលេបកិត្តិយសដើម្បីជ័យជម្នះចុងក្រោយ។" }
+            },
+            {
+                title: "9. ការដើរទ័ព (The Army on the March)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ការសង្កេតសញ្ញា</h3>
+                    <p class="mb-6">ជំពូកនេះនិយាយពីការជ្រើសរើសទីតាំងបោះជំរុំ និងការសង្កេតសញ្ញាសត្រូវ។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-gray-300">
+                        <li>បោះជំរុំនៅកន្លែងខ្ពស់ និងមានពន្លឺថ្ងៃ។</li>
+                        <li>កុំបោះជំរុំនៅខ្សែទឹកខាងក្រោម (ខ្លាចគេដាក់ថ្នាំពុល ឬបង្ហូរទឹកដាក់)។</li>
+                    </ul>
+                    <p class="mb-6"><strong>ការអានសញ្ញា៖</strong></p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-gray-300">
+                        <li>ដើមឈើកម្រើក = សត្រូវកំពុងមក។</li>
+                        <li>សត្វស្លាបហើរឡើង = មានការលាក់ខ្លួននៅខាងក្រោម។</li>
+                        <li>ធូលីហុយទាបនិងធំ = ទ័ពថ្មើរជើង។ ធូលីហុយខ្ពស់និងតូច = ទ័ពសេះ។</li>
+                        <li>ទាហានឈរផ្អែកអាវុធ = ពួកគេឃ្លាននិងហត់។</li>
+                    </ul>
+                `,
+                scenario: `
+                    <p><strong>Business Intelligence:</strong> សង្កេតគូប្រជែងរបស់អ្នក។ បើពួកគេចាប់ផ្តើមបញ្ចុះតម្លៃខ្លាំងខុសធម្មតា ប្រហែលជាពួកគេកំពុងមានបញ្ហាលំហូរសាច់ប្រាក់ (Cashflow issue)។ នោះគឺជាសញ្ញា។</p>
+                `,
+                quiz: { question: "បើអ្នកឃើញសត្វស្លាបហោះឡើងពីព្រៃ តើវាមានន័យថាម៉េច?", options: ["ព្យុះមកដល់", "មានសត្រូវលាក់ខ្លួននៅទីនោះ (Ambush)", "គ្មានអ្វីទេ", "សត្វស្លាបរកចំណី"], correct: 1, explanation: "ត្រឹមត្រូវ! ការសង្កេតបរិស្ថានឱ្យបានល្អិតល្អន់ អាចជួយសង្គ្រោះជីវិតបាន។" }
+            },
+            {
+                title: "10. ភូមិសាស្ត្រ (Terrain)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ស្គាល់ដី ស្គាល់ជ័យជម្នះ</h3>
+                    <p class="mb-6">Sun Tzu បែងចែកដីជា ៦ ប្រភេទ (Accessible, Entangling, Temporizing, Narrow, Precipitous, Distant)។ ប្រភេទនីមួយៗត្រូវការយុទ្ធសាស្ត្រខុសគ្នា។</p>
+                    <p class="mb-6"><strong>ច្បាប់សំខាន់៖</strong></p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-gray-300">
+                        <li>បើដីទូលាយ កុំរារាំងផ្លូវគេ។</li>
+                        <li>បើដីចង្អៀត ត្រូវកាន់កាប់ច្រកចេញចូលមុនគេ។</li>
+                        <li>បើដីខ្ពស់ ត្រូវនៅខាងលើ។ កុំវាយឡើងលើភ្នំ។</li>
+                    </ul>
+                    <p class="mb-6">"ការស្គាល់សត្រូវ គឺឈ្នះពាក់កណ្តាល។ ការស្គាល់ដីនិងមេឃ (Terrain & Weather) គឺឈ្នះទាំងស្រុង។"</p>
+                `,
+                scenario: `
+                    <p><strong>Market Terrain:</strong> ទីផ្សារពិសេស (Niche Market) គឺដូចជា "ដីចង្អៀត"។ បើអ្នកចូលមុន អ្នកអាចបិទច្រកមិនឱ្យគូប្រជែងចូលបាន។ ទីផ្សារទូទៅ (Mass Market) គឺដូចជា "ដីទូលាយ" ពិបាកការពារ។</p>
+                `,
+                quiz: { question: "តើយើងគួរធ្វើដូចម្តេចចំពោះសត្រូវដែលនៅទីតាំងខ្ពស់?", options: ["វាយឡើងទៅលើ", "កុំវាយ (Do not attack)", "ជីករូងក្រោមដី", "ស្រែកជេរ"], correct: 1, explanation: "ត្រឹមត្រូវ! ការវាយឡើងទួល គឺខាតបង់កម្លាំងនិងគ្រោះថ្នាក់។ ត្រូវរកវិធីអូសគេចុះមកវិញ។" }
+            },
+            {
+                title: "11. ស្ថានភាពទាំង ៩ (The Nine Situations)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ចិត្តសាស្ត្រនៃទីតាំង</h3>
+                    <p class="mb-6">នេះនិយាយពីឥទ្ធិពលនៃទីតាំងមកលើ "ចិត្ត" របស់ទាហាន។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-gray-300">
+                        <li><strong>Dispersive Ground (ដីបែកបាក់):</strong> ប្រយុទ្ធក្នុងទឹកដីខ្លួនឯង។ ទាហានងាយនឹងរត់ទៅផ្ទះ។ កុំប្រយុទ្ធនៅទីនេះ។</li>
+                        <li><strong>Death Ground (ដីស្លាប់):</strong> គ្មានផ្លូវរត់។ ទាហាននឹងប្រយុទ្ធយ៉ាងក្លាហានបំផុតព្រោះគ្មានជម្រើស។ "Throw your soldiers into positions whence there is no escape, and they will prefer death to flight."</li>
+                    </ul>
+                    <p class="mb-6">មេទ័ពពូកែ ត្រូវចេះដាក់ទាហានក្នុងស្ថានភាព "ដីស្លាប់" នៅពេលចាំបាច់ ដើម្បីទាញយកថាមពលចុងក្រោយ។</p>
+                `,
+                scenario: `
+                    <p><strong>Burn the Boats:</strong> នៅពេល Alexander the Great ទៅដល់ពែរ្ស គាត់ដុតកប៉ាល់ចោល ដើម្បីប្រាប់ទាហានថា "យើងមានតែផ្លូវពីរទេ៖ ឈ្នះ ឬ ស្លាប់"។ នេះគឺជាការបង្កើត Death Ground។</p>
+                `,
+                quiz: { question: "តើទាហាននឹងប្រយុទ្ធខ្លាំងបំផុតនៅពេលណា?", options: ["ពេលបានប្រាក់ខែ", "ពេលនៅផ្ទះ", "ពេលស្ថិតក្នុង 'ដីស្លាប់' ដែលគ្មានផ្លូវរត់ (Death Ground)", "ពេលមានអាវុធល្អ"], correct: 2, explanation: "ត្រឹមត្រូវ! ភាពអស់សង្ឃឹមក្នុងការរស់ ផ្តល់កំណើតឱ្យសេចក្តីក្លាហាន។" }
+            },
+            {
+                title: "12. ការវាយប្រហារដោយភ្លើង (The Attack by Fire)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ការប្រើប្រាស់បរិស្ថានជាអាវុធ</h3>
+                    <p class="mb-6">មាន ៥ វិធីក្នុងការប្រើភ្លើង៖ ដុតទាហាន, ដុតស្បៀង, ដុតឃ្លាំង, ដុតអាវុធ, និងដុតផ្លូវ។</p>
+                    <p class="mb-6">ប៉ុន្តែត្រូវចាំថា៖ <strong>"កុំធ្វើសង្គ្រាមដោយសារកំហឹង"</strong>។</p>
+                    <p class="mb-6">ភ្លើងគឺគ្រោះថ្នាក់។ បើខ្យល់បក់ត្រឡប់មកវិញ វានឹងឆេះខ្លួនឯង។ មេដឹកនាំមិនត្រូវបញ្ជាឱ្យវាយប្រហារដោយសារតែខឹងសត្រូវទេ។ កំហឹងអាចបាត់ទៅវិញ ប៉ុន្តែរដ្ឋដែលវិនាសមិនអាចសាងសង់ឡើងវិញបានទេ។</p>
+                    <div class="quote-box">
+                        "No ruler should put troops into the field merely to gratify his own spleen." (គ្មានអ្នកដឹកនាំណាគួរធ្វើសង្គ្រាមគ្រាន់តែដើម្បីបន្ធូរកំហឹងទេ)។
+                    </div>
+                `,
+                scenario: `
+                    <p><strong>ការគ្រប់គ្រងអារម្មណ៍៖</strong> ពេលអ្នកខឹងខ្លាំង អ្នកចង់ "ដុត" អ្វីៗចោល (ជេរប្រមាថ, លុបចោលកិច្ចសន្យា)។ Sun Tzu ព្រមានថា៖ ភ្លើងនោះអាចនឹងឆេះអ្នកវិញ។ រង់ចាំឱ្យត្រជាក់ចិត្តសិន។</p>
+                `,
+                quiz: { question: "តើ Sun Tzu ព្រមានអ្វីខ្លះអំពីការប្រើភ្លើង និងការធ្វើសង្គ្រាម?", options: ["ប្រើភ្លើងគ្រប់ពេល", "កុំធ្វើសង្គ្រាមដោយសារកំហឹង (Anger)", "ភ្លើងមិនសូវមានប្រសិទ្ធភាព", "ត្រូវដុតព្រៃជានិច្ច"], correct: 1, explanation: "ត្រឹមត្រូវ! ការសម្រេចចិត្តដោយអារម្មណ៍ នាំមកនូវសោកនាដកម្ម។" }
+            },
+            {
+                title: "13. ការប្រើប្រាស់ចារបុរស (The Use of Spies)",
+                content: `
+                    <h3 class="text-3xl font-bold text-red-500 mb-6 kh-title">ព័ត៌មានគឺជាអាយុជីវិត</h3>
+                    <p class="mb-6">ជំពូកចុងក្រោយ។ "ការមិនដឹងពីស្ថានភាពសត្រូវ គឺជាកំពូលនៃភាពល្ងង់ខ្លៅ"។</p>
+                    <p class="mb-6">កុំពឹងលើការទស្សន៍ទាយ ឬវិញ្ញាណ។ ត្រូវពឹងលើ <strong>"ចារបុរស" (Spies)</strong>។</p>
+                    <ul class="list-disc ml-8 mb-6 space-y-2 text-gray-300">
+                        <li><strong>Local spies:</strong> ប្រើប្រជាជននៅតំបន់នោះ។</li>
+                        <li><strong>Inward spies:</strong> ប្រើមន្ត្រីរបស់សត្រូវ។</li>
+                        <li><strong>Converted spies:</strong> ប្រើចារបុរសសត្រូវឱ្យធ្វើការឱ្យយើងវិញ (Double agent)។</li>
+                        <li><strong>Doomed spies:</strong> ផ្តល់ព័ត៌មានក្លែងក្លាយឱ្យចារបុរសយើង ដើម្បីឱ្យគេទៅប្រាប់សត្រូវ (ហើយត្រូវសត្រូវសម្លាប់ចោលពេលដឹងការពិត)។</li>
+                        <li><strong>Surviving spies:</strong> អ្នកដែលត្រឡប់មកវិញជាមួយព័ត៌មាន។</li>
+                    </ul>
+                    <p class="mb-6">ចារបុរសគឺជា "ទ្រព្យសម្បត្តិដ៏មានតម្លៃបំផុត" របស់មេទ័ព។ បើគ្មានពួកគេទេ កងទ័ពប្រៀបដូចជាមនុស្សខ្វាក់។</p>
+                `,
+                scenario: `
+                    <p><strong>Data & Information:</strong> ក្នុងសម័យនេះ "ចារបុរស" គឺទិន្នន័យ (Data Analytics, Market Research)។ ក្រុមហ៊ុនដែលដឹងពីតម្រូវការអតិថិជន និងយុទ្ធសាស្ត្រគូប្រជែងច្បាស់ជាងគេ គឺជាអ្នកឈ្នះ។</p>
+                `,
+                quiz: { question: "តើវិធីតែមួយគត់ដើម្បីដឹងពីស្ថានភាពសត្រូវជាមុន (Foreknowledge) គឺអ្វី?", options: ["សួរគ្រូទាយ", "បន់ស្រន់", "ប្រើចារបុរស (Spies/Human Intelligence)", "ប្រើតក្កវិជ្ជា"], correct: 2, explanation: "ត្រឹមត្រូវ! ព័ត៌មានមិនអាចកើតចេញពីខ្យល់ទេ។ វាត្រូវតែបានមកពីមនុស្សដែលដឹងរឿង។" }
+            }
+        ];
+
+        // Logic
+        let currentLessonIndex = 0;
+        const sidebar = document.getElementById('sidebar');
+        const lessonList = document.getElementById('lessonList');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const lessonContainer = document.getElementById('lessonContainer');
+        const lessonTitle = document.getElementById('lessonTitle');
+        const lessonBody = document.getElementById('lessonBody');
+        const chapterNumber = document.getElementById('chapterNumber');
+        const scenarioBox = document.getElementById('scenarioBox');
+        const scenarioContent = document.getElementById('scenarioContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const menuBtn = document.getElementById('menuBtn');
+
+        function initNav() {
+            lessonList.innerHTML = '';
+            lessons.forEach((lesson, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-6 py-4 hover:bg-[#1a0505] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-red-500' : 'text-gray-500'}`;
+                
+                const simpleTitle = lesson.title.split('(')[0];
+                
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-[#1a0505] text-red-500 flex items-center justify-center text-xs mr-3 lesson-indicator flex-shrink-0 font-bold border border-red-900">${index + 1}</span>
+                    <span class="truncate tracking-wide font-kantumruy">${simpleTitle}</span>
+                `;
+                btn.onclick = () => loadLesson(index);
+                btn.id = `nav-item-${index}`;
+                lessonList.appendChild(btn);
+            });
+        }
+
+        menuBtn.onclick = () => {
+            sidebar.classList.toggle('-translate-x-full');
+        };
+
+        function loadLesson(index) {
+            currentLessonIndex = index;
+            
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.remove('hidden');
+            lessonContainer.classList.remove('fade-in'); 
+            void lessonContainer.offsetWidth; 
+            lessonContainer.classList.add('fade-in');
+
+            document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#1a0505]');
+                b.classList.add('border-transparent');
+                b.querySelector('.lesson-indicator').classList.remove('bg-red-600', 'text-white', 'border-red-600');
+                b.querySelector('.lesson-indicator').classList.add('bg-[#1a0505]', 'text-red-500', 'border-red-900');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            if(activeBtn) {
+                activeBtn.classList.add('sidebar-active', 'bg-[#1a0505]');
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.querySelector('.lesson-indicator').classList.remove('bg-[#1a0505]', 'text-red-500', 'border-red-900');
+                activeBtn.querySelector('.lesson-indicator').classList.add('bg-red-600', 'text-white', 'border-red-600');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if(window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+
+            const lesson = lessons[index];
+            chapterNumber.innerText = `Chapter ${index + 1}`;
+            lessonTitle.innerText = lesson.title;
+            lessonBody.innerHTML = lesson.content;
+
+            if (lesson.scenario) {
+                scenarioBox.classList.remove('hidden');
+                scenarioContent.innerHTML = lesson.scenario;
+            } else {
+                scenarioBox.classList.add('hidden');
+            }
+
+            setupQuiz(lesson.quiz);
+            updateProgress();
+            
+            // Save progress to Supabase
+            saveProgressToDb(index);
+            
+            prevBtn.disabled = index === 0;
+            if(prevBtn.disabled) prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            else prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            nextBtn.innerHTML = index === lessons.length - 1 ? `បញ្ចប់` : `បន្ទាប់`;
+        }
+
+        function setupQuiz(quizData) {
+            quizFeedback.className = "mt-10 hidden p-8 rounded-sm text-xl border-l-4 shadow-2xl bg-[#0a0a0a] transition-all";
+            quizFeedback.innerHTML = "";
+            quizOptions.innerHTML = "";
+            quizQuestion.innerText = quizData.question;
+
+            quizData.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 rounded-sm border border-red-900 hover:bg-[#1a0505] transition flex items-center shadow-lg group bg-[#0f0f0f] text-gray-400 font-medium";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border border-red-800 mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-red-600 group-hover:bg-red-600 group-hover:text-white group-hover:border-red-600 transition font-mono">${String.fromCharCode(65 + i)}</span><span class="group-hover:text-white font-kantumruy">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
+                quizOptions.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, explanation, btnElement) {
+            const buttons = quizOptions.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            quizFeedback.classList.remove('hidden');
+            
+            if (selected === correct) {
+                btnElement.classList.add('correct-answer');
+                quizFeedback.className = "mt-10 p-8 rounded-sm bg-green-900/50 text-green-200 border-l-4 border-green-500 shadow-lg fade-in";
+                quizFeedback.innerHTML = `<strong class="text-green-400 text-lg block mb-2 font-cinzel">VICTORY!</strong> ${explanation}`;
+                if(currentLessonIndex === lessons.length - 1) launchConfetti();
+            } else {
+                btnElement.classList.add('wrong-answer');
+                const correctBtn = buttons[correct];
+                correctBtn.classList.add('correct-answer');
+                quizFeedback.className = "mt-10 p-8 rounded-sm bg-red-950/50 text-red-200 border-l-4 border-red-500 shadow-lg fade-in";
+                quizFeedback.innerHTML = `<strong class="text-red-400 text-lg block mb-2 font-cinzel">DEFEAT.</strong> ចម្លើយដែលត្រឹមត្រូវគឺ៖ <br>${explanation}`;
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round(((currentLessonIndex + 1) / lessons.length) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}%`;
+        }
+
+        prevBtn.onclick = () => { if (currentLessonIndex > 0) loadLesson(currentLessonIndex - 1); };
+        nextBtn.onclick = () => { 
+            if (currentLessonIndex < lessons.length - 1) loadLesson(currentLessonIndex + 1); 
+            else alert("អ្នកបានបញ្ចប់ការសិក្សាយុទ្ធសាស្ត្រសង្គ្រាម។ ចូរប្រើប្រាស់វាដោយប្រាជ្ញា!");
+        };
+
+        // Save progress to database
+        async function saveProgressToDb(chapterIndex) {
+            if (!supabaseClient) return;
+            try {
+                await supabaseClient.rpc('save_progress', {
+                    p_book_id: BOOK_ID,
+                    p_current_chapter: chapterIndex,
+                    p_total_chapters: lessons.length
+                });
+            } catch (err) {
+                console.log('Progress save error:', err);
+            }
+        }
+        
+        // Load saved progress on page load
+        async function loadSavedProgress() {
+            if (!supabaseClient) return;
+            try {
+                const { data } = await supabaseClient
+                    .from('reading_progress')
+                    .select('current_chapter')
+                    .eq('book_id', BOOK_ID)
+                    .single();
+                
+                if (data && data.current_chapter > 0) {
+                    const continueBtn = document.createElement('button');
+                    continueBtn.className = 'mt-6 btn-war py-2 px-6 rounded-sm text-sm';
+                    continueBtn.innerHTML = `បន្តអាន Chapter ${data.current_chapter + 1} →`;
+                    continueBtn.onclick = () => loadLesson(data.current_chapter);
+                    document.querySelector('#welcomeScreen .bg-\\[\\#171717\\]\\/90')?.appendChild(continueBtn);
+                }
+            } catch (err) {
+                console.log('No saved progress');
+            }
+        }
+        
+        // Call after auth check
+        setTimeout(loadSavedProgress, 500);
+
+        function launchConfetti() {
+            const colors = ['#b91c1c', '#d4af37', '#ffffff'];
+            for(let i=0; i<100; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 8 + 4 + 'px';
+                conf.style.height = Math.random() * 8 + 4 + 'px'; // Confetti shape
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '50%';
+                conf.style.left = '50%';
+                conf.style.zIndex = '9999';
+                conf.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                document.body.appendChild(conf);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 5;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+                
+                let x = window.innerWidth / 2;
+                let y = window.innerHeight / 2;
+                
+                let frame = 0;
+                function animate() {
+                    x += dx;
+                    y += dy + (frame * 0.05); 
+                    conf.style.left = x + 'px';
+                    conf.style.top = y + 'px';
+                    conf.style.opacity = 1 - (frame/200);
+                    conf.style.transform = `rotate(${frame * 10}deg)`;
+                    frame++;
+                    if(frame < 200) requestAnimationFrame(animate);
+                    else conf.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        initNav();
+
+    </script>
+</body>
+</html>
