@@ -173,6 +173,73 @@
             50% { opacity: 0.8; }
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
+
+        /* Character Intro Styles */
+        .char-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .char-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-8px);
+            border-color: rgba(250, 204, 21, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .char-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 3px solid #facc15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 1.5rem;
+        }
+        .char-card:hover .char-circle {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.5);
+            border-color: #4ade80;
+            background: #022c22;
+        }
+        .char-name {
+            font-family: 'Berkshire Swash', cursive;
+            font-size: 1.5rem;
+            color: #facc15;
+            margin-bottom: 0.5rem;
+        }
+        .char-desc {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .char-quote {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #4ade80;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+            width: 100%;
+        }
+        .char-card:hover .char-quote {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -343,13 +410,86 @@
                     
                     <div class="text-8xl mb-8 drop-shadow-[0_0_25px_rgba(250,204,21,0.5)]">🧚✨🐊</div>
                     <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 kh-title leading-tight drop-shadow-md">ភីធើ ផេន និង នេវើលែន</h2>
-                    <p class="text-xl text-slate-300 mb-12 leading-loose font-light px-8">
+                    <p class="text-xl text-slate-300 mb-8 leading-loose font-light px-8">
                         "កុមារទាំងអស់សុទ្ធតែធំឡើង... លើកលែងតែម្នាក់ប៉ុណ្ណោះ។"<br>
                         តោះហោះទៅកាន់កោះនៃក្តីស្រមៃ ដែលគ្មាននរណាម្នាក់ចាស់។
                     </p>
-                    <button onclick="loadLesson(0)" class="btn-fly py-5 px-12 rounded-full text-xl flex items-center mx-auto tracking-widest uppercase">
-                        <span>Second to the right...</span>
-                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"></path></svg>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-center items-center mt-6 w-full">
+                         <button onclick="showCharacters()" class="px-8 py-4 rounded-full border-2 border-[#4ade80] text-[#4ade80] hover:bg-[#4ade80] hover:text-[#020617] transition-all font-bold tracking-widest uppercase flex items-center justify-center min-w-[220px]">
+                            <span class="mr-2 text-xl">👥</span> តួអង្គសំខាន់
+                        </button>
+                        <button onclick="loadLesson(0)" class="btn-fly py-4 px-10 rounded-full text-lg flex items-center justify-center tracking-widest uppercase min-w-[220px]">
+                            <span>ចាប់ផ្តើមរឿង</span>
+                            <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Character Intro Section (Hidden by Default) -->
+            <div id="characterSection" class="hidden fade-in">
+                <div class="flex items-center space-x-4 text-[#facc15] mb-10 font-bold text-xs uppercase tracking-[0.2em] border-b border-slate-800 w-full pb-4 en-title">
+                    <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700">Intro</span>
+                    <span class="flex-1 text-right text-slate-500">The Cast of Neverland</span>
+                </div>
+                
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-12 leading-snug kh-title text-center text-shadow-lg">ជួបជាមួយអ្នករស់នៅ Neverland</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Peter -->
+                    <div class="char-card group">
+                        <div class="char-circle">🧚‍♂️</div>
+                        <h3 class="char-name">Peter Pan</h3>
+                        <p class="char-desc">ក្មេងប្រុសដែលបដិសេធមិនព្រមធំឡើង។ គាត់តំណាងឱ្យភាពក្មេងខ្ចីដ៏អស់កល្ប ភាពសប្បាយរីករាយ និងភាពគ្មានបេះដូង។</p>
+                        <p class="char-quote">"To die will be an awfully big adventure."</p>
+                    </div>
+
+                    <!-- Wendy -->
+                    <div class="char-card group">
+                        <div class="char-circle">👩</div>
+                        <h3 class="char-name">Wendy Darling</h3>
+                        <p class="char-desc">ក្មេងស្រីដែលក្លាយជា "ម្តាយ"។ នាងតំណាងឱ្យភាពចាស់ទុំ និងការទទួលខុសត្រូវ។</p>
+                        <p class="char-quote">"I'll think of a mermaid lagoon underneath a magic moon."</p>
+                    </div>
+
+                    <!-- Hook -->
+                    <div class="char-card group">
+                        <div class="char-circle">🏴‍☠️</div>
+                        <h3 class="char-name">Captain Hook</h3>
+                        <p class="char-desc">ចោរសមុទ្រដែលខ្លាចក្រពើ។ គាត់តំណាងឱ្យមនុស្សធំដែលភ័យខ្លាចពេលវេលា និងសេចក្តីស្លាប់។</p>
+                        <p class="char-quote">"Tick-tock, tick-tock!"</p>
+                    </div>
+
+                    <!-- Tinkerbell -->
+                    <div class="char-card group">
+                        <div class="char-circle">✨</div>
+                        <h3 class="char-name">Tinker Bell</h3>
+                        <p class="char-desc">ទេពអប្សរតូចដែលមានអារម្មណ៍តែមួយក្នុងពេលតែមួយ។ នាងតំណាងឱ្យជំនឿ (Faith)។</p>
+                        <p class="char-quote">"You know that place between sleep and awake..."</p>
+                    </div>
+                    
+                    <!-- The Crocodile -->
+                    <div class="char-card group">
+                        <div class="char-circle">🐊</div>
+                        <h3 class="char-name">The Crocodile</h3>
+                        <p class="char-desc">សត្វដែលលេបនាឡិការោទ៍។ វាគឺជា "ពេលវេលា" ដែលដេញតាមយើងគ្រប់គ្នា។</p>
+                        <p class="char-quote">*Tick Tock Tick Tock*</p>
+                    </div>
+
+                     <!-- Nana -->
+                     <div class="char-card group">
+                        <div class="char-circle">🐶</div>
+                        <h3 class="char-name">Nana</h3>
+                        <p class="char-desc">ឆ្កែដែលធ្វើជាអ្នកមើលថែក្មេង។ តំណាងឱ្យសណ្តាប់ធ្នាប់នៃពិភពពិត។</p>
+                        <p class="char-quote">"Woof!"</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-16 pt-8 border-t border-slate-800">
+                    <button onclick="loadLesson(0)" class="btn-fly py-4 px-12 rounded-full text-xl flex items-center tracking-widest uppercase">
+                        <span>ចូលទៅក្នុងសៀវភៅ</span>
+                        <svg class="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
                 </div>
             </div>
@@ -391,7 +531,7 @@
 
                 <!-- Nav Buttons -->
                 <div class="flex justify-between items-center mt-24 pt-12 border-t border-slate-800">
-                    <button id="prevBtn" class="px-10 py-4 rounded-xl border border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
+                    <button id="prevBtn" class="px-10 py-4 rounded-xl border-2 border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-white transition-all flex items-center text-lg font-bold uppercase tracking-widest en-title">
                         ← Back
                     </button>
                     <button id="nextBtn" class="btn-fly py-4 px-10 rounded-xl flex items-center text-lg">
@@ -404,7 +544,7 @@
     </div>
 
     <script>
-        // FULL DETAILED CONTENT FOR PETER PAN (KHMER)
+        // FULL EXTENDED CONTENT FOR THE WIZARD OF OZ (KHMER)
         const lessons = [
             {
                 title: "1. កុមារដែលមិនធំ (The Boy Who Wouldn't Grow Up)",
@@ -573,11 +713,12 @@
             }
         ];
 
-        // ... (Logic remains identical: initNav, loadLesson, setupQuiz, checkAnswer, updateProgress, launchConfetti) ...
+        // LOGIC
         let currentLessonIndex = 0;
         const sidebar = document.getElementById('sidebar');
         const lessonList = document.getElementById('lessonList');
         const welcomeScreen = document.getElementById('welcomeScreen');
+        const characterSection = document.getElementById('characterSection');
         const lessonContainer = document.getElementById('lessonContainer');
         const lessonTitle = document.getElementById('lessonTitle');
         const lessonBody = document.getElementById('lessonBody');
@@ -599,26 +740,34 @@
             lessons.forEach((lesson, index) => {
                 const btn = document.createElement('button');
                 btn.className = `w-full text-left px-6 py-4 hover:bg-[#0f172a] transition flex items-center text-sm font-bold border-l-4 border-transparent ${index === 0 ? 'text-[#4ade80]' : 'text-slate-500'}`;
-                
                 const simpleTitle = lesson.title.split('(')[0];
-                
-                btn.innerHTML = `
-                    <span class="w-8 h-8 rounded-full bg-[#1e293b] text-[#4ade80] flex items-center justify-center text-[10px] mr-3 font-mono font-bold border border-[#4ade80]">${index + 1}</span>
-                    <span class="truncate tracking-wide font-kantumruy">${simpleTitle}</span>
-                `;
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full bg-[#1e293b] text-[#4ade80] flex items-center justify-center text-[10px] mr-3 font-mono font-bold border border-[#4ade80]">${index + 1}</span><span class="truncate tracking-wide font-kantumruy">${simpleTitle}</span>`;
                 btn.onclick = () => loadLesson(index);
                 btn.id = `nav-item-${index}`;
                 lessonList.appendChild(btn);
             });
         }
+        
+        function showCharacters() {
+            welcomeScreen.classList.add('hidden');
+            lessonContainer.classList.add('hidden');
+            characterSection.classList.remove('hidden');
+            
+            // Highlight character button if we had one in sidebar, or just remove active class from all lessons
+             document.querySelectorAll('#lessonList button').forEach(b => {
+                b.classList.remove('sidebar-active', 'bg-[#0f172a]');
+                b.classList.add('text-slate-500', 'border-transparent');
+                b.querySelector('span:first-child').classList.remove('bg-[#4ade80]', 'text-[#020617]', 'border-[#4ade80]');
+                b.querySelector('span:first-child').classList.add('bg-[#1e293b]', 'text-[#4ade80]', 'border-[#4ade80]');
+            });
+        }
 
-        menuBtn.onclick = () => {
-            sidebar.classList.toggle('-translate-x-full');
-        };
+        menuBtn.onclick = () => sidebar.classList.toggle('-translate-x-full');
 
         function loadLesson(index) {
             currentLessonIndex = index;
             welcomeScreen.classList.add('hidden');
+            characterSection.classList.add('hidden');
             lessonContainer.classList.remove('hidden');
             lessonContainer.classList.remove('fade-in'); 
             void lessonContainer.offsetWidth; 
@@ -626,7 +775,7 @@
 
             document.querySelectorAll('#lessonList button').forEach(b => {
                 b.classList.remove('sidebar-active', 'bg-[#0f172a]');
-                b.classList.add('border-transparent');
+                b.classList.add('text-slate-500', 'border-transparent');
                 b.querySelector('span:first-child').classList.remove('bg-[#4ade80]', 'text-[#020617]', 'border-[#4ade80]');
                 b.querySelector('span:first-child').classList.add('bg-[#1e293b]', 'text-[#4ade80]', 'border-[#4ade80]');
             });
@@ -639,9 +788,7 @@
                 activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
-            if(window.innerWidth < 768) {
-                sidebar.classList.add('-translate-x-full');
-            }
+            if(window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
 
             const lesson = lessons[index];
             chapterNumber.innerText = `Adventure ${index + 1}`;
@@ -677,12 +824,7 @@
             quizData.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 hover:bg-[#1e293b] transition flex items-center shadow-md group bg-[#0f172a]/50 text-emerald-100 font-medium";
-                btn.innerHTML = `
-                    <span class="w-8 h-8 rounded-full border border-[#4ade80] mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-[#4ade80] group-hover:bg-[#facc15] group-hover:text-black group-hover:border-[#facc15] transition font-mono">
-                        ${String.fromCharCode(65 + i)}
-                    </span> 
-                    <span class="group-hover:text-white font-kantumruy">${opt}</span>
-                `;
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full border border-[#4ade80] mr-4 flex-shrink-0 flex items-center justify-center text-sm font-bold text-[#4ade80] group-hover:bg-[#facc15] group-hover:text-black group-hover:border-[#facc15] transition font-mono">${String.fromCharCode(65 + i)}</span><span class="font-medium group-hover:text-white font-kantumruy">${opt}</span>`;
                 btn.onclick = () => checkAnswer(i, quizData.correct, quizData.explanation, btn);
                 quizOptions.appendChild(btn);
             });
@@ -744,12 +886,15 @@
                     .single();
                 
                 if (data && data.current_chapter > 0) {
-                    // Show continue button
-                    const continueBtn = document.createElement('button');
-                    continueBtn.className = 'mt-6 bg-green-500/20 border border-green-500 text-green-400 font-bold py-2 px-6 rounded-full hover:bg-green-500 hover:text-black transition text-sm';
-                    continueBtn.innerHTML = `បន្តអាន Adventure ${data.current_chapter + 1} →`;
-                    continueBtn.onclick = () => loadLesson(data.current_chapter);
-                    document.querySelector('#welcomeScreen .bg-\\[\\#0f172a\\]\\/70')?.appendChild(continueBtn);
+                    // Show continue button in the welcome screen buttons area
+                    const buttonsArea = document.querySelector('#welcomeScreen .flex.flex-col.md\\:flex-row');
+                    if (buttonsArea) {
+                        const continueBtn = document.createElement('button');
+                        continueBtn.className = 'px-8 py-4 rounded-full bg-yellow-400/20 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition-all font-bold tracking-widest uppercase flex items-center justify-center min-w-[220px]';
+                        continueBtn.innerHTML = `<span class="mr-2">📖</span> បន្តអាន Ch.${data.current_chapter + 1}`;
+                        continueBtn.onclick = () => loadLesson(data.current_chapter);
+                        buttonsArea.appendChild(continueBtn);
+                    }
                 }
             } catch (err) {
                 console.log('No saved progress');
